@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using PulseRisk.Domain.Entities;
 using PulseRisk.Infrastructure.Persistence;
 
@@ -50,5 +51,18 @@ public sealed class PulseRiskDbContextModelTests
 
         activeAlertIndex.GetFilter().Should().Be("resolved_at IS NULL");
     }
-}
 
+    [Fact]
+    public void PositionModel_ShouldUseXminConcurrencyToken()
+    {
+        using var context = new PulseRiskDesignTimeDbContextFactory().CreateDbContext([]);
+
+        var positionEntity = context.Model.FindEntityType(typeof(Position))!;
+        var xmin = positionEntity.FindProperty("xmin");
+
+        xmin.Should().NotBeNull();
+        xmin!.IsConcurrencyToken.Should().BeTrue();
+        xmin.ValueGenerated.Should().Be(ValueGenerated.OnAddOrUpdate);
+        xmin.GetColumnType().Should().Be("xid");
+    }
+}

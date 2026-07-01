@@ -103,7 +103,7 @@
 - [x] Настроить snake_case naming convention.
 - [x] Настроить precision для денежных и ценовых полей.
 - [x] Настроить enum conversion.
-- [ ] Настроить `xmin`/concurrency token для `Position`, если выбран optimistic concurrency.
+- [x] Настроить `xmin`/concurrency token для `Position`, если выбран optimistic concurrency.
 - [x] Создать initial migration.
 - [x] Создать таблицу `clients`.
 - [x] Создать таблицу `trading_accounts`.
@@ -177,13 +177,13 @@
 - [x] Реализовать расчет average price для увеличения позиции.
 - [x] Реализовать расчет net volume для Buy/Sell.
 - [x] Реализовать сценарий частичного закрытия/переворота позиции.
-- [ ] Реализовать optimistic concurrency retry для позиции.
-- [ ] После commit публиковать `PositionChangedEvent` в channel.
+- [x] Реализовать optimistic concurrency retry для позиции.
+- [x] После commit публиковать `PositionChangedEvent` в channel.
 - [ ] Добавить structured logs:
-  - [ ] trade accepted;
-  - [ ] validation failed;
-  - [ ] position updated;
-  - [ ] concurrency retry.
+  - [x] trade accepted;
+  - [x] validation failed;
+  - [x] position updated;
+  - [x] concurrency retry.
 - [x] Добавить unit-тесты PositionCalculator.
 - [ ] Добавить integration-тест "создание сделки обновляет позицию".
 
@@ -192,13 +192,13 @@
 - [ ] Создать модели событий:
   - [ ] `QuoteTick`;
   - [ ] `TradeAcceptedEvent`;
-  - [ ] `PositionChangedEvent`;
+  - [x] `PositionChangedEvent`;
   - [ ] `RiskEvaluationRequested`;
   - [ ] `RiskAlertRaisedEvent`.
-- [ ] Создать abstraction `IEventWriter<T>`.
-- [ ] Создать abstraction `IEventReader<T>`.
+- [x] Создать abstraction `IEventWriter<T>`.
+- [x] Создать abstraction `IEventReader<T>`.
 - [ ] Реализовать bounded channel для quote events.
-- [ ] Реализовать bounded channel для risk events.
+- [x] Реализовать bounded channel для risk events.
 - [ ] Настроить capacity через options.
 - [ ] Настроить full mode через options.
 - [ ] Добавить счетчик dropped events.

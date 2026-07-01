@@ -18,6 +18,8 @@
 - инфраструктурный слой: `PulseRiskDbContext`, EF Core mappings, PostgreSQL migration, seed instruments/risk rules;
 - application/API слой для clients, accounts и instruments;
 - trade processing: `POST /api/trades`, создание сделки и обновление позиции за один commit;
+- optimistic concurrency retry для обновления позиции через PostgreSQL `xmin`;
+- in-process bounded channel для `PositionChangedEvent`;
 - первые smoke-тесты и unit-тесты доменной логики;
 - validators для первых write use cases;
 - unit-тесты orchestration для создания сделки;
@@ -72,4 +74,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - усилить trade processing: optimistic concurrency retry для позиции, structured logs и публикация `PositionChangedEvent` в будущий event pipeline.
+Следующий технический шаг - развить internal event pipeline и подготовить Risk Engine consumer для `PositionChangedEvent`.

@@ -16,7 +16,7 @@
 | 12. Проектируем схему БД и миграции | Initial migration создана | `chapter-12-database-schema` | Выполнено |
 | 13. Реализуем clients, accounts и instruments | Базовые use cases работают | `chapter-13-reference-data-api` | Выполнено |
 | 14. Реализуем обработку сделок | `POST /api/trades` работает | `chapter-14-trade-processing` | Выполнено |
-| 15. Обновляем позиции транзакционно | Trade + position транзакция работает | `chapter-15-positions-transaction` | Не начато |
+| 15. Обновляем позиции транзакционно | Trade + position транзакция работает | `chapter-15-positions-transaction` | Выполнено |
 | 16. Добавляем REST API и Swagger | Swagger показывает основные endpoints | `chapter-16-api-swagger` | Не начато |
 | 17. Пишем integration tests через Testcontainers | Первый PostgreSQL integration test проходит | `chapter-17-integration-tests` | Не начато |
 | 18. Проектируем internal event pipeline | Event contracts и channel abstractions готовы | `chapter-18-event-pipeline` | Не начато |

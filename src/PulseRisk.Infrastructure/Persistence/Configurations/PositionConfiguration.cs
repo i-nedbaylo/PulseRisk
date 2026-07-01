@@ -16,6 +16,9 @@ internal sealed class PositionConfiguration : IEntityTypeConfiguration<Position>
         builder.Property(position => position.Id)
             .ValueGeneratedNever();
 
+        builder.Property<uint>("xmin")
+            .IsRowVersion();
+
         builder.Property(position => position.Symbol)
             .HasConversion(ValueObjectConverters.Symbol)
             .HasMaxLength(32)

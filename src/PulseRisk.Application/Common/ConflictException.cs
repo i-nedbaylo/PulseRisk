@@ -1,4 +1,14 @@
 namespace PulseRisk.Application.Common;
 
-public sealed class ConflictException(string message) : Exception(message);
+public class ConflictException : Exception
+{
+    public ConflictException(string message)
+        : base(message)
+    {
+    }
 
+    public ConflictException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+}

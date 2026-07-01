@@ -1,5 +1,7 @@
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using PulseRisk.Application.Common;
+using PulseRisk.Application.Events;
 using PulseRisk.Application.Repositories;
 using PulseRisk.Application.Trades;
 using PulseRisk.Domain.Entities;
@@ -21,13 +23,15 @@ public sealed class CreateTradeHandlerTests
         var unitOfWork = new FakeUnitOfWork();
         var trades = new FakeTradeRepository();
         var positions = new FakePositionRepository();
+        var events = new FakeEventWriter<PositionChangedEvent>();
         var handler = CreateHandler(
             new FakeClientRepository(new Client(clientId, "Acme Capital", ClientStatus.Active, Now)),
             new FakeTradingAccountRepository(CreateAccount(accountId, clientId)),
             new FakeInstrumentRepository(CreateInstrument(symbol, isActive: true)),
             trades,
             positions,
-            unitOfWork);
+            unitOfWork,
+            events);
 
         var result = await handler.HandleAsync(
             new CreateTradeCommand(clientId, accountId, symbol.Value, TradeSide.Buy, Volume: 2, OpenPrice: 1.25m),
@@ -42,6 +46,10 @@ public sealed class CreateTradeHandlerTests
         positions.Items.Single().AveragePrice.Should().Be(1.25m);
         positions.Items.Single().UpdatedAt.Should().Be(Now);
         unitOfWork.SaveChangesCallCount.Should().Be(1);
+        events.Items.Should().ContainSingle();
+        events.Items.Single().TradeId.Should().Be(result.Id);
+        events.Items.Single().PositionId.Should().Be(positions.Items.Single().Id);
+        events.Items.Single().NetVolume.Should().Be(2);
     }
 
     [Fact]
@@ -79,6 +87,61 @@ public sealed class CreateTradeHandlerTests
         existingPosition.AveragePrice.Should().Be(1.30m);
         trades.Items.Should().ContainSingle();
         unitOfWork.SaveChangesCallCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task HandleAsync_WhenConcurrencyConflictOccurs_ShouldClearChangesAndRetry()
+    {
+        var clientId = Guid.NewGuid();
+        var accountId = Guid.NewGuid();
+        var symbol = new Symbol("EURUSD");
+        var stalePosition = new Position(
+            Guid.NewGuid(),
+            clientId,
+            accountId,
+            symbol,
+            netVolume: 2,
+            averagePrice: 1.20m,
+            floatingPnL: 0,
+            updatedAt: Now);
+        var freshPosition = new Position(
+            Guid.NewGuid(),
+            clientId,
+            accountId,
+            symbol,
+            netVolume: 4,
+            averagePrice: 1.30m,
+            floatingPnL: 0,
+            updatedAt: Now);
+        var unitOfWork = new FakeUnitOfWork
+        {
+            ConcurrencyFailuresBeforeSuccess = 1
+        };
+        var trades = new FakeTradeRepository();
+        var positions = new FakePositionRepository();
+        positions.EnqueueGetResults(stalePosition, freshPosition);
+        unitOfWork.OnClearChanges = trades.Clear;
+        var events = new FakeEventWriter<PositionChangedEvent>();
+        var handler = CreateHandler(
+            new FakeClientRepository(new Client(clientId, "Acme Capital", ClientStatus.Active, Now)),
+            new FakeTradingAccountRepository(CreateAccount(accountId, clientId)),
+            new FakeInstrumentRepository(CreateInstrument(symbol, isActive: true)),
+            trades,
+            positions,
+            unitOfWork,
+            events);
+
+        await handler.HandleAsync(
+            new CreateTradeCommand(clientId, accountId, symbol.Value, TradeSide.Buy, Volume: 1, OpenPrice: 1.50m),
+            CancellationToken.None);
+
+        unitOfWork.SaveChangesCallCount.Should().Be(2);
+        unitOfWork.ClearChangesCallCount.Should().Be(1);
+        trades.Items.Should().ContainSingle();
+        freshPosition.NetVolume.Should().Be(5);
+        freshPosition.AveragePrice.Should().Be(1.34m);
+        events.Items.Should().ContainSingle();
+        events.Items.Single().PositionId.Should().Be(freshPosition.Id);
     }
 
     [Fact]
@@ -141,7 +204,8 @@ public sealed class CreateTradeHandlerTests
         IInstrumentRepository instruments,
         FakeTradeRepository trades,
         FakePositionRepository positions,
-        FakeUnitOfWork unitOfWork)
+        FakeUnitOfWork unitOfWork,
+        FakeEventWriter<PositionChangedEvent>? events = null)
     {
         return new CreateTradeHandler(
             new CreateTradeValidator(),
@@ -151,7 +215,9 @@ public sealed class CreateTradeHandlerTests
             trades,
             positions,
             unitOfWork,
-            new FixedTimeProvider(Now));
+            new FixedTimeProvider(Now),
+            events ?? new FakeEventWriter<PositionChangedEvent>(),
+            NullLogger<CreateTradeHandler>.Instance);
     }
 
     private static TradingAccount CreateAccount(Guid accountId, Guid clientId)
@@ -181,11 +247,30 @@ public sealed class CreateTradeHandlerTests
     {
         public int SaveChangesCallCount { get; private set; }
 
+        public int ClearChangesCallCount { get; private set; }
+
+        public int ConcurrencyFailuresBeforeSuccess { get; init; }
+
+        public Action? OnClearChanges { get; set; }
+
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             SaveChangesCallCount++;
 
+            if (SaveChangesCallCount <= ConcurrencyFailuresBeforeSuccess)
+            {
+                throw new ConcurrencyConflictException(
+                    "Test concurrency conflict.",
+                    new InvalidOperationException("Simulated conflict."));
+            }
+
             return Task.FromResult(1);
+        }
+
+        public void ClearChanges()
+        {
+            ClearChangesCallCount++;
+            OnClearChanges?.Invoke();
         }
     }
 
@@ -283,11 +368,26 @@ public sealed class CreateTradeHandlerTests
         {
             return Task.FromResult(Items.FirstOrDefault(trade => trade.Id == id));
         }
+
+        public void Clear()
+        {
+            Items.Clear();
+        }
     }
 
     private sealed class FakePositionRepository(params Position[] positions) : IPositionRepository
     {
+        private readonly Queue<Position?> _getResults = new();
+
         public List<Position> Items { get; } = [.. positions];
+
+        public void EnqueueGetResults(params Position?[] results)
+        {
+            foreach (var result in results)
+            {
+                _getResults.Enqueue(result);
+            }
+        }
 
         public Task AddAsync(Position position, CancellationToken cancellationToken)
         {
@@ -301,10 +401,27 @@ public sealed class CreateTradeHandlerTests
             Symbol symbol,
             CancellationToken cancellationToken)
         {
+            if (_getResults.Count > 0)
+            {
+                return Task.FromResult(_getResults.Dequeue());
+            }
+
             var position = Items.FirstOrDefault(candidate =>
                 candidate.TradingAccountId == tradingAccountId && candidate.Symbol == symbol);
 
             return Task.FromResult(position);
+        }
+    }
+
+    private sealed class FakeEventWriter<TEvent> : IEventWriter<TEvent>
+    {
+        public List<TEvent> Items { get; } = [];
+
+        public ValueTask WriteAsync(TEvent message, CancellationToken cancellationToken)
+        {
+            Items.Add(message);
+
+            return ValueTask.CompletedTask;
         }
     }
 }
