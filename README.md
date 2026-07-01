@@ -15,7 +15,9 @@
 - базовые зависимости для EF Core/PostgreSQL, Dapper, FluentValidation, Serilog, Testcontainers и BenchmarkDotNet;
 - health endpoint `GET /api/health`;
 - доменный слой: enums, value objects, entities, `PositionCalculator`, `PnLCalculator`;
+- инфраструктурный слой: `PulseRiskDbContext`, EF Core mappings, PostgreSQL migration, seed instruments/risk rules;
 - первые smoke-тесты и unit-тесты доменной логики;
+- mapping integration tests для EF-модели;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -30,6 +32,18 @@ dotnet build PulseRisk.slnx
 
 ```bash
 dotnet test PulseRisk.slnx
+```
+
+Восстановить локальные .NET tools:
+
+```bash
+dotnet tool restore
+```
+
+Создать или обновить локальную PostgreSQL-схему после запуска БД:
+
+```bash
+dotnet dotnet-ef database update --project src/PulseRisk.Infrastructure --startup-project src/PulseRisk.Api
 ```
 
 Запустить API локально:
@@ -54,4 +68,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - подключение PostgreSQL/EF Core: `DbContext`, mappings, миграции и схема БД.
+Следующий технический шаг - application/use-case слой для clients, accounts и instruments.

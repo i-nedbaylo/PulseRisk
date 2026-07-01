@@ -98,35 +98,35 @@
 
 ## 4. Infrastructure: PostgreSQL и EF Core
 
-- [ ] Создать `PulseRiskDbContext`.
-- [ ] Настроить mappings через `IEntityTypeConfiguration<T>`.
-- [ ] Настроить snake_case naming convention.
-- [ ] Настроить precision для денежных и ценовых полей.
-- [ ] Настроить enum conversion.
+- [x] Создать `PulseRiskDbContext`.
+- [x] Настроить mappings через `IEntityTypeConfiguration<T>`.
+- [x] Настроить snake_case naming convention.
+- [x] Настроить precision для денежных и ценовых полей.
+- [x] Настроить enum conversion.
 - [ ] Настроить `xmin`/concurrency token для `Position`, если выбран optimistic concurrency.
-- [ ] Создать initial migration.
-- [ ] Создать таблицу `clients`.
-- [ ] Создать таблицу `trading_accounts`.
-- [ ] Создать таблицу `instruments`.
-- [ ] Создать таблицу `trades`.
-- [ ] Создать таблицу `positions`.
-- [ ] Создать таблицу `quotes`.
-- [ ] Создать таблицу `risk_rules`.
-- [ ] Создать таблицу `risk_alerts`.
-- [ ] Добавить обязательные индексы:
-  - [ ] `trades(client_id, created_at DESC)`;
-  - [ ] `trades(symbol, created_at DESC)`;
-  - [ ] `positions(client_id, symbol)`;
-  - [ ] unique `positions(trading_account_id, symbol)`;
-  - [ ] `quotes(symbol, timestamp DESC)`;
-  - [ ] `risk_alerts(client_id, created_at DESC)`;
-  - [ ] `risk_alerts(severity, created_at DESC)`.
-- [ ] Добавить partial index для активных алертов.
-- [ ] Добавить seed базовых инструментов:
-  - [ ] `EURUSD`;
-  - [ ] `GBPUSD`;
-  - [ ] `XAUUSD`.
-- [ ] Добавить seed базовых risk rules.
+- [x] Создать initial migration.
+- [x] Создать таблицу `clients`.
+- [x] Создать таблицу `trading_accounts`.
+- [x] Создать таблицу `instruments`.
+- [x] Создать таблицу `trades`.
+- [x] Создать таблицу `positions`.
+- [x] Создать таблицу `quotes`.
+- [x] Создать таблицу `risk_rules`.
+- [x] Создать таблицу `risk_alerts`.
+- [x] Добавить обязательные индексы:
+  - [x] `trades(client_id, created_at DESC)`;
+  - [x] `trades(symbol, created_at DESC)`;
+  - [x] `positions(client_id, symbol)`;
+  - [x] unique `positions(trading_account_id, symbol)`;
+  - [x] `quotes(symbol, timestamp DESC)`;
+  - [x] `risk_alerts(client_id, created_at DESC)`;
+  - [x] `risk_alerts(severity, created_at DESC)`.
+- [x] Добавить partial index для активных алертов.
+- [x] Добавить seed базовых инструментов:
+  - [x] `EURUSD`;
+  - [x] `GBPUSD`;
+  - [x] `XAUUSD`.
+- [x] Добавить seed базовых risk rules.
 
 ## 5. Infrastructure: repositories и query objects
 

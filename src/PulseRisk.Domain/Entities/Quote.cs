@@ -4,6 +4,10 @@ namespace PulseRisk.Domain.Entities;
 
 public sealed class Quote
 {
+    private Quote()
+    {
+    }
+
     public Quote(Guid id, Symbol symbol, Price bid, Price ask, DateTimeOffset timestamp)
     {
         if (id == Guid.Empty)
@@ -23,14 +27,13 @@ public sealed class Quote
         Timestamp = timestamp;
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
 
-    public Symbol Symbol { get; }
+    public Symbol Symbol { get; private set; }
 
-    public Price Bid { get; }
+    public Price Bid { get; private set; }
 
-    public Price Ask { get; }
+    public Price Ask { get; private set; }
 
-    public DateTimeOffset Timestamp { get; }
+    public DateTimeOffset Timestamp { get; private set; }
 }
-

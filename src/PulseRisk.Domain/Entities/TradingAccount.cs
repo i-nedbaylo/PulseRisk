@@ -6,6 +6,10 @@ namespace PulseRisk.Domain.Entities;
 
 public sealed class TradingAccount
 {
+    private TradingAccount()
+    {
+    }
+
     public TradingAccount(
         Guid id,
         Guid clientId,
@@ -23,22 +27,23 @@ public sealed class TradingAccount
 
         Id = id;
         ClientId = clientId;
-        Balance = balance;
+        Balance = balance.Amount;
+        Currency = balance.Currency;
         Leverage = leverage;
         CreatedAt = createdAt;
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
 
-    public Guid ClientId { get; }
+    public Guid ClientId { get; private set; }
 
-    public Money Balance { get; private set; }
+    public decimal Balance { get; private set; }
 
-    public CurrencyCode Currency => Balance.Currency;
+    public CurrencyCode Currency { get; private set; }
 
-    public decimal Leverage { get; }
+    public decimal Leverage { get; private set; }
 
-    public DateTimeOffset CreatedAt { get; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     public void UpdateBalance(Money balance)
     {
@@ -47,7 +52,6 @@ public sealed class TradingAccount
             throw new InvalidOperationException("Trading account currency cannot be changed.");
         }
 
-        Balance = balance;
+        Balance = balance.Amount;
     }
 }
-

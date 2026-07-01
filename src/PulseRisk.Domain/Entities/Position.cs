@@ -6,6 +6,10 @@ namespace PulseRisk.Domain.Entities;
 
 public sealed class Position
 {
+    private Position()
+    {
+    }
+
     public Position(
         Guid id,
         Guid clientId,
@@ -40,13 +44,13 @@ public sealed class Position
         UpdatedAt = updatedAt;
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
 
-    public Guid ClientId { get; }
+    public Guid ClientId { get; private set; }
 
-    public Guid TradingAccountId { get; }
+    public Guid TradingAccountId { get; private set; }
 
-    public Symbol Symbol { get; }
+    public Symbol Symbol { get; private set; }
 
     public decimal NetVolume { get; private set; }
 
@@ -91,4 +95,3 @@ public sealed class Position
         UpdatedAt = updatedAt;
     }
 }
-

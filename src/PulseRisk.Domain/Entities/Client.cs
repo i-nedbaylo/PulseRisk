@@ -5,6 +5,11 @@ namespace PulseRisk.Domain.Entities;
 
 public sealed class Client
 {
+    private Client()
+    {
+        Name = string.Empty;
+    }
+
     public Client(Guid id, string name, ClientStatus status, DateTimeOffset createdAt)
     {
         DomainValidation.EnsureNotEmpty(id, nameof(id));
@@ -15,13 +20,13 @@ public sealed class Client
         CreatedAt = createdAt;
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
 
-    public string Name { get; }
+    public string Name { get; private set; }
 
     public ClientStatus Status { get; private set; }
 
-    public DateTimeOffset CreatedAt { get; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     public static Client Create(string name, DateTimeOffset createdAt)
     {
@@ -38,4 +43,3 @@ public sealed class Client
         Status = ClientStatus.Closed;
     }
 }
-

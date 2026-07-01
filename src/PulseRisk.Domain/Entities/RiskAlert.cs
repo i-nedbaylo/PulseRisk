@@ -6,6 +6,11 @@ namespace PulseRisk.Domain.Entities;
 
 public sealed class RiskAlert
 {
+    private RiskAlert()
+    {
+        Message = string.Empty;
+    }
+
     public RiskAlert(
         Guid id,
         Guid clientId,
@@ -32,21 +37,21 @@ public sealed class RiskAlert
         ResolvedAt = resolvedAt;
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
 
-    public Guid ClientId { get; }
+    public Guid ClientId { get; private set; }
 
-    public Guid TradingAccountId { get; }
+    public Guid TradingAccountId { get; private set; }
 
-    public Symbol Symbol { get; }
+    public Symbol Symbol { get; private set; }
 
-    public RiskAlertType AlertType { get; }
+    public RiskAlertType AlertType { get; private set; }
 
-    public RiskSeverity Severity { get; }
+    public RiskSeverity Severity { get; private set; }
 
-    public string Message { get; }
+    public string Message { get; private set; }
 
-    public DateTimeOffset CreatedAt { get; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     public DateTimeOffset? ResolvedAt { get; private set; }
 
@@ -62,4 +67,3 @@ public sealed class RiskAlert
         ResolvedAt = resolvedAt;
     }
 }
-

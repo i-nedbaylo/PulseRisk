@@ -5,6 +5,11 @@ namespace PulseRisk.Domain.Entities;
 
 public sealed class RiskRule
 {
+    private RiskRule()
+    {
+        Name = string.Empty;
+    }
+
     public RiskRule(
         Guid id,
         string name,
@@ -23,11 +28,11 @@ public sealed class RiskRule
         IsEnabled = isEnabled;
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
 
-    public string Name { get; }
+    public string Name { get; private set; }
 
-    public RiskRuleType RuleType { get; }
+    public RiskRuleType RuleType { get; private set; }
 
     public decimal ThresholdValue { get; private set; }
 
@@ -50,4 +55,3 @@ public sealed class RiskRule
         IsEnabled = false;
     }
 }
-

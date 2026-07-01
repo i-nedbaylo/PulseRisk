@@ -5,6 +5,12 @@ namespace PulseRisk.Domain.Entities;
 
 public sealed class Instrument
 {
+    private Instrument()
+    {
+        BaseAsset = string.Empty;
+        QuoteAsset = string.Empty;
+    }
+
     public Instrument(
         Symbol symbol,
         string baseAsset,
@@ -31,15 +37,15 @@ public sealed class Instrument
         IsActive = isActive;
     }
 
-    public Symbol Symbol { get; }
+    public Symbol Symbol { get; private set; }
 
-    public string BaseAsset { get; }
+    public string BaseAsset { get; private set; }
 
-    public string QuoteAsset { get; }
+    public string QuoteAsset { get; private set; }
 
-    public int Digits { get; }
+    public int Digits { get; private set; }
 
-    public decimal ContractSize { get; }
+    public decimal ContractSize { get; private set; }
 
     public bool IsActive { get; private set; }
 
@@ -53,4 +59,3 @@ public sealed class Instrument
         IsActive = false;
     }
 }
-

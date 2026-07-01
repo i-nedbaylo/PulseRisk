@@ -12,8 +12,8 @@
 | 8. Проектируем доменную модель | Модель описана перед реализацией | `chapter-08-domain-design` | Выполнено |
 | 9. Реализуем value objects и entities | Domain entities/value objects добавлены | `chapter-09-domain-model` | Выполнено |
 | 10. Пишем первые unit-тесты домена | Первые unit-тесты проходят | `chapter-10-domain-tests` | Выполнено |
-| 11. Подключаем PostgreSQL и EF Core | DbContext и PostgreSQL зависимости добавлены | `chapter-11-postgresql-efcore` | Не начато |
-| 12. Проектируем схему БД и миграции | Initial migration создана | `chapter-12-database-schema` | Не начато |
+| 11. Подключаем PostgreSQL и EF Core | DbContext и PostgreSQL зависимости добавлены | `chapter-11-postgresql-efcore` | Выполнено |
+| 12. Проектируем схему БД и миграции | Initial migration создана | `chapter-12-database-schema` | Выполнено |
 | 13. Реализуем clients, accounts и instruments | Базовые use cases работают | `chapter-13-reference-data-api` | Не начато |
 | 14. Реализуем обработку сделок | `POST /api/trades` работает | `chapter-14-trade-processing` | Не начато |
 | 15. Обновляем позиции транзакционно | Trade + position транзакция работает | `chapter-15-positions-transaction` | Не начато |

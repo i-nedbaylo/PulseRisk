@@ -6,6 +6,10 @@ namespace PulseRisk.Domain.Entities;
 
 public sealed class Trade
 {
+    private Trade()
+    {
+    }
+
     public Trade(
         Guid id,
         Guid clientId,
@@ -30,21 +34,21 @@ public sealed class Trade
         CreatedAt = createdAt;
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
 
-    public Guid ClientId { get; }
+    public Guid ClientId { get; private set; }
 
-    public Guid TradingAccountId { get; }
+    public Guid TradingAccountId { get; private set; }
 
-    public Symbol Symbol { get; }
+    public Symbol Symbol { get; private set; }
 
-    public TradeSide Side { get; }
+    public TradeSide Side { get; private set; }
 
-    public Volume Volume { get; }
+    public Volume Volume { get; private set; }
 
-    public Price OpenPrice { get; }
+    public Price OpenPrice { get; private set; }
 
-    public DateTimeOffset CreatedAt { get; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     public static Trade Create(
         Guid clientId,
@@ -66,4 +70,3 @@ public sealed class Trade
             createdAt);
     }
 }
-
