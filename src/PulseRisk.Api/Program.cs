@@ -1,4 +1,5 @@
 using PulseRisk.Api.ErrorHandling;
+using PulseRisk.Api.OpenApi;
 using PulseRisk.Application;
 using PulseRisk.BackgroundWorkers;
 using PulseRisk.Infrastructure;
@@ -15,8 +16,7 @@ builder.Host.UseSerilog((context, services, configuration) =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddPulseRiskSwagger();
 
 builder.Services
     .AddPulseRiskApplication()
@@ -27,8 +27,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UsePulseRiskSwagger();
 }
 
 app.UseSerilogRequestLogging();

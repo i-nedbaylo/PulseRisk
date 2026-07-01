@@ -390,6 +390,14 @@ REST API должен быть тонким слоем над application use ca
 
 Swagger/OpenAPI обязателен. Валидацию входных DTO можно делать через FluentValidation, а доменные инварианты оставлять в value objects/entities.
 
+Текущая Swagger-конфигурация вынесена в `AddPulseRiskSwagger()` и `UsePulseRiskSwagger()`: API-документ имеет версию `v1`, смысловые теги `Clients`, `Accounts`, `Instruments`, `Trades`, `Health`, краткие summary/description для операций, request examples для write-сценариев и типовые `ProblemDetails` responses.
+
+Паттерны здесь применяются без выделения отдельного framework:
+
+- **Template Method**: Swashbuckle вызывает `IOperationFilter`/`IDocumentFilter`, а проект заполняет только свою часть OpenAPI-документа.
+- **Indirection**: `SwaggerServiceCollectionExtensions` отделяет composition root от деталей OpenAPI.
+- **Protected Variations**: контроллеры не знают о конкретном формате Swagger examples; изменение документации не меняет HTTP actions.
+
 Ошибки возвращаются через `ProblemDetails`:
 
 - `400` - validation error;

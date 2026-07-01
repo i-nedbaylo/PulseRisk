@@ -22,6 +22,7 @@
 - configurable in-process bounded channels для quote/risk events;
 - backpressure diagnostics: depth, written/read/dropped counters и graceful completion каналов;
 - background worker, который превращает `PositionChangedEvent` в `RiskEvaluationRequested`;
+- Swagger/OpenAPI с группами endpoints, описаниями операций, request examples и ProblemDetails-ответами;
 - первые smoke-тесты и unit-тесты доменной логики;
 - validators для первых write use cases;
 - unit-тесты orchestration для создания сделки;
@@ -77,4 +78,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - вернуться к API-документации: сгруппировать Swagger endpoints, добавить примеры запросов и описать текущие HTTP-сценарии в книге.
+Следующий технический шаг - перейти к Market Data Simulator: генерация котировок, настройка частоты и подготовка quote pipeline к batch writer.

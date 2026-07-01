@@ -248,8 +248,8 @@
 
 - [x] Настроить global exception handling.
 - [x] Настроить `ProblemDetails`.
-- [ ] Настроить request logging.
-- [ ] Настроить Swagger groups/tags.
+- [x] Настроить request logging.
+- [x] Настроить Swagger groups/tags.
 - [x] Реализовать `POST /api/clients`.
 - [x] Реализовать `GET /api/clients`.
 - [x] Реализовать `GET /api/clients/{id}`.
@@ -272,7 +272,7 @@
 - [ ] Реализовать `POST /api/simulator/market/stop`.
 - [ ] Реализовать `POST /api/simulator/load-test/start`.
 - [ ] Реализовать `GET /api/simulator/status`.
-- [ ] Добавить примеры запросов в Swagger.
+- [x] Добавить примеры запросов в Swagger.
 
 ## 12. Load-test scenario
 
