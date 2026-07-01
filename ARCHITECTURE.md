@@ -549,7 +549,71 @@ http://localhost:5000/swagger
 | Batch insert quotes | Ключевая оптимизация для highload-режима |
 | Structured logging | Диагностика продакшен-подобного backend'а |
 
-## 17. Что проект покажет на интервью
+## 17. GoF, GRASP и границы применения паттернов
+
+Вакансия IndigoSoft требует глубокого понимания GoF/GRASP и умения применять паттерны без overengineering. Поэтому в PulseRisk паттерн считается оправданным только если он решает одну из практических проблем:
+
+- снижает связность между слоями;
+- повышает тестируемость бизнес-логики;
+- изолирует изменяемую часть системы;
+- устраняет дублирование алгоритмов или правил;
+- делает транзакционную или конкурентную границу явной;
+- помогает объяснить решение на code review или интервью.
+
+Если паттерн не дает одного из этих эффектов, он не вводится.
+
+### 17.1. GRASP
+
+| GRASP-паттерн | Где применяется | Какую проблему решает | Почему это не overengineering |
+| --- | --- | --- | --- |
+| **Information Expert** | `Position`, `PositionCalculator`, `PnLCalculator`, risk metric calculations | Формулы позиции, PnL и exposure не должны расползаться по controllers, EF mappings и workers | Бизнес-логика тестируется без БД и находится рядом с данными, которые нужны для расчета |
+| **Creator** | Методы/фабрики создания `Trade`, `Position`, `RiskAlert` | Объекты должны создаваться в валидном состоянии, с обязательными полями и инвариантами | Создание централизовано, но без сложных иерархий factory classes |
+| **Controller** | API controllers и application handlers | HTTP endpoint не должен сам выполнять бизнес-сценарий | Controllers остаются тонкими, а orchestration находится в Application layer |
+| **Low Coupling** | Направление зависимостей `Api -> Application -> Domain`, Infrastructure реализует порты | Домен нельзя связывать с PostgreSQL, ASP.NET Core или hosted services | Это позволяет тестировать домен отдельно и заменить инфраструктурную реализацию |
+| **High Cohesion** | Отдельные модули для trade processing, positions, risk, simulator, persistence | Один "большой сервис" быстро стал бы точкой изменения для всего проекта | Каждый модуль имеет понятную ответственность и причину изменения |
+| **Polymorphism** | `IRiskRuleStrategy` и реализации риск-правил | Новые risk rules не должны добавлять ветки в большой `switch` | Вариативность правил задана предметной областью, а не придумана ради паттерна |
+| **Pure Fabrication** | Application handlers, repositories, query objects, calculators | Не все обязанности естественно принадлежат доменным сущностям | Эти классы уменьшают связность и делают код тестируемым |
+| **Indirection** | `IEventWriter<T>`, `IEventReader<T>`, repositories, query objects | Producer котировок не должен зависеть от конкретного consumer, Application не должен знать SQL details | Посредники изолируют скорость обработки и инфраструктурные детали |
+| **Protected Variations** | Ports, strategies, options, channel full-mode policies | Изменяемые места системы не должны ломать стабильный код | Абстракции ставятся только на границах ожидаемой изменчивости |
+
+### 17.2. GoF
+
+| GoF-паттерн | Где применяется | Какую проблему решает | Ограничение применения |
+| --- | --- | --- | --- |
+| **Strategy** | Risk rules: `MaxExposure`, `MaxLoss`, `MarginLevel`, `PriceSpike`, `HighFrequencyActivity` | Разные алгоритмы проверки лимитов должны расширяться и тестироваться независимо | Это основной GoF-паттерн проекта; он используется только для реальной алгоритмической вариативности |
+| **Factory Method / Simple Factory** | `RiskAlertFactory`, future event factories | Создание alert/event должно быть единообразным, валидным и не размазанным по Risk Engine | Если нет полиморфной фабричной иерархии, реализация честно называется Simple Factory, а не GoF Factory Method |
+| **Template Method** | `BackgroundService.ExecuteAsync` в workers | Фреймворк задает жизненный цикл worker'а, проект реализует конкретный алгоритм обработки | Это framework-level применение; собственные template base classes не вводятся без повторения |
+| **Adapter** | Infrastructure implementations для application ports, PostgreSQL/Dapper adapters | Application работает с контрактами, а внешняя технология подключается снаружи | Adapter появляется только на инфраструктурной границе |
+| **Command** | `CreateTradeCommand`, `CreateClientCommand` и handlers | Use case получает явный входной объект и отдельную orchestration-точку | Не реализуются undo/redo, command queue и сложный dispatcher, пока они не нужны |
+| **Decorator** | Потенциальный logging/retry/validation pipeline вокруг handlers | Cross-cutting behavior не должен копироваться в каждый handler | Вводится только после появления повторяющегося поведения |
+
+### 17.3. Enterprise patterns
+
+Не все важные backend-подходы являются GoF. В PulseRisk отдельно применяются enterprise/application patterns:
+
+| Паттерн | Где применяется | Зачем нужен |
+| --- | --- | --- |
+| **Repository** | Сохранение и загрузка агрегатов | Скрыть persistence details от Application layer |
+| **Query Object** | История сделок, активные алерты, последние котировки, risk metrics | Держать оптимизированный SQL рядом с конкретным read scenario |
+| **Unit of Work** | `DbContext` как транзакционная граница trade + position | Гарантировать атомарность критической операции |
+| **Options pattern** | Simulator rate, channel capacity, batch size, risk thresholds | Настраивать поведение без изменения кода |
+| **Producer-Consumer** | `Channel<T>` pipeline котировок и risk events | Развязать скорость генерации и обработки событий |
+| **Outbox** | Optional senior extension | Надежно публиковать события после commit |
+
+### 17.4. Анти-overengineering правила
+
+В проекте намеренно не вводятся:
+
+- **Abstract Factory**, пока нет семейства взаимозаменяемых продуктов;
+- **Visitor**, потому что risk rules проще выразить стратегиями;
+- **State**, пока жизненный цикл сделок и алертов прост;
+- **Chain of Responsibility** для risk rules, потому что правила должны оцениваться независимо, а не останавливаться цепочкой;
+- внешний **Mediator**, пока прямые handlers и DI достаточно понятны;
+- микросервисные паттерны, пока модульный монолит лучше показывает транзакции и домен.
+
+Каждое новое применение паттерна должно быть отражено в книге в формате: место применения, решаемая проблема, альтернатива, причина отказа от более простого решения и способ проверки.
+
+## 18. Что проект покажет на интервью
 
 PulseRisk должен позволить уверенно обсудить:
 
@@ -565,7 +629,7 @@ PulseRisk должен позволить уверенно обсудить:
 - как unit-тестировать бизнес-логику без БД;
 - как расширить проект до распределенной системы.
 
-## 18. Возможная эволюция
+## 19. Возможная эволюция
 
 После базовой версии можно добавить senior-level возможности:
 

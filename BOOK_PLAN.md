@@ -102,7 +102,36 @@
 - обещаний production-grade trading platform;
 - имитации реального брокера или реальной торговли.
 
-## 5. Артефакты книги
+## 5. Сквозная линия GoF/GRASP
+
+Книга должна явно показывать, что паттерны проектирования выбираются по проблеме, а не по желанию "использовать побольше паттернов".
+
+Для каждого примененного паттерна нужно объяснять:
+
+- **где** он находится в коде;
+- **какую проблему** он решает;
+- **что было бы без него**;
+- **почему он не является overengineering**;
+- **какая альтернатива** была рассмотрена;
+- **как проверить**, что решение оправдано: тестом, dependency graph, benchmark, code review question или простотой добавления нового сценария.
+
+Отдельный рабочий файл книги: `book/patterns-gof-grasp.md`.
+
+Сквозная карта паттернов:
+
+| Главы | GoF/GRASP фокус | Проблема проекта |
+| --- | --- | --- |
+| 4-5 | GRASP Low Coupling, High Cohesion, Protected Variations | Разделить слои так, чтобы домен не зависел от API/PostgreSQL/workers |
+| 8-10 | GRASP Information Expert, Creator, Pure Fabrication | Поместить бизнес-формулы и создание объектов в понятные места |
+| 11-12 | Adapter, Repository, Query Object, Unit of Work | Изолировать PostgreSQL и явно показать транзакционные границы |
+| 13-17 | GRASP Controller, Command style | Не смешивать HTTP, orchestration и бизнес-правила |
+| 18-21 | Producer-Consumer, Indirection, Template Method через `BackgroundService` | Развязать producers/consumers и показать controlled concurrency |
+| 22-25 | GoF Strategy, GRASP Polymorphism, Simple Factory, Protected Variations | Расширять risk rules и создавать alerts без большого `switch` |
+| 28-30 | Query Object, Strategy for benchmark variants | Оптимизировать только измеренные bottleneck'и |
+
+Анти-overengineering правило: если паттерн не уменьшает связность, не повышает тестируемость, не защищает от ожидаемой изменчивости и не делает бизнес-правило яснее, он в проект не добавляется.
+
+## 6. Артефакты книги
 
 В идеале книга сопровождается репозиторием и тегами:
 
@@ -120,7 +149,7 @@
 
 Каждая глава должна заканчиваться состоянием репозитория, которое можно собрать или хотя бы проверить тестами. Если глава содержит промежуточную архитектурную работу без запуска приложения, это должно быть явно сказано.
 
-## 6. Общая структура книги
+## 7. Общая структура книги
 
 ### Часть I. От вакансии к проекту
 
@@ -191,7 +220,7 @@
 33. Пишем README и финальную документацию.
 34. Готовим проект к демонстрации на интервью.
 
-## 7. Подробный план глав
+## 8. Подробный план глав
 
 ### Глава 1. Зачем мы строим PulseRisk
 
@@ -272,6 +301,7 @@
 - layered architecture;
 - зависимости к домену;
 - границы модулей;
+- GRASP Low Coupling, High Cohesion и Protected Variations;
 - как проект можно эволюционировать.
 
 Практический результат:
@@ -351,6 +381,8 @@
 - чем `Trade` отличается от `Position`;
 - почему `Quote` может быть и исторической записью, и streaming event;
 - где хранить risk rules;
+- GRASP Information Expert: где должны жить формулы и инварианты;
+- GRASP Creator: кто отвечает за создание валидных доменных объектов;
 - какие инварианты принадлежат домену.
 
 Практический результат:
@@ -368,6 +400,7 @@
 - enums;
 - entities;
 - защита от некорректных состояний;
+- GRASP Creator и Information Expert в конструкторах, фабричных методах и доменных методах;
 - баланс между простотой и выразительностью.
 
 Проверка:
@@ -403,6 +436,7 @@
 - design-time factory;
 - migrations;
 - snake_case naming;
+- Adapter: Infrastructure подключает EF Core/PostgreSQL к application contracts;
 - precision decimal fields.
 
 Практический результат:
@@ -419,6 +453,8 @@
 - таблицы и связи;
 - индексы под реальные запросы;
 - уникальность позиции по account + symbol;
+- Unit of Work: `DbContext` как транзакционная граница;
+- Query Object: где ручной SQL лучше generic repository;
 - active alerts;
 - seed data.
 
@@ -436,6 +472,8 @@
 - commands и handlers;
 - validators;
 - repositories;
+- GRASP Controller: endpoint принимает HTTP, handler оркестрирует use case;
+- Command style: явные входные модели для use cases без сложного mediator на старте;
 - DTO;
 - ProblemDetails;
 - Swagger.
@@ -457,6 +495,7 @@
 - validation;
 - проверка клиента, счета, инструмента;
 - сохранение trade;
+- Unit of Work: сделка и позиция фиксируются атомарно;
 - публикация события после commit.
 
 Проверка:
@@ -477,6 +516,7 @@
 - переворот позиции;
 - транзакция trade + position;
 - optimistic concurrency;
+- Protected Variations: retry/concurrency policy изолируется от бизнес-формул;
 - retry policy.
 
 Проверка:
@@ -530,6 +570,7 @@
 - in-process events;
 - каналы для quote events и risk events;
 - contracts `IEventWriter<T>` и `IEventReader<T>`;
+- Indirection и Producer-Consumer: producer не знает конкретного consumer;
 - границы ответственности workers.
 
 Практический результат:
@@ -546,6 +587,7 @@
 - `Channel<T>`;
 - bounded capacity;
 - full modes: wait, drop oldest, drop write;
+- Strategy-like policy для поведения при переполнении очереди;
 - метрики dropped events;
 - graceful completion.
 
@@ -561,6 +603,7 @@
 Содержание:
 
 - `BackgroundService`;
+- Template Method: фреймворк задает жизненный цикл worker'а через `ExecuteAsync`;
 - генерация bid/ask;
 - нормальный режим;
 - high-load режим;
@@ -585,6 +628,7 @@
 - flush interval;
 - shutdown flush;
 - обработка ошибок;
+- High Cohesion: batch writer отвечает только за накопление и запись котировок;
 - Dapper или EF bulk strategy.
 
 Проверка:
@@ -602,6 +646,8 @@
 - что входит в `RiskEvaluationContext`;
 - что такое `RiskMetricSnapshot`;
 - где брать latest quote;
+- GRASP Information Expert: какие данные нужны Risk Engine для расчета;
+- Protected Variations: risk evaluation не должен зависеть от конкретного источника котировок;
 - как не пересчитывать лишнее.
 
 Практический результат:
@@ -622,6 +668,7 @@
 - `MarginLevelWarningRuleStrategy`;
 - `PriceSpikeDetectionRuleStrategy`;
 - `HighFrequencyTradingActivityRuleStrategy`;
+- GRASP Polymorphism: новые правила добавляются новой реализацией, а не веткой `switch`;
 - почему это не overengineering.
 
 Проверка:
@@ -636,6 +683,7 @@
 Содержание:
 
 - `RiskAlertFactory`;
+- Simple Factory / Creator: alert создается единообразно и валидно;
 - severity;
 - alert message;
 - active alert;
@@ -657,6 +705,7 @@
 - перерасчет floating PnL при новой цене;
 - latest quote cache;
 - sampling;
+- Protected Variations: источник latest quote можно заменить кешем/Redis/read model;
 - trade-driven vs quote-driven evaluation;
 - логирование длительных расчетов.
 
@@ -712,6 +761,7 @@
 - запрос активных алертов;
 - индексы до/после;
 - `AsNoTracking`;
+- Query Object: read paths оптимизируются под конкретные запросы;
 - Dapper для read paths.
 
 Практический результат:
@@ -838,7 +888,7 @@
 - список expected questions/answers;
 - финальный чек-лист приемки.
 
-## 8. План написания книги по этапам
+## 9. План написания книги по этапам
 
 ### Этап 1. Подготовка материала
 
@@ -925,7 +975,7 @@
 - [ ] Добавить appendix с командами.
 - [ ] Добавить appendix с вопросами для интервью.
 
-## 9. Шаблон главы
+## 10. Шаблон главы
 
 Каждую главу удобно начинать с такого каркаса:
 
@@ -963,7 +1013,7 @@
 ## Чек-лист главы
 ```
 
-## 10. Правила синхронизации книги и кода
+## 11. Правила синхронизации книги и кода
 
 - Каждая глава должна соответствовать конкретному состоянию репозитория.
 - Код из книги должен компилироваться в том виде, в котором он показан.
@@ -974,7 +1024,7 @@
 - Если глава добавляет архитектурное решение, оно должно попасть в `ARCHITECTURE.md`.
 - Если глава добавляет пользовательский сценарий, он должен попасть в README.
 
-## 11. План итоговых приложений
+## 12. План итоговых приложений
 
 В конце книги стоит добавить приложения:
 
@@ -986,7 +1036,7 @@
 - **Приложение F. Interview guide** - вопросы и ответы по проекту.
 - **Приложение G. Что улучшить после книги** - SignalR, Redis, outbox, metrics, CQRS, отдельные workers.
 
-## 12. Критерии готовности книги
+## 13. Критерии готовности книги
 
 Книга считается готовой, если:
 
@@ -1003,7 +1053,7 @@
 - [ ] в книге есть честный раздел про ограничения и будущие улучшения;
 - [ ] по книге можно подготовиться к техническому интервью.
 
-## 13. Рекомендуемый порядок фактической работы
+## 14. Рекомендуемый порядок фактической работы
 
 Оптимальный режим: писать книгу короткими итерациями вместе с кодом.
 
