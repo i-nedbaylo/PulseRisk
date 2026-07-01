@@ -26,6 +26,7 @@
 - validators для первых write use cases;
 - unit-тесты orchestration для создания сделки;
 - mapping integration tests для EF-модели;
+- Testcontainers-сценарий `client -> account -> trade -> position` на настоящей PostgreSQL, который автоматически пропускается, если Docker Engine недоступен;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -76,4 +77,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - перейти к Testcontainers-сценарию client -> account -> trade -> position и проверить trade processing на настоящей PostgreSQL.
+Следующий технический шаг - вернуться к API-документации: сгруппировать Swagger endpoints, добавить примеры запросов и описать текущие HTTP-сценарии в книге.

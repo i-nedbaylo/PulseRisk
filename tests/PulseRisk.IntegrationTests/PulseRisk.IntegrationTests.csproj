@@ -16,6 +16,7 @@
     <PackageReference Include="Testcontainers.PostgreSql" Version="4.12.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PulseRisk.Api\PulseRisk.Api.csproj" />
+    <ProjectReference Include="..\..\src\PulseRisk.Application\PulseRisk.Application.csproj" />
     <ProjectReference Include="..\..\src\PulseRisk.Infrastructure\PulseRisk.Infrastructure.csproj" />
   </ItemGroup>
 

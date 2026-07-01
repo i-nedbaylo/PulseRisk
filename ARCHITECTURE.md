@@ -488,6 +488,15 @@ Integration-тесты:
 
 Интеграционные тесты запускаются через Testcontainers PostgreSQL. Бизнес-логика должна тестироваться без БД.
 
+Первый сквозной PostgreSQL-сценарий проверяет путь `client -> account -> trade -> position`: test host подменяет только `ConnectionStrings:PulseRisk`, применяет EF Core migrations к временной базе, выполняет HTTP-запросы через `HttpClient` и затем проверяет фактическое состояние `trades`/`positions` через `PulseRiskDbContext`. На локальной машине тест помечается как skipped, если Docker Engine недоступен; в CI Docker должен быть обязательной частью runner-а.
+
+Паттерны в тестовой инфраструктуре применяются точечно:
+
+- **Adapter**: `WebApplicationFactory` адаптирует ASP.NET Core приложение к тестовому `HttpClient`.
+- **Template Method**: `PulseRiskPostgresApplicationFactory.ConfigureWebHost` меняет только часть lifecycle test host-а.
+- **Protected Variations**: тест зависит от публичного HTTP API и persistence boundary, а не от внутренней реализации handler/repository.
+- **Indirection**: in-memory configuration отделяет тестовый connection string от production configuration.
+
 ## 14. CI/CD
 
 GitLab pipeline:
