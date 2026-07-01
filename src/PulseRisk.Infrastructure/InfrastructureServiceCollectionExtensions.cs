@@ -1,7 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using PulseRisk.Application.Common;
+using PulseRisk.Application.Repositories;
 using PulseRisk.Infrastructure.Persistence;
+using PulseRisk.Infrastructure.Persistence.Repositories;
 
 namespace PulseRisk.Infrastructure;
 
@@ -20,6 +23,11 @@ public static class InfrastructureServiceCollectionExtensions
                 .UseNpgsql(connectionString)
                 .UseSnakeCaseNamingConvention();
         });
+
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        services.AddScoped<IClientRepository, EfClientRepository>();
+        services.AddScoped<ITradingAccountRepository, EfTradingAccountRepository>();
+        services.AddScoped<IInstrumentRepository, EfInstrumentRepository>();
 
         return services;
     }

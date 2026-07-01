@@ -16,7 +16,9 @@
 - health endpoint `GET /api/health`;
 - доменный слой: enums, value objects, entities, `PositionCalculator`, `PnLCalculator`;
 - инфраструктурный слой: `PulseRiskDbContext`, EF Core mappings, PostgreSQL migration, seed instruments/risk rules;
+- application/API слой для clients, accounts и instruments;
 - первые smoke-тесты и unit-тесты доменной логики;
+- validators для первых write use cases;
 - mapping integration tests для EF-модели;
 - каркас книги в `book/`.
 
@@ -43,7 +45,7 @@ dotnet tool restore
 Создать или обновить локальную PostgreSQL-схему после запуска БД:
 
 ```bash
-dotnet dotnet-ef database update --project src/PulseRisk.Infrastructure --startup-project src/PulseRisk.Api
+dotnet ef database update --project src/PulseRisk.Infrastructure --startup-project src/PulseRisk.Api
 ```
 
 Запустить API локально:
@@ -68,4 +70,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - application/use-case слой для clients, accounts и instruments.
+Следующий технический шаг - trade processing: создание сделки, транзакционное обновление позиции и публикация события для будущего Risk Engine.

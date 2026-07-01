@@ -130,15 +130,15 @@
 
 ## 5. Infrastructure: repositories и query objects
 
-- [ ] Создать интерфейсы repositories в Application layer.
-- [ ] Реализовать `ClientRepository`.
-- [ ] Реализовать `TradingAccountRepository`.
-- [ ] Реализовать `InstrumentRepository`.
+- [x] Создать интерфейсы repositories в Application layer.
+- [x] Реализовать `ClientRepository`.
+- [x] Реализовать `TradingAccountRepository`.
+- [x] Реализовать `InstrumentRepository`.
 - [ ] Реализовать `TradeRepository`.
 - [ ] Реализовать `PositionRepository`.
 - [ ] Реализовать `RiskRuleRepository`.
 - [ ] Реализовать `RiskAlertRepository`.
-- [ ] Создать `IUnitOfWork` или использовать `DbContext` как unit of work за application boundary.
+- [x] Создать `IUnitOfWork` или использовать `DbContext` как unit of work за application boundary.
 - [ ] Создать query object `GetTradesQuery`.
 - [ ] Создать query object `GetPositionsQuery`.
 - [ ] Создать query object `GetRiskAlertsQuery`.
@@ -150,19 +150,19 @@
 
 ## 6. Application: clients, accounts, instruments
 
-- [ ] Реализовать `CreateClientCommand`.
-- [ ] Реализовать `CreateClientHandler`.
-- [ ] Реализовать `GetClientsQuery`.
-- [ ] Реализовать `GetClientByIdQuery`.
-- [ ] Реализовать `CreateTradingAccountCommand`.
-- [ ] Реализовать `CreateTradingAccountHandler`.
-- [ ] Реализовать `GetTradingAccountByIdQuery`.
-- [ ] Реализовать `GetClientAccountsQuery`.
-- [ ] Реализовать `CreateInstrumentCommand`.
-- [ ] Реализовать `CreateInstrumentHandler`.
-- [ ] Реализовать `GetInstrumentsQuery`.
-- [ ] Добавить FluentValidation validators.
-- [ ] Добавить unit-тесты validators для базовых ошибок.
+- [x] Реализовать `CreateClientCommand`.
+- [x] Реализовать `CreateClientHandler`.
+- [x] Реализовать `GetClientsQuery`.
+- [x] Реализовать `GetClientByIdQuery`.
+- [x] Реализовать `CreateTradingAccountCommand`.
+- [x] Реализовать `CreateTradingAccountHandler`.
+- [x] Реализовать `GetTradingAccountByIdQuery`.
+- [x] Реализовать `GetClientAccountsQuery`.
+- [x] Реализовать `CreateInstrumentCommand`.
+- [x] Реализовать `CreateInstrumentHandler`.
+- [x] Реализовать `GetInstrumentsQuery`.
+- [x] Добавить FluentValidation validators.
+- [x] Добавить unit-тесты validators для базовых ошибок.
 
 ## 7. Application: trade processing
 
@@ -246,18 +246,18 @@
 
 ## 11. API layer
 
-- [ ] Настроить global exception handling.
-- [ ] Настроить `ProblemDetails`.
+- [x] Настроить global exception handling.
+- [x] Настроить `ProblemDetails`.
 - [ ] Настроить request logging.
 - [ ] Настроить Swagger groups/tags.
-- [ ] Реализовать `POST /api/clients`.
-- [ ] Реализовать `GET /api/clients`.
-- [ ] Реализовать `GET /api/clients/{id}`.
-- [ ] Реализовать `POST /api/accounts`.
-- [ ] Реализовать `GET /api/accounts/{id}`.
-- [ ] Реализовать `GET /api/clients/{clientId}/accounts`.
-- [ ] Реализовать `POST /api/instruments`.
-- [ ] Реализовать `GET /api/instruments`.
+- [x] Реализовать `POST /api/clients`.
+- [x] Реализовать `GET /api/clients`.
+- [x] Реализовать `GET /api/clients/{id}`.
+- [x] Реализовать `POST /api/accounts`.
+- [x] Реализовать `GET /api/accounts/{id}`.
+- [x] Реализовать `GET /api/clients/{clientId}/accounts`.
+- [x] Реализовать `POST /api/instruments`.
+- [x] Реализовать `GET /api/instruments`.
 - [ ] Реализовать `POST /api/trades`.
 - [ ] Реализовать `GET /api/trades` с фильтрами.
 - [ ] Реализовать `GET /api/clients/{clientId}/trades`.

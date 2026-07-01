@@ -1,3 +1,4 @@
+using PulseRisk.Api.ErrorHandling;
 using PulseRisk.Application;
 using PulseRisk.BackgroundWorkers;
 using PulseRisk.Infrastructure;
@@ -31,6 +32,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
+app.UseMiddleware<ApiExceptionMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 
