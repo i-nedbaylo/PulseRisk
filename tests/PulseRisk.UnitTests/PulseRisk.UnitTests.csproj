@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\PulseRisk.BackgroundWorkers\PulseRisk.BackgroundWorkers.csproj" />
     <ProjectReference Include="..\..\src\PulseRisk.Domain\PulseRisk.Domain.csproj" />
     <ProjectReference Include="..\..\src\PulseRisk.Application\PulseRisk.Application.csproj" />
   </ItemGroup>

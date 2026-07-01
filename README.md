@@ -19,7 +19,8 @@
 - application/API слой для clients, accounts и instruments;
 - trade processing: `POST /api/trades`, создание сделки и обновление позиции за один commit;
 - optimistic concurrency retry для обновления позиции через PostgreSQL `xmin`;
-- in-process bounded channel для `PositionChangedEvent`;
+- configurable in-process bounded channels для quote/risk events;
+- background worker, который превращает `PositionChangedEvent` в `RiskEvaluationRequested`;
 - первые smoke-тесты и unit-тесты доменной логики;
 - validators для первых write use cases;
 - unit-тесты orchestration для создания сделки;
@@ -74,4 +75,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - развить internal event pipeline и подготовить Risk Engine consumer для `PositionChangedEvent`.
+Следующий технический шаг - добавить диагностику backpressure/dropped events и затем перейти к Testcontainers-сценарию client -> account -> trade -> position.

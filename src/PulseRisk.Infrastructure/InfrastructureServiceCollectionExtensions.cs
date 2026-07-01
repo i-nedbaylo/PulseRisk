@@ -32,11 +32,26 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IInstrumentRepository, EfInstrumentRepository>();
         services.AddScoped<ITradeRepository, EfTradeRepository>();
         services.AddScoped<IPositionRepository, EfPositionRepository>();
-        services.AddSingleton<InMemoryEventChannel<PositionChangedEvent>>();
-        services.AddSingleton<IEventWriter<PositionChangedEvent>>(provider =>
-            provider.GetRequiredService<InMemoryEventChannel<PositionChangedEvent>>());
-        services.AddSingleton<IEventReader<PositionChangedEvent>>(provider =>
-            provider.GetRequiredService<InMemoryEventChannel<PositionChangedEvent>>());
+
+        services.Configure<EventChannelOptions>(
+            configuration.GetSection(EventChannelOptions.SectionName));
+
+        services.AddEventChannel<QuoteTick>();
+        services.AddEventChannel<TradeAcceptedEvent>();
+        services.AddEventChannel<PositionChangedEvent>();
+        services.AddEventChannel<RiskEvaluationRequested>();
+        services.AddEventChannel<RiskAlertRaisedEvent>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddEventChannel<TEvent>(this IServiceCollection services)
+    {
+        services.AddSingleton<InMemoryEventChannel<TEvent>>();
+        services.AddSingleton<IEventWriter<TEvent>>(provider =>
+            provider.GetRequiredService<InMemoryEventChannel<TEvent>>());
+        services.AddSingleton<IEventReader<TEvent>>(provider =>
+            provider.GetRequiredService<InMemoryEventChannel<TEvent>>());
 
         return services;
     }

@@ -179,7 +179,7 @@
 - [x] Реализовать сценарий частичного закрытия/переворота позиции.
 - [x] Реализовать optimistic concurrency retry для позиции.
 - [x] После commit публиковать `PositionChangedEvent` в channel.
-- [ ] Добавить structured logs:
+- [x] Добавить structured logs:
   - [x] trade accepted;
   - [x] validation failed;
   - [x] position updated;
@@ -189,18 +189,18 @@
 
 ## 8. Event channels
 
-- [ ] Создать модели событий:
-  - [ ] `QuoteTick`;
-  - [ ] `TradeAcceptedEvent`;
+- [x] Создать модели событий:
+  - [x] `QuoteTick`;
+  - [x] `TradeAcceptedEvent`;
   - [x] `PositionChangedEvent`;
-  - [ ] `RiskEvaluationRequested`;
-  - [ ] `RiskAlertRaisedEvent`.
+  - [x] `RiskEvaluationRequested`;
+  - [x] `RiskAlertRaisedEvent`.
 - [x] Создать abstraction `IEventWriter<T>`.
 - [x] Создать abstraction `IEventReader<T>`.
-- [ ] Реализовать bounded channel для quote events.
+- [x] Реализовать bounded channel для quote events.
 - [x] Реализовать bounded channel для risk events.
-- [ ] Настроить capacity через options.
-- [ ] Настроить full mode через options.
+- [x] Настроить capacity через options.
+- [x] Настроить full mode через options.
 - [ ] Добавить счетчик dropped events.
 - [ ] Добавить логирование переполнения channel.
 - [ ] Добавить graceful completion при shutdown.
