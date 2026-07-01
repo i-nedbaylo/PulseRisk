@@ -39,7 +39,7 @@
 - [ ] Создать options-классы:
   - [ ] `MarketDataOptions`;
   - [ ] `RiskEngineOptions`;
-  - [ ] `ChannelOptions`;
+  - [x] `EventChannelOptions`;
   - [ ] `QuoteBatchOptions`;
   - [ ] `LoadTestOptions`.
 - [ ] Настроить validation options на старте приложения.
@@ -201,9 +201,9 @@
 - [x] Реализовать bounded channel для risk events.
 - [x] Настроить capacity через options.
 - [x] Настроить full mode через options.
-- [ ] Добавить счетчик dropped events.
-- [ ] Добавить логирование переполнения channel.
-- [ ] Добавить graceful completion при shutdown.
+- [x] Добавить счетчик dropped events.
+- [x] Добавить логирование переполнения channel.
+- [x] Добавить graceful completion при shutdown.
 
 ## 9. Market Data Simulator
 

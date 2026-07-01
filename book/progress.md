@@ -20,7 +20,7 @@
 | 16. Добавляем REST API и Swagger | Swagger показывает основные endpoints | `chapter-16-api-swagger` | Не начато |
 | 17. Пишем integration tests через Testcontainers | Первый PostgreSQL integration test проходит | `chapter-17-integration-tests` | Не начато |
 | 18. Проектируем internal event pipeline | Event contracts и channel abstractions готовы | `chapter-18-event-pipeline` | Выполнено |
-| 19. Реализуем bounded channels и backpressure | Bounded channel behavior протестирован | `chapter-19-backpressure` | Не начато |
+| 19. Реализуем bounded channels и backpressure | Bounded channel behavior протестирован | `chapter-19-backpressure` | Выполнено |
 | 20. Создаем Market Data Simulator | Quote simulator генерирует события | `chapter-20-market-simulator` | Не начато |
 | 21. Пишем batch writer для котировок | Batch insert котировок работает | `chapter-21-quote-batch-writer` | Не начато |
 | 22. Проектируем Risk Engine | Risk Engine contracts готовы | `chapter-22-risk-engine-design` | Не начато |

@@ -20,6 +20,7 @@
 - trade processing: `POST /api/trades`, создание сделки и обновление позиции за один commit;
 - optimistic concurrency retry для обновления позиции через PostgreSQL `xmin`;
 - configurable in-process bounded channels для quote/risk events;
+- backpressure diagnostics: depth, written/read/dropped counters и graceful completion каналов;
 - background worker, который превращает `PositionChangedEvent` в `RiskEvaluationRequested`;
 - первые smoke-тесты и unit-тесты доменной логики;
 - validators для первых write use cases;
@@ -75,4 +76,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - добавить диагностику backpressure/dropped events и затем перейти к Testcontainers-сценарию client -> account -> trade -> position.
+Следующий технический шаг - перейти к Testcontainers-сценарию client -> account -> trade -> position и проверить trade processing на настоящей PostgreSQL.

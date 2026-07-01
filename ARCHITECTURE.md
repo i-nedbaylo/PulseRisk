@@ -372,7 +372,7 @@ public interface IRiskRuleStrategy
 - проще RabbitMQ/Kafka для учебного монолита;
 - поддерживает graceful completion и cancellation.
 
-Текущая реализация начинается с `IEventWriter<TEvent>`/`IEventReader<TEvent>` и `InMemoryEventChannel<TEvent>`. Каналы настраиваются через `EventChannelOptions`: для risk events используется режим `Wait`, потому что событие изменения позиции нельзя терять, а для будущего потока котировок выбран `DropOldest`, где важнее свежие данные. `PositionChangedEventWorker` уже потребляет `PositionChangedEvent` и публикует `RiskEvaluationRequested`, но сам Risk Engine пока остается следующим модулем.
+Текущая реализация начинается с `IEventWriter<TEvent>`/`IEventReader<TEvent>` и `InMemoryEventChannel<TEvent>`. Каналы настраиваются через `EventChannelOptions`: для risk events используется режим `Wait`, потому что событие изменения позиции нельзя терять, а для будущего потока котировок выбран `DropOldest`, где важнее свежие данные. Каналы отдают `EventChannelSnapshot` с depth, written/read/dropped counters и завершаются через `IEventChannelLifetime` при shutdown. `PositionChangedEventWorker` уже потребляет `PositionChangedEvent` и публикует `RiskEvaluationRequested`, но сам Risk Engine пока остается следующим модулем.
 
 ## 10. API
 

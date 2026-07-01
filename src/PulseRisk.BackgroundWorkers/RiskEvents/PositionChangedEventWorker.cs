@@ -24,5 +24,7 @@ internal sealed class PositionChangedEventWorker(
         {
             logger.LogInformation("Position changed event worker stopped.");
         }
+
+        logger.LogInformation("Position changed event worker completed.");
     }
 }

@@ -41,6 +41,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddEventChannel<PositionChangedEvent>();
         services.AddEventChannel<RiskEvaluationRequested>();
         services.AddEventChannel<RiskAlertRaisedEvent>();
+        services.AddHostedService<EventChannelShutdownService>();
 
         return services;
     }
@@ -51,6 +52,10 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddSingleton<IEventWriter<TEvent>>(provider =>
             provider.GetRequiredService<InMemoryEventChannel<TEvent>>());
         services.AddSingleton<IEventReader<TEvent>>(provider =>
+            provider.GetRequiredService<InMemoryEventChannel<TEvent>>());
+        services.AddSingleton<IEventChannelMonitor>(provider =>
+            provider.GetRequiredService<InMemoryEventChannel<TEvent>>());
+        services.AddSingleton<IEventChannelLifetime>(provider =>
             provider.GetRequiredService<InMemoryEventChannel<TEvent>>());
 
         return services;
