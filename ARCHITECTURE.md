@@ -175,6 +175,8 @@ flowchart LR
 
 Котировки идут через bounded channel. Это позволяет явно показать backpressure при нагрузке 1000-5000 ticks/sec.
 
+Текущая версия содержит отключаемый `MarketDataSimulatorWorker`. Он читает `MarketDataOptions`, генерирует bid/ask через `MarketDataQuoteGenerator` и пишет `QuoteTick` в `IEventWriter<QuoteTick>`. По умолчанию симулятор выключен (`MarketData:Enabled=false`), чтобы приложение не создавало поток котировок без явного решения. При включении частота задается через `TicksPerSecondPerInstrument`, а сам поток проходит через уже настроенный quote channel с `DropOldest`.
+
 Стратегия перегрузки выбирается конфигурацией:
 
 - `Wait` - производитель ждет, когда освободится место;
@@ -357,7 +359,7 @@ public interface IRiskRuleStrategy
 
 Фоновые процессы:
 
-- `MarketDataSimulatorWorker` - генерирует котировки.
+- `MarketDataSimulatorWorker` - генерирует котировки и пишет `QuoteTick` в bounded quote channel.
 - `QuoteDispatchWorker` - отправляет quote events в cache, batch writer и risk queue.
 - `QuoteBatchWriterWorker` - пишет котировки в PostgreSQL batch'ами.
 - `RiskEventWorker` - обрабатывает события сделок и позиций.

@@ -37,7 +37,7 @@
 - [x] Подключить Testcontainers PostgreSQL для integration tests.
 - [x] Подключить BenchmarkDotNet для benchmark-проекта.
 - [ ] Создать options-классы:
-  - [ ] `MarketDataOptions`;
+  - [x] `MarketDataOptions`;
   - [ ] `RiskEngineOptions`;
   - [x] `EventChannelOptions`;
   - [ ] `QuoteBatchOptions`;
@@ -207,14 +207,14 @@
 
 ## 9. Market Data Simulator
 
-- [ ] Реализовать `MarketDataSimulatorWorker : BackgroundService`.
-- [ ] Реализовать генератор bid/ask по инструментам.
-- [ ] Добавить настраиваемую частоту генерации.
-- [ ] Добавить режим normal load.
+- [x] Реализовать `MarketDataSimulatorWorker : BackgroundService`.
+- [x] Реализовать генератор bid/ask по инструментам.
+- [x] Добавить настраиваемую частоту генерации.
+- [x] Добавить режим normal load.
 - [ ] Добавить режим high load.
 - [ ] Добавить режим price spike.
 - [ ] Добавить start/stop управление через application service.
-- [ ] Избегать `Thread.Sleep`, использовать async delay/timer с `CancellationToken`.
+- [x] Избегать `Thread.Sleep`, использовать async delay/timer с `CancellationToken`.
 - [ ] Проверить корректную остановку worker'а.
 - [ ] Добавить `LatestQuoteCache`.
 - [ ] Реализовать `QuoteBatchWriterWorker`.
@@ -222,9 +222,9 @@
 - [ ] При shutdown сбрасывать остаток batch.
 - [ ] Добавить integration-тест batch insert.
 - [ ] Добавить логирование:
-  - [ ] simulator started;
-  - [ ] simulator stopped;
-  - [ ] quotes generated/sec;
+  - [x] simulator started;
+  - [x] simulator stopped;
+  - [x] quotes generated/sec;
   - [ ] quote channel overflow.
 
 ## 10. Risk Engine
