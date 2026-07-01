@@ -16,8 +16,14 @@ public static class BackgroundWorkersServiceCollectionExtensions
             .Bind(configuration.GetSection(MarketDataOptions.SectionName))
             .ValidateOnStart();
 
+        services.AddOptions<QuoteBatchOptions>()
+            .Bind(configuration.GetSection(QuoteBatchOptions.SectionName))
+            .ValidateOnStart();
+
         services.AddSingleton<IValidateOptions<MarketDataOptions>, MarketDataOptionsValidator>();
+        services.AddSingleton<IValidateOptions<QuoteBatchOptions>, QuoteBatchOptionsValidator>();
         services.AddSingleton<MarketDataQuoteGenerator>();
+        services.AddHostedService<QuoteBatchWriterWorker>();
         services.AddHostedService<MarketDataSimulatorWorker>();
 
         services.AddSingleton<PositionChangedEventProcessor>();

@@ -40,7 +40,7 @@
   - [x] `MarketDataOptions`;
   - [ ] `RiskEngineOptions`;
   - [x] `EventChannelOptions`;
-  - [ ] `QuoteBatchOptions`;
+  - [x] `QuoteBatchOptions`;
   - [ ] `LoadTestOptions`.
 - [ ] Настроить validation options на старте приложения.
 
@@ -217,10 +217,10 @@
 - [x] Избегать `Thread.Sleep`, использовать async delay/timer с `CancellationToken`.
 - [ ] Проверить корректную остановку worker'а.
 - [ ] Добавить `LatestQuoteCache`.
-- [ ] Реализовать `QuoteBatchWriterWorker`.
-- [ ] Реализовать batch insert quotes.
-- [ ] При shutdown сбрасывать остаток batch.
-- [ ] Добавить integration-тест batch insert.
+- [x] Реализовать `QuoteBatchWriterWorker`.
+- [x] Реализовать batch insert quotes.
+- [x] При shutdown сбрасывать остаток batch.
+- [x] Добавить integration-тест batch insert.
 - [ ] Добавить логирование:
   - [x] simulator started;
   - [x] simulator stopped;
@@ -349,7 +349,7 @@
 - [ ] Добавить тест "history trades фильтруется по clientId".
 - [ ] Добавить тест "alerts фильтруются по severity".
 - [ ] Добавить тест "concurrent trades не ломают позицию".
-- [ ] Добавить тест "quote batch writer пишет batch".
+- [x] Добавить тест "quote batch writer пишет batch".
 
 ## 17. Unit tests
 

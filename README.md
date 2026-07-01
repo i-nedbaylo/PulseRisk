@@ -23,6 +23,7 @@
 - backpressure diagnostics: depth, written/read/dropped counters и graceful completion каналов;
 - background worker, который превращает `PositionChangedEvent` в `RiskEvaluationRequested`;
 - отключаемый Market Data Simulator, который генерирует `QuoteTick` по настраиваемой частоте и пишет их в quote channel;
+- `QuoteBatchWriterWorker`, который читает `QuoteTick`, пишет котировки batch'ами в PostgreSQL и сбрасывает остаток batch при shutdown;
 - Swagger/OpenAPI с группами endpoints, описаниями операций, request examples и ProblemDetails-ответами;
 - первые smoke-тесты и unit-тесты доменной логики;
 - validators для первых write use cases;
@@ -79,4 +80,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - перейти к batch writer для котировок: накопление `QuoteTick`, запись batch'ами в PostgreSQL и flush при shutdown.
+Следующий технический шаг - перейти к проектированию Risk Engine: contracts, active rules, latest quotes и расчет risk metrics.

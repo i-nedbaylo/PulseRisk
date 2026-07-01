@@ -279,6 +279,8 @@ CREATE INDEX ix_risk_alerts_severity_created_at ON risk_alerts (severity, create
 - уважает `CancellationToken`;
 - при shutdown сбрасывает остаток batch.
 
+Текущая версия реализует этот шаг через `QuoteBatchWriterWorker` и application port `IQuoteBatchWriter`. Worker читает `QuoteTick` из bounded quote channel, накапливает batch по `QuoteBatchOptions.BatchSize` или `FlushIntervalMilliseconds`, создает scoped writer на flush и вызывает EF-реализацию `EfQuoteBatchWriter`. Infrastructure мапит ticks в доменные `Quote` entities и сохраняет их в таблицу `quotes`; BackgroundWorkers при этом не зависит от `PulseRiskDbContext`.
+
 ## 8. Risk Engine
 
 Risk Engine - центральный модуль проекта.
@@ -361,7 +363,7 @@ public interface IRiskRuleStrategy
 
 - `MarketDataSimulatorWorker` - генерирует котировки и пишет `QuoteTick` в bounded quote channel.
 - `QuoteDispatchWorker` - отправляет quote events в cache, batch writer и risk queue.
-- `QuoteBatchWriterWorker` - пишет котировки в PostgreSQL batch'ами.
+- `QuoteBatchWriterWorker` - пишет котировки в PostgreSQL batch'ами и сбрасывает остаток при shutdown.
 - `RiskEventWorker` - обрабатывает события сделок и позиций.
 - `LoadTestWorker` - генерирует сделки и котировки для демонстрационного сценария.
 - `OutboxPublisherWorker` - optional senior extension.
