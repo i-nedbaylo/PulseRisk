@@ -137,7 +137,7 @@
 
 - `book/` - исходники глав в Markdown;
 - `book/assets/` - схемы, диаграммы, скриншоты Swagger/Grafana, фрагменты EXPLAIN;
-- `docs/book-progress.md` - карта соответствия глав, веток и коммитов;
+- `book/progress.md` - карта соответствия глав, веток и коммитов;
 - git tags:
   - `chapter-01-project-purpose`;
   - `chapter-02-solution-skeleton`;

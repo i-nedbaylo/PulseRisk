@@ -9,9 +9,9 @@
 | 5. Планируем путь разработки | `DEVELOPMENT_PLAN.md` согласован с книгой | `chapter-05-development-plan` | Черновик |
 | 6. Создаем solution и структуру репозитория | Solution и проекты созданы | `chapter-06-solution-skeleton` | Выполнено |
 | 7. Настраиваем .NET 10, analyzers и стиль кода | Repo standards добавлены | `chapter-07-repo-standards` | Выполнено |
-| 8. Проектируем доменную модель | Модель описана перед реализацией | `chapter-08-domain-design` | Не начато |
-| 9. Реализуем value objects и entities | Domain entities/value objects добавлены | `chapter-09-domain-model` | Не начато |
-| 10. Пишем первые unit-тесты домена | Первые unit-тесты проходят | `chapter-10-domain-tests` | Не начато |
+| 8. Проектируем доменную модель | Модель описана перед реализацией | `chapter-08-domain-design` | Выполнено |
+| 9. Реализуем value objects и entities | Domain entities/value objects добавлены | `chapter-09-domain-model` | Выполнено |
+| 10. Пишем первые unit-тесты домена | Первые unit-тесты проходят | `chapter-10-domain-tests` | Выполнено |
 | 11. Подключаем PostgreSQL и EF Core | DbContext и PostgreSQL зависимости добавлены | `chapter-11-postgresql-efcore` | Не начато |
 | 12. Проектируем схему БД и миграции | Initial migration создана | `chapter-12-database-schema` | Не начато |
 | 13. Реализуем clients, accounts и instruments | Базовые use cases работают | `chapter-13-reference-data-api` | Не начато |

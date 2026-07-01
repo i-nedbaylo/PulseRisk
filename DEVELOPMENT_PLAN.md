@@ -46,40 +46,40 @@
 
 ## 2. Domain layer
 
-- [ ] Создать enums:
-  - [ ] `ClientStatus`;
-  - [ ] `TradeSide`;
-  - [ ] `RiskRuleType`;
-  - [ ] `RiskAlertType`;
-  - [ ] `RiskSeverity`;
-  - [ ] `CurrencyCode`.
-- [ ] Создать value objects:
-  - [ ] `Symbol`;
-  - [ ] `Money`;
-  - [ ] `Price`;
-  - [ ] `Volume`;
-  - [ ] `Percentage`.
-- [ ] Реализовать entity `Client`.
-- [ ] Реализовать entity `TradingAccount`.
-- [ ] Реализовать entity `Instrument`.
-- [ ] Реализовать entity `Trade`.
-- [ ] Реализовать entity `Position`.
-- [ ] Реализовать entity `Quote`.
-- [ ] Реализовать entity `RiskRule`.
-- [ ] Реализовать entity `RiskAlert`.
+- [x] Создать enums:
+  - [x] `ClientStatus`;
+  - [x] `TradeSide`;
+  - [x] `RiskRuleType`;
+  - [x] `RiskAlertType`;
+  - [x] `RiskSeverity`;
+  - [x] `CurrencyCode`.
+- [x] Создать value objects:
+  - [x] `Symbol`;
+  - [x] `Money`;
+  - [x] `Price`;
+  - [x] `Volume`;
+  - [x] `Percentage`.
+- [x] Реализовать entity `Client`.
+- [x] Реализовать entity `TradingAccount`.
+- [x] Реализовать entity `Instrument`.
+- [x] Реализовать entity `Trade`.
+- [x] Реализовать entity `Position`.
+- [x] Реализовать entity `Quote`.
+- [x] Реализовать entity `RiskRule`.
+- [x] Реализовать entity `RiskAlert`.
 - [ ] Добавить доменные инварианты:
-  - [ ] volume > 0;
-  - [ ] price > 0;
-  - [ ] bid <= ask;
-  - [ ] leverage > 0;
+  - [x] volume > 0;
+  - [x] price > 0;
+  - [x] bid <= ask;
+  - [x] leverage > 0;
   - [ ] inactive instrument нельзя использовать для новой сделки;
   - [ ] disabled risk rule не участвует в проверке.
-- [ ] Реализовать доменный сервис `PositionCalculator`.
-- [ ] Реализовать доменный сервис `PnLCalculator`.
-- [ ] Реализовать модели risk evaluation:
-  - [ ] `RiskEvaluationContext`;
-  - [ ] `RiskMetricSnapshot`;
-  - [ ] `RiskRuleEvaluationResult`.
+- [x] Реализовать доменный сервис `PositionCalculator`.
+- [x] Реализовать доменный сервис `PnLCalculator`.
+- [x] Реализовать модели risk evaluation:
+  - [x] `RiskEvaluationContext`;
+  - [x] `RiskMetricSnapshot`;
+  - [x] `RiskRuleEvaluationResult`.
 
 ## 3. Risk rules
 
@@ -352,8 +352,8 @@
 
 ## 17. Unit tests
 
-- [ ] `PositionCalculatorTests`.
-- [ ] `PnLCalculatorTests`.
+- [x] `PositionCalculatorTests`.
+- [x] `PnLCalculatorTests`.
 - [ ] `MaxExposureRuleStrategyTests`.
 - [ ] `MaxLossRuleStrategyTests`.
 - [ ] `MarginLevelWarningRuleStrategyTests`.
@@ -363,10 +363,10 @@
 - [ ] `RiskAlertFactoryTests`.
 - [ ] `LatestQuoteCacheTests`.
 - [ ] Проверить edge cases:
-  - [ ] нулевой объем;
-  - [ ] отрицательная цена;
-  - [ ] закрытие позиции;
-  - [ ] переворот позиции;
+  - [x] нулевой объем;
+  - [x] отрицательная цена;
+  - [x] закрытие позиции;
+  - [x] переворот позиции;
   - [ ] отсутствие котировки;
   - [ ] отсутствие активных risk rules.
 

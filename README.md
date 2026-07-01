@@ -14,7 +14,8 @@
 - проекты `UnitTests`, `IntegrationTests`, `Benchmarks`;
 - базовые зависимости для EF Core/PostgreSQL, Dapper, FluentValidation, Serilog, Testcontainers и BenchmarkDotNet;
 - health endpoint `GET /api/health`;
-- первые smoke-тесты;
+- доменный слой: enums, value objects, entities, `PositionCalculator`, `PnLCalculator`;
+- первые smoke-тесты и unit-тесты доменной логики;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -53,4 +54,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - реализация доменной модели: value objects, enums, entities и первые unit-тесты для расчета позиции.
+Следующий технический шаг - подключение PostgreSQL/EF Core: `DbContext`, mappings, миграции и схема БД.
