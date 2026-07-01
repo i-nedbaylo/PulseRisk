@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PulseRisk.Api/PulseRisk.Api.csproj" />
+    <Project Path="src/PulseRisk.Application/PulseRisk.Application.csproj" />
+    <Project Path="src/PulseRisk.BackgroundWorkers/PulseRisk.BackgroundWorkers.csproj" />
+    <Project Path="src/PulseRisk.Domain/PulseRisk.Domain.csproj" />
+    <Project Path="src/PulseRisk.Infrastructure/PulseRisk.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PulseRisk.Benchmarks/PulseRisk.Benchmarks.csproj" />
+    <Project Path="tests/PulseRisk.IntegrationTests/PulseRisk.IntegrationTests.csproj" />
+    <Project Path="tests/PulseRisk.UnitTests/PulseRisk.UnitTests.csproj" />
+  </Folder>
+</Solution>
