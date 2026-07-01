@@ -28,6 +28,8 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IClientRepository, EfClientRepository>();
         services.AddScoped<ITradingAccountRepository, EfTradingAccountRepository>();
         services.AddScoped<IInstrumentRepository, EfInstrumentRepository>();
+        services.AddScoped<ITradeRepository, EfTradeRepository>();
+        services.AddScoped<IPositionRepository, EfPositionRepository>();
 
         return services;
     }

@@ -17,8 +17,10 @@
 - доменный слой: enums, value objects, entities, `PositionCalculator`, `PnLCalculator`;
 - инфраструктурный слой: `PulseRiskDbContext`, EF Core mappings, PostgreSQL migration, seed instruments/risk rules;
 - application/API слой для clients, accounts и instruments;
+- trade processing: `POST /api/trades`, создание сделки и обновление позиции за один commit;
 - первые smoke-тесты и unit-тесты доменной логики;
 - validators для первых write use cases;
+- unit-тесты orchestration для создания сделки;
 - mapping integration tests для EF-модели;
 - каркас книги в `book/`.
 
@@ -70,4 +72,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - trade processing: создание сделки, транзакционное обновление позиции и публикация события для будущего Risk Engine.
+Следующий технический шаг - усилить trade processing: optimistic concurrency retry для позиции, structured logs и публикация `PositionChangedEvent` в будущий event pipeline.

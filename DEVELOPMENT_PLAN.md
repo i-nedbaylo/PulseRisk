@@ -72,7 +72,7 @@
   - [x] price > 0;
   - [x] bid <= ask;
   - [x] leverage > 0;
-  - [ ] inactive instrument нельзя использовать для новой сделки;
+  - [x] inactive instrument нельзя использовать для новой сделки;
   - [ ] disabled risk rule не участвует в проверке.
 - [x] Реализовать доменный сервис `PositionCalculator`.
 - [x] Реализовать доменный сервис `PnLCalculator`.
@@ -134,8 +134,8 @@
 - [x] Реализовать `ClientRepository`.
 - [x] Реализовать `TradingAccountRepository`.
 - [x] Реализовать `InstrumentRepository`.
-- [ ] Реализовать `TradeRepository`.
-- [ ] Реализовать `PositionRepository`.
+- [x] Реализовать `TradeRepository`.
+- [x] Реализовать `PositionRepository`.
 - [ ] Реализовать `RiskRuleRepository`.
 - [ ] Реализовать `RiskAlertRepository`.
 - [x] Создать `IUnitOfWork` или использовать `DbContext` как unit of work за application boundary.
@@ -166,17 +166,17 @@
 
 ## 7. Application: trade processing
 
-- [ ] Реализовать `CreateTradeCommand`.
-- [ ] Реализовать `CreateTradeValidator`.
-- [ ] Реализовать `CreateTradeHandler`.
-- [ ] В handler добавить проверку клиента.
-- [ ] В handler добавить проверку торгового счета.
-- [ ] В handler добавить проверку инструмента.
-- [ ] В handler добавить проверку активности инструмента.
-- [ ] Реализовать транзакцию: insert trade + update position.
-- [ ] Реализовать расчет average price для увеличения позиции.
-- [ ] Реализовать расчет net volume для Buy/Sell.
-- [ ] Реализовать сценарий частичного закрытия/переворота позиции.
+- [x] Реализовать `CreateTradeCommand`.
+- [x] Реализовать `CreateTradeValidator`.
+- [x] Реализовать `CreateTradeHandler`.
+- [x] В handler добавить проверку клиента.
+- [x] В handler добавить проверку торгового счета.
+- [x] В handler добавить проверку инструмента.
+- [x] В handler добавить проверку активности инструмента.
+- [x] Реализовать транзакцию: insert trade + update position.
+- [x] Реализовать расчет average price для увеличения позиции.
+- [x] Реализовать расчет net volume для Buy/Sell.
+- [x] Реализовать сценарий частичного закрытия/переворота позиции.
 - [ ] Реализовать optimistic concurrency retry для позиции.
 - [ ] После commit публиковать `PositionChangedEvent` в channel.
 - [ ] Добавить structured logs:
@@ -184,7 +184,7 @@
   - [ ] validation failed;
   - [ ] position updated;
   - [ ] concurrency retry.
-- [ ] Добавить unit-тесты PositionCalculator.
+- [x] Добавить unit-тесты PositionCalculator.
 - [ ] Добавить integration-тест "создание сделки обновляет позицию".
 
 ## 8. Event channels
@@ -258,7 +258,8 @@
 - [x] Реализовать `GET /api/clients/{clientId}/accounts`.
 - [x] Реализовать `POST /api/instruments`.
 - [x] Реализовать `GET /api/instruments`.
-- [ ] Реализовать `POST /api/trades`.
+- [x] Реализовать `POST /api/trades`.
+- [x] Реализовать `GET /api/trades/{id}`.
 - [ ] Реализовать `GET /api/trades` с фильтрами.
 - [ ] Реализовать `GET /api/clients/{clientId}/trades`.
 - [ ] Реализовать `GET /api/positions`.
@@ -359,7 +360,7 @@
 - [ ] `MarginLevelWarningRuleStrategyTests`.
 - [ ] `PriceSpikeDetectionRuleStrategyTests`.
 - [ ] `HighFrequencyTradingActivityRuleStrategyTests`.
-- [ ] `CreateTradeValidatorTests`.
+- [x] `CreateTradeValidatorTests`.
 - [ ] `RiskAlertFactoryTests`.
 - [ ] `LatestQuoteCacheTests`.
 - [ ] Проверить edge cases:
