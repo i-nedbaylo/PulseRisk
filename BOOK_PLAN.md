@@ -127,7 +127,7 @@
 | 13-17 | GRASP Controller, Command style | Не смешивать HTTP, orchestration и бизнес-правила |
 | 18-21 | Producer-Consumer, Indirection, Template Method через `BackgroundService` | Развязать producers/consumers и показать controlled concurrency |
 | 22-25 | GoF Strategy, GRASP Polymorphism, Simple Factory, Protected Variations | Расширять risk rules и создавать alerts без большого `switch` |
-| 28-30 | Query Object, Strategy for benchmark variants | Оптимизировать только измеренные bottleneck'и |
+| 28-30 | Query Object, Pure Fabrication, Protected Variations | Оптимизировать только измеренные bottleneck'и |
 
 Анти-overengineering правило: если паттерн не уменьшает связность, не повышает тестируемость, не защищает от ожидаемой изменчивости и не делает бизнес-правило яснее, он в проект не добавляется.
 
@@ -794,9 +794,10 @@
 Содержание:
 
 - BenchmarkDotNet;
-- baseline PnL calculator;
-- optimized PnL calculator;
+- baseline position/PnL calculations;
+- optimized position/PnL calculations;
 - allocation report;
+- почему benchmark variants не требуют отдельного Strategy;
 - почему не оптимизируем все подряд;
 - как читать benchmark results.
 

@@ -75,6 +75,7 @@ tests/
 docs/
   explain-analyze/
   load-tests/
+  benchmarks/
 docker/
   postgres/
 .gitlab-ci.yml
@@ -515,7 +516,7 @@ Swagger/OpenAPI обязателен. Валидацию входных DTO мо
 - projection-запросы вместо загрузки полных EF entities;
 - `AsNoTracking` для read-only queries;
 - compiled queries в горячих местах после измерений;
-- BenchmarkDotNet для PnL calculator variants.
+- BenchmarkDotNet для position/PnL calculation variants.
 
 Текущая версия уже содержит первый PostgreSQL performance evidence в `docs/explain-analyze/`: seed-набор данных, hot-path `EXPLAIN ANALYZE` и сравнение lookup открытых позиций до/после partial index. В локальном disposable-наборе данных индекс `ix_positions_symbol_open_trading_account` уменьшил чтение для `EURUSD` с 4 000 строк по символу с фильтрацией 3 273 flat positions до прямого чтения 727 открытых позиций.
 
@@ -530,6 +531,18 @@ Swagger/OpenAPI обязателен. Валидацию входных DTO мо
 - **Отказ от overengineering**: сценарий не вводит внешний load-test framework и не имитирует распределенную систему до появления Docker Compose/CI окружения.
 
 Локальный отчет `docs/load-tests/2026-07-02-local-load-report.md` снят на disposable PostgreSQL 18 cluster: `Quotes500`, 5 клиентов, 5 счетов, 3 секунды генерации, 1463 котировки, 28 успешных сделок, 54 обработанных risk evaluation requests, dropped quotes `0`.
+
+Для доменных расчетов добавлен BenchmarkDotNet report в `docs/benchmarks/2026-07-02-domain-calculations.md`. Он сравнивает reference-record baseline и production value-result для `PositionCalculator`, а также object-heavy и production-пути для `PnLCalculator`. По локальному `ShortRun` production-варианты `PositionCalculator.ApplyTrade`, `PnLCalculator.CalculateFloatingPnL` через entity и primitive overload не создают managed allocations; reference-record baseline для результата позиции выделяет `48 B`, object-heavy PnL path выделяет `88 B`.
+
+После измерения `PositionCalculationState` и `PositionCalculationResult` оформлены как `readonly record struct`. Это локальная оптимизация горячего расчетного пути: у этих моделей нет identity, они маленькие, immutable и создаются часто. Более агрессивные решения вроде object pool, unsafe-кода, SIMD или cache не вводятся, потому что benchmark не показывает для них практической проблемы.
+
+Паттерны в benchmark/performance части:
+
+- **GRASP Information Expert**: формулы остаются в `PositionCalculator` и `PnLCalculator`, рядом с данными, нужными для расчета.
+- **GRASP Pure Fabrication**: benchmark-классы и reference-модели существуют только для измерений и не загрязняют production domain.
+- **GRASP Low Coupling**: `PulseRisk.Benchmarks` зависит только от `PulseRisk.Domain`, поэтому micro benchmark не измеряет DI, EF Core или hosted services.
+- **Protected Variations**: benchmark-проект изолирует baseline и эксперименты от application flow.
+- **Отказ от overengineering**: для position/PnL расчетов не вводятся Strategy, Factory или Object Pool; вариативности алгоритмов и lifecycle-проблем здесь нет.
 
 ## 13. Testing strategy
 
@@ -563,7 +576,7 @@ Integration-тесты:
 
 Интеграционные тесты запускаются через Testcontainers PostgreSQL. Бизнес-логика должна тестироваться без БД.
 
-Сквозные PostgreSQL-сценарии проверяют пути `client -> account -> trade -> position`, batch insert котировок и `exposure breach -> risk alert`. Test host подменяет только `ConnectionStrings:PulseRisk`, применяет EF Core migrations к временной базе, выполняет HTTP-запросы через `HttpClient` и затем проверяет фактическое состояние `trades`/`positions`/`risk_alerts` через `PulseRiskDbContext`. На локальной машине тесты помечаются как skipped, если Docker Engine недоступен; в CI Docker должен быть обязательной частью runner-а.
+Сквозные PostgreSQL-сценарии проверяют пути `client -> account -> trade -> position`, batch insert котировок и `exposure breach -> risk alert`. Test host подменяет только `ConnectionStrings:PulseRisk`, применяет EF Core migrations к временной базе, выполняет HTTP-запросы через `HttpClient` и затем проверяет фактическое состояние `trades`/`positions`/`risk_alerts` через `PulseRiskDbContext`. На локальной машине тесты помечаются как skipped, если Docker Engine или локальный PostgreSQL image недоступны; в CI Docker и нужный image должны быть обязательной частью runner-а.
 
 Для HTTP setup используется `IntegrationTestDataBuilder`: он инкапсулирует повторяющиеся `POST /api/clients`, `POST /api/accounts` и `POST /api/trades`, но не скрывает проверяемые assertions. Risk alert scenario использует polling PostgreSQL, потому что alert создается background worker-ом после асинхронной обработки `PositionChangedEvent` и `RiskEvaluationRequested`.
 
@@ -727,7 +740,7 @@ PulseRisk должен позволить уверенно обсудить:
 - Prometheus metrics и Grafana dashboard;
 - Redis latest quote cache;
 - CQRS read model для риск-метрик;
-- BenchmarkDotNet report;
+- расширенный BenchmarkDotNet suite в CI;
 - нагрузочный отчет;
 - отдельный worker host;
 - подготовленный раздел "legacy refactoring and allocation optimization" в README.

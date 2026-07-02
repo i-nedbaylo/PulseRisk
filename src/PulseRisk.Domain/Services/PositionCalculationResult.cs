@@ -1,4 +1,3 @@
 namespace PulseRisk.Domain.Services;
 
-public sealed record PositionCalculationResult(decimal NetVolume, decimal AveragePrice);
-
+public readonly record struct PositionCalculationResult(decimal NetVolume, decimal AveragePrice);

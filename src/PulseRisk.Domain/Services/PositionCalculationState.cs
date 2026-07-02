@@ -1,6 +1,6 @@
 namespace PulseRisk.Domain.Services;
 
-public sealed record PositionCalculationState
+public readonly record struct PositionCalculationState
 {
     public PositionCalculationState(decimal netVolume, decimal averagePrice)
     {
@@ -29,4 +29,3 @@ public sealed record PositionCalculationState
 
     public static PositionCalculationState Flat { get; } = new(0, 0);
 }
-

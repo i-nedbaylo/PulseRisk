@@ -33,9 +33,10 @@
 - unit-тесты orchestration для создания сделки;
 - расширенное unit-покрытие Risk Engine edge cases: отсутствие котировки, отсутствие active rules, disabled rules, unsupported rule strategy и threshold boundaries;
 - mapping integration tests для EF-модели;
-- Testcontainers-сценарии `client -> account -> trade -> position`, batch insert котировок и `exposure breach -> risk alert` на настоящей PostgreSQL, которые автоматически пропускаются, если Docker Engine недоступен;
+- Testcontainers-сценарии `client -> account -> trade -> position`, batch insert котировок и `exposure breach -> risk alert` на настоящей PostgreSQL, которые автоматически пропускаются, если Docker Engine или локальный PostgreSQL image недоступны;
 - PostgreSQL performance evidence: seed-набор данных, `EXPLAIN ANALYZE` отчеты для hot-path запросов и partial index для quote-driven поиска открытых позиций;
 - отключаемый Load Test Worker с профилями `Quotes500`, `Quotes1000`, `Quotes5000`, генерацией клиентов/счетов/сделок/котировок и markdown-отчетом по throughput, latency, channel pressure и active alerts;
+- BenchmarkDotNet report для доменных расчетов position/PnL, p95 latency sample и value-type оптимизация расчетного результата без managed allocations;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -84,8 +85,9 @@ curl http://localhost:5000/api/health
 - `BOOK_PLAN.md` - подробный план книги.
 - `docs/explain-analyze/` - воспроизводимые SQL-скрипты и локальные `EXPLAIN ANALYZE` отчеты.
 - `docs/load-tests/` - сценарии и результаты локальных нагрузочных прогонов.
+- `docs/benchmarks/` - BenchmarkDotNet-отчеты и p95-сэмплы для доменных расчетов.
 - `book/` - будущая книга, которая пишется параллельно с кодом.
 
 ## Следующий этап
 
-Следующий технический шаг - добавить BenchmarkDotNet report для расчетов PnL/position и сравнить latency/allocations.
+Следующий технический шаг - упаковать проект в Docker Compose и проверить запуск API вместе с PostgreSQL на чистом окружении.

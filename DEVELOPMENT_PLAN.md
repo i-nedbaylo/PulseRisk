@@ -16,7 +16,8 @@
   - [x] `tests/PulseRisk.IntegrationTests`;
   - [x] `tests/PulseRisk.Benchmarks`;
   - [x] `docs/explain-analyze`;
-  - [x] `docs/load-tests`.
+  - [x] `docs/load-tests`;
+  - [x] `docs/benchmarks`.
 - [x] Настроить `.editorconfig`.
 - [x] Настроить `Directory.Build.props`.
 - [x] Включить nullable reference types.
@@ -297,13 +298,13 @@
 
 ## 13. Benchmarks
 
-- [ ] Создать benchmark для PnL calculation.
-- [ ] Реализовать baseline-вариант.
-- [ ] Реализовать optimized-вариант после измерений.
-- [ ] Сравнить allocations.
-- [ ] Сравнить mean/p95 execution time.
-- [ ] Сохранить benchmark report.
-- [ ] Описать выводы: что оптимизировали и почему.
+- [x] Создать benchmark для PnL calculation.
+- [x] Реализовать baseline-вариант.
+- [x] Реализовать optimized-вариант после измерений.
+- [x] Сравнить allocations.
+- [x] Сравнить mean/p95 execution time.
+- [x] Сохранить benchmark report.
+- [x] Описать выводы: что оптимизировали и почему.
 
 ## 14. Observability
 
@@ -438,7 +439,7 @@
 - [ ] Добавить Grafana dashboard.
 - [ ] Реализовать CQRS read model для risk metrics.
 - [ ] Добавить отдельный worker host.
-- [ ] Добавить allocation optimization report.
+- [x] Добавить allocation optimization report.
 - [ ] Добавить legacy refactoring example: baseline service -> optimized service.
 
 ## 22. Финальная приемка
@@ -473,4 +474,4 @@
 - [ ] Можно показать GitLab pipeline.
 - [ ] Можно объяснить, почему проект не сделан микросервисами.
 - [ ] Можно объяснить, какие части легко вынести в отдельные сервисы.
-- [ ] Можно показать минимум один performance/benchmark результат.
+- [x] Можно показать минимум один performance/benchmark результат.

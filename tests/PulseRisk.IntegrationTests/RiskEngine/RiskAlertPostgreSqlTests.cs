@@ -7,7 +7,6 @@ using PulseRisk.Domain.Entities;
 using PulseRisk.Domain.Enums;
 using PulseRisk.Infrastructure.Persistence;
 using PulseRisk.IntegrationTests.TestInfrastructure;
-using Testcontainers.PostgreSql;
 
 namespace PulseRisk.IntegrationTests.RiskEngine;
 
@@ -16,17 +15,10 @@ public sealed class RiskAlertPostgreSqlTests
     [SkippableFact]
     public async Task CreateTrade_WhenExposureLimitIsExceeded_ShouldPersistRiskAlert()
     {
-        Skip.IfNot(
-            DockerAvailability.IsDockerAvailable(),
-            "Docker is not available; skipping PostgreSQL Testcontainers scenario.");
+        PostgreSqlTestContainer.SkipIfUnavailable();
 
-        await using var postgres = new PostgreSqlBuilder("postgres:17-alpine")
-            .WithDatabase("pulserisk_tests")
-            .WithUsername("pulserisk")
-            .WithPassword("pulserisk")
-            .Build();
-
-        await postgres.StartAsync();
+        await using var postgres = PostgreSqlTestContainer.Create();
+        await PostgreSqlTestContainer.StartOrSkipAsync(postgres);
 
         await using var application = new PulseRiskPostgresApplicationFactory(postgres.GetConnectionString());
         await using (var migrationScope = application.Services.CreateAsyncScope())

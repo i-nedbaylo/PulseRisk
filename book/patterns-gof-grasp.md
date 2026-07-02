@@ -74,4 +74,4 @@
 | 13-17 | Controller, Command style, validation boundaries |
 | 18-21 | Producer-Consumer, Indirection, Template Method |
 | 22-25 | Strategy, Polymorphism, Simple Factory, Protected Variations |
-| 28-30 | Query Object, Strategy for benchmark variants, отказ от premature abstraction |
+| 28-30 | Query Object, Pure Fabrication, Protected Variations, отказ от premature abstraction |
