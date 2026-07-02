@@ -22,4 +22,15 @@ internal sealed class EfPositionRepository(PulseRiskDbContext dbContext) : IPosi
                 position => position.TradingAccountId == tradingAccountId && position.Symbol == symbol,
                 cancellationToken);
     }
+
+    public async Task<IReadOnlyCollection<Position>> ListOpenBySymbolAsync(
+        Symbol symbol,
+        CancellationToken cancellationToken)
+    {
+        return await dbContext.Positions
+            .AsNoTracking()
+            .Where(position => position.Symbol == symbol && position.NetVolume != 0)
+            .OrderBy(position => position.TradingAccountId)
+            .ToArrayAsync(cancellationToken);
+    }
 }

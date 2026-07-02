@@ -26,7 +26,7 @@
 - risk rule strategies для exposure, loss и margin level с resolver-ом и unit-тестами;
 - создание `RiskAlert` через factory, active-alert deduplication, сохранение в PostgreSQL и публикация `RiskAlertRaisedEvent`;
 - отключаемый Market Data Simulator, который генерирует `QuoteTick` по настраиваемой частоте и пишет их в quote channel;
-- `QuoteBatchWriterWorker`, который читает `QuoteTick`, пишет котировки batch'ами в PostgreSQL и сбрасывает остаток batch при shutdown;
+- `QuoteBatchWriterWorker`, который читает `QuoteTick`, пишет котировки batch'ами в PostgreSQL, сбрасывает остаток batch при shutdown и запускает quote-driven risk evaluation для открытых позиций;
 - Swagger/OpenAPI с группами endpoints, описаниями операций, request examples и ProblemDetails-ответами;
 - первые smoke-тесты и unit-тесты доменной логики;
 - validators для первых write use cases;
@@ -83,4 +83,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - добавить quote-driven risk evaluation, чтобы новые котировки запускали перерасчет risk metrics near real-time.
+Следующий технический шаг - укрепить покрытие бизнес-логики unit-тестами и закрыть оставшиеся edge cases Risk Engine.

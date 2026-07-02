@@ -23,6 +23,7 @@ public static class BackgroundWorkersServiceCollectionExtensions
         services.AddSingleton<IValidateOptions<MarketDataOptions>, MarketDataOptionsValidator>();
         services.AddSingleton<IValidateOptions<QuoteBatchOptions>, QuoteBatchOptionsValidator>();
         services.AddSingleton<MarketDataQuoteGenerator>();
+        services.AddScoped<QuoteRiskEvaluationDispatcher>();
         services.AddHostedService<QuoteBatchWriterWorker>();
         services.AddHostedService<MarketDataSimulatorWorker>();
 

@@ -158,6 +158,18 @@ public sealed class RiskEvaluationContextBuilderTests
                     ? position
                     : null);
         }
+
+        public Task<IReadOnlyCollection<Position>> ListOpenBySymbolAsync(
+            Symbol symbol,
+            CancellationToken cancellationToken)
+        {
+            IReadOnlyCollection<Position> result =
+                position.Symbol == symbol && position.NetVolume != 0
+                    ? [position]
+                    : [];
+
+            return Task.FromResult(result);
+        }
     }
 
     private sealed class FakeInstrumentRepository(Instrument instrument) : IInstrumentRepository

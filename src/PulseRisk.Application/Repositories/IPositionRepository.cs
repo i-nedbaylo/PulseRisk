@@ -11,4 +11,8 @@ public interface IPositionRepository
         Guid tradingAccountId,
         Symbol symbol,
         CancellationToken cancellationToken);
+
+    Task<IReadOnlyCollection<Position>> ListOpenBySymbolAsync(
+        Symbol symbol,
+        CancellationToken cancellationToken);
 }

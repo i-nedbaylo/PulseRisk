@@ -120,13 +120,16 @@ internal sealed class QuoteBatchWriterWorker(
             var startedAt = Stopwatch.GetTimestamp();
             await using var scope = scopeFactory.CreateAsyncScope();
             var writer = scope.ServiceProvider.GetRequiredService<IQuoteBatchWriter>();
+            var riskDispatcher = scope.ServiceProvider.GetRequiredService<QuoteRiskEvaluationDispatcher>();
 
             await writer.WriteAsync(batch, cancellationToken);
+            var riskRequestCount = await riskDispatcher.PublishAsync(batch, cancellationToken);
 
             var elapsed = Stopwatch.GetElapsedTime(startedAt);
             logger.LogInformation(
-                "Quote batch writer flushed {QuoteCount} quotes in {ElapsedMilliseconds} ms.",
+                "Quote batch writer flushed {QuoteCount} quotes and published {RiskRequestCount} risk requests in {ElapsedMilliseconds} ms.",
                 batch.Count,
+                riskRequestCount,
                 elapsed.TotalMilliseconds);
         }
         finally

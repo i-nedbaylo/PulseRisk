@@ -411,6 +411,17 @@ public sealed class CreateTradeHandlerTests
 
             return Task.FromResult(position);
         }
+
+        public Task<IReadOnlyCollection<Position>> ListOpenBySymbolAsync(
+            Symbol symbol,
+            CancellationToken cancellationToken)
+        {
+            var result = Items
+                .Where(position => position.Symbol == symbol && position.NetVolume != 0)
+                .ToArray();
+
+            return Task.FromResult<IReadOnlyCollection<Position>>(result);
+        }
     }
 
     private sealed class FakeEventWriter<TEvent> : IEventWriter<TEvent>

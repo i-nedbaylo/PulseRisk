@@ -219,6 +219,7 @@
 - [ ] Добавить `LatestQuoteCache`.
 - [x] Реализовать `QuoteBatchWriterWorker`.
 - [x] Реализовать batch insert quotes.
+- [x] Публиковать quote-driven risk requests после сохранения batch-а котировок.
 - [x] При shutdown сбрасывать остаток batch.
 - [x] Добавить integration-тест batch insert.
 - [ ] Добавить логирование:
@@ -231,7 +232,7 @@
 
 - [x] Реализовать `RiskEventWorker : BackgroundService`.
 - [x] Обрабатывать `PositionChangedEvent`.
-- [ ] Обрабатывать quote-driven risk evaluation.
+- [x] Обрабатывать quote-driven risk evaluation.
 - [x] Подгружать активные risk rules.
 - [x] Подгружать account/positions/latest quotes.
 - [x] Рассчитывать `RiskMetricSnapshot`.
@@ -362,6 +363,7 @@
 - [ ] `HighFrequencyTradingActivityRuleStrategyTests`.
 - [x] `CreateTradeValidatorTests`.
 - [x] `RiskAlertFactoryTests`.
+- [x] `QuoteRiskEvaluationDispatcherTests`.
 - [ ] `LatestQuoteCacheTests`.
 - [ ] Проверить edge cases:
   - [x] нулевой объем;

@@ -26,7 +26,7 @@
 | 22. Проектируем Risk Engine | Risk Engine contracts готовы | `chapter-22-risk-engine-design` | Выполнено |
 | 23. Реализуем risk rule strategies | Метриковые risk strategies покрыты тестами | `chapter-23-risk-strategies` | Выполнено |
 | 24. Создаем risk alerts и deduplication | Alerts создаются без лавины дублей | `chapter-24-risk-alerts` | Выполнено |
-| 25. Добавляем quote-driven risk evaluation | Котировки влияют на risk metrics | `chapter-25-quote-risk-evaluation` | Не начато |
+| 25. Добавляем quote-driven risk evaluation | Котировки влияют на risk metrics | `chapter-25-quote-risk-evaluation` | Выполнено |
 | 26. Покрываем бизнес-логику unit-тестами | Обязательные unit-тесты готовы | `chapter-26-unit-test-coverage` | Не начато |
 | 27. Укрепляем integration tests | Сквозные сценарии покрыты | `chapter-27-integration-coverage` | Не начато |
 | 28. Оптимизируем PostgreSQL-запросы | EXPLAIN ANALYZE reports добавлены | `chapter-28-postgresql-performance` | Не начато |

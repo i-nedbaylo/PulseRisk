@@ -159,17 +159,19 @@ sequenceDiagram
 flowchart LR
     Simulator["MarketDataSimulator BackgroundService"]
     QuoteChannel["Bounded Channel<QuoteTick>"]
-    Cache["LatestQuoteCache"]
-    BatchWriter["QuoteBatchWriter"]
-    RiskWorker["RiskQuoteWorker"]
+    BatchWriter["QuoteBatchWriterWorker"]
+    Dispatcher["QuoteRiskEvaluationDispatcher"]
+    RiskChannel["Bounded Channel<RiskEvaluationRequested>"]
+    RiskWorker["RiskEvaluationRequestedWorker"]
     Db[("PostgreSQL")]
     Alerts[("RiskAlerts")]
 
     Simulator --> QuoteChannel
-    QuoteChannel --> Cache
     QuoteChannel --> BatchWriter
-    QuoteChannel --> RiskWorker
     BatchWriter --> Db
+    BatchWriter --> Dispatcher
+    Dispatcher --> RiskChannel
+    RiskChannel --> RiskWorker
     RiskWorker --> Alerts
 ```
 
@@ -281,6 +283,8 @@ CREATE INDEX ix_risk_alerts_severity_created_at ON risk_alerts (severity, create
 
 Текущая версия реализует этот шаг через `QuoteBatchWriterWorker` и application port `IQuoteBatchWriter`. Worker читает `QuoteTick` из bounded quote channel, накапливает batch по `QuoteBatchOptions.BatchSize` или `FlushIntervalMilliseconds`, создает scoped writer на flush и вызывает EF-реализацию `EfQuoteBatchWriter`. Infrastructure мапит ticks в доменные `Quote` entities и сохраняет их в таблицу `quotes`; BackgroundWorkers при этом не зависит от `PulseRiskDbContext`.
 
+После успешной записи batch-а worker вызывает `QuoteRiskEvaluationDispatcher`. Dispatcher берет последнюю котировку по каждому символу в batch-е, находит открытые позиции через `IPositionRepository.ListOpenBySymbolAsync(...)` и публикует `RiskEvaluationRequested` в risk channel. Второй reader для quote channel не добавляется намеренно: текущий `Channel<T>` работает как work queue, а не как pub/sub, поэтому параллельный consumer мог бы конкурировать с batch writer-ом за одни и те же ticks.
+
 ## 8. Risk Engine
 
 Risk Engine - центральный модуль проекта.
@@ -296,8 +300,8 @@ Risk Engine - центральный модуль проекта.
 - `ILatestQuoteReader` и `IRiskRuleRepository` являются application ports.
 - `EfLatestQuoteReader` и `EfRiskRuleRepository` являются PostgreSQL/EF Core adapters.
 - `RiskMetricSnapshot` рассчитывает net exposure, floating PnL, equity, margin used и margin level.
-
-Создание alerts намеренно оставлено следующим шагом: сначала фиксируем состав данных, формулы и первые полиморфные правила, затем подключаем сохранение алертов и защиту от дублей.
+- `RiskEvaluationProcessor` применяет strategies, создает `RiskAlert`, сохраняет его и публикует `RiskAlertRaisedEvent`.
+- `QuoteRiskEvaluationDispatcher` запускает risk evaluation от новых котировок для открытых позиций.
 
 Сейчас подключены первые метриковые strategies:
 
@@ -391,8 +395,8 @@ public interface IRiskRuleStrategy
 Фоновые процессы:
 
 - `MarketDataSimulatorWorker` - генерирует котировки и пишет `QuoteTick` в bounded quote channel.
-- `QuoteDispatchWorker` - отправляет quote events в cache, batch writer и risk queue.
-- `QuoteBatchWriterWorker` - пишет котировки в PostgreSQL batch'ами и сбрасывает остаток при shutdown.
+- `QuoteBatchWriterWorker` - пишет котировки в PostgreSQL batch'ами, сбрасывает остаток при shutdown и после успешного flush публикует quote-driven risk requests.
+- `QuoteRiskEvaluationDispatcher` - превращает сохраненные котировки в `RiskEvaluationRequested` для открытых позиций.
 - `RiskEventWorker` - обрабатывает события сделок и позиций.
 - `LoadTestWorker` - генерирует сделки и котировки для демонстрационного сценария.
 - `OutboxPublisherWorker` - optional senior extension.
@@ -405,7 +409,7 @@ public interface IRiskRuleStrategy
 - проще RabbitMQ/Kafka для учебного монолита;
 - поддерживает graceful completion и cancellation.
 
-Текущая реализация начинается с `IEventWriter<TEvent>`/`IEventReader<TEvent>` и `InMemoryEventChannel<TEvent>`. Каналы настраиваются через `EventChannelOptions`: для risk events используется режим `Wait`, потому что событие изменения позиции нельзя терять, а для потока котировок выбран `DropOldest`, где важнее свежие данные. Каналы отдают `EventChannelSnapshot` с depth, written/read/dropped counters и завершаются через `IEventChannelLifetime` при shutdown. `PositionChangedEventWorker` уже потребляет `PositionChangedEvent` и публикует `RiskEvaluationRequested`, а `RiskEvaluationRequestedWorker` готовит snapshot метрик для будущих risk strategies.
+Текущая реализация начинается с `IEventWriter<TEvent>`/`IEventReader<TEvent>` и `InMemoryEventChannel<TEvent>`. Каналы настраиваются через `EventChannelOptions`: для risk events используется режим `Wait`, потому что событие изменения позиции нельзя терять, а для потока котировок выбран `DropOldest`, где важнее свежие данные. Каналы отдают `EventChannelSnapshot` с depth, written/read/dropped counters и завершаются через `IEventChannelLifetime` при shutdown. `PositionChangedEventWorker` потребляет `PositionChangedEvent` и публикует `RiskEvaluationRequested`; `QuoteRiskEvaluationDispatcher` публикует такие же requests после сохранения batch-а котировок; `RiskEvaluationRequestedWorker` применяет Risk Engine к обоим источникам.
 
 ## 10. API
 
