@@ -33,7 +33,7 @@
 - unit-тесты orchestration для создания сделки;
 - расширенное unit-покрытие Risk Engine edge cases: отсутствие котировки, отсутствие active rules, disabled rules, unsupported rule strategy и threshold boundaries;
 - mapping integration tests для EF-модели;
-- Testcontainers-сценарий `client -> account -> trade -> position` на настоящей PostgreSQL, который автоматически пропускается, если Docker Engine недоступен;
+- Testcontainers-сценарии `client -> account -> trade -> position`, batch insert котировок и `exposure breach -> risk alert` на настоящей PostgreSQL, которые автоматически пропускаются, если Docker Engine недоступен;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -84,4 +84,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - укрепить integration tests: сквозной сценарий превышения лимита должен создавать risk alert в PostgreSQL.
+Следующий технический шаг - подготовить PostgreSQL performance evidence: тестовый набор данных и первые `EXPLAIN ANALYZE` отчеты для hot-path запросов.

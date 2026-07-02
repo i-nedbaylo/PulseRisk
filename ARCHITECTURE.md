@@ -537,7 +537,9 @@ Integration-тесты:
 
 Интеграционные тесты запускаются через Testcontainers PostgreSQL. Бизнес-логика должна тестироваться без БД.
 
-Первый сквозной PostgreSQL-сценарий проверяет путь `client -> account -> trade -> position`: test host подменяет только `ConnectionStrings:PulseRisk`, применяет EF Core migrations к временной базе, выполняет HTTP-запросы через `HttpClient` и затем проверяет фактическое состояние `trades`/`positions` через `PulseRiskDbContext`. На локальной машине тест помечается как skipped, если Docker Engine недоступен; в CI Docker должен быть обязательной частью runner-а.
+Сквозные PostgreSQL-сценарии проверяют пути `client -> account -> trade -> position`, batch insert котировок и `exposure breach -> risk alert`. Test host подменяет только `ConnectionStrings:PulseRisk`, применяет EF Core migrations к временной базе, выполняет HTTP-запросы через `HttpClient` и затем проверяет фактическое состояние `trades`/`positions`/`risk_alerts` через `PulseRiskDbContext`. На локальной машине тесты помечаются как skipped, если Docker Engine недоступен; в CI Docker должен быть обязательной частью runner-а.
+
+Для HTTP setup используется `IntegrationTestDataBuilder`: он инкапсулирует повторяющиеся `POST /api/clients`, `POST /api/accounts` и `POST /api/trades`, но не скрывает проверяемые assertions. Risk alert scenario использует polling PostgreSQL, потому что alert создается background worker-ом после асинхронной обработки `PositionChangedEvent` и `RiskEvaluationRequested`.
 
 Паттерны в тестовой инфраструктуре применяются точечно:
 
