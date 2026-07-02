@@ -35,6 +35,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IQuoteBatchWriter, EfQuoteBatchWriter>();
         services.AddScoped<ILatestQuoteReader, EfLatestQuoteReader>();
         services.AddScoped<IRiskRuleRepository, EfRiskRuleRepository>();
+        services.AddScoped<IRiskAlertRepository, EfRiskAlertRepository>();
 
         services.Configure<EventChannelOptions>(
             configuration.GetSection(EventChannelOptions.SectionName));

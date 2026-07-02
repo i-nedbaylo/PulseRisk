@@ -90,11 +90,11 @@
 - [x] Реализовать `MarginLevelWarningRuleStrategy`.
 - [ ] Реализовать `PriceSpikeDetectionRuleStrategy`.
 - [ ] Реализовать `HighFrequencyTradingActivityRuleStrategy`.
-- [ ] Создать `RiskAlertFactory`.
-- [ ] Добавить cooldown/deduplication модель для алертов.
+- [x] Создать `RiskAlertFactory`.
+- [x] Добавить cooldown/deduplication модель для алертов.
 - [ ] Покрыть каждое правило unit-тестами.
 - [ ] Проверить сценарий: rule disabled не создает alert.
-- [ ] Проверить сценарий: несколько rules могут создать несколько alert'ов в одной evaluation.
+- [x] Проверить сценарий: несколько rules могут создать несколько alert'ов в одной evaluation.
 
 ## 4. Infrastructure: PostgreSQL и EF Core
 
@@ -136,8 +136,8 @@
 - [x] Реализовать `InstrumentRepository`.
 - [x] Реализовать `TradeRepository`.
 - [x] Реализовать `PositionRepository`.
-- [ ] Реализовать `RiskRuleRepository`.
-- [ ] Реализовать `RiskAlertRepository`.
+- [x] Реализовать `RiskRuleRepository`.
+- [x] Реализовать `RiskAlertRepository`.
 - [x] Создать `IUnitOfWork` или использовать `DbContext` как unit of work за application boundary.
 - [ ] Создать query object `GetTradesQuery`.
 - [ ] Создать query object `GetPositionsQuery`.
@@ -236,10 +236,10 @@
 - [x] Подгружать account/positions/latest quotes.
 - [x] Рассчитывать `RiskMetricSnapshot`.
 - [x] Применять strategies по `RiskRuleType`.
-- [ ] Создавать risk alerts через `RiskAlertFactory`.
-- [ ] Реализовать alert deduplication/cooldown.
-- [ ] Сохранять alert в PostgreSQL.
-- [ ] Логировать alert как `Warning`.
+- [x] Создавать risk alerts через `RiskAlertFactory`.
+- [x] Реализовать alert deduplication/cooldown.
+- [x] Сохранять alert в PostgreSQL.
+- [x] Логировать alert как `Warning`.
 - [ ] Логировать длительную risk evaluation.
 - [ ] Добавить integration-тест "превышение лимита создает alert".
 - [ ] Добавить integration-тест "disabled rule не создает alert".
@@ -361,7 +361,7 @@
 - [ ] `PriceSpikeDetectionRuleStrategyTests`.
 - [ ] `HighFrequencyTradingActivityRuleStrategyTests`.
 - [x] `CreateTradeValidatorTests`.
-- [ ] `RiskAlertFactoryTests`.
+- [x] `RiskAlertFactoryTests`.
 - [ ] `LatestQuoteCacheTests`.
 - [ ] Проверить edge cases:
   - [x] нулевой объем;

@@ -353,8 +353,10 @@ public interface IRiskRuleStrategy
 
 Обоснование:
 
-- формат сообщения, severity, alert type и deduplication key задаются в одном месте;
+- формат сообщения, severity и alert type задаются в одном месте;
 - Risk Engine не размазывает правила создания алертов по разным обработчикам.
+
+В текущей реализации factory получает `RiskEvaluationContext`, `RiskRuleEvaluationResult` и timestamp evaluation. Она создает active `RiskAlert` только из triggered result. Это Simple Factory и GRASP Creator: объект создается единообразно и в валидном состоянии, но без лишней иерархии фабрик.
 
 ### Deduplication
 
@@ -365,6 +367,13 @@ public interface IRiskRuleStrategy
 - обновление существующего активного alert вместо вставки нового.
 
 Для первой версии рекомендуется cooldown-window и поиск активного alert по `(client_id, account_id, symbol, alert_type, resolved_at IS NULL)`.
+
+Текущая версия использует active-alert deduplication:
+
+- `IRiskAlertRepository.ExistsActiveAsync(...)` проверяет активный alert по `(client_id, trading_account_id, symbol, alert_type, resolved_at IS NULL)`;
+- `RiskEvaluationProcessor` дополнительно держит локальный ключ внутри одной evaluation, чтобы два сработавших правила одного `RiskAlertType` не создали дубль до `SaveChanges`;
+- новый alert сохраняется через `IUnitOfWork`;
+- `RiskAlertRaisedEvent` публикуется только после успешного сохранения.
 
 ## 9. Concurrency и background processing
 

@@ -46,6 +46,7 @@ public static class ApplicationServiceCollectionExtensions
         services.AddSingleton<IRiskRuleStrategy, MaxLossRuleStrategy>();
         services.AddSingleton<IRiskRuleStrategy, MarginLevelWarningRuleStrategy>();
         services.AddSingleton<RiskRuleStrategyResolver>();
+        services.AddSingleton<RiskAlertFactory>();
 
         return services;
     }

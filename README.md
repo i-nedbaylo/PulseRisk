@@ -22,8 +22,9 @@
 - configurable in-process bounded channels для quote/risk events;
 - backpressure diagnostics: depth, written/read/dropped counters и graceful completion каналов;
 - background worker, который превращает `PositionChangedEvent` в `RiskEvaluationRequested`;
-- Risk Engine skeleton: `RiskEvaluationRequestedWorker`, active rules/latest quote ports и расчет `RiskMetricSnapshot`;
+- Risk Engine: `RiskEvaluationRequestedWorker`, active rules/latest quote ports и расчет `RiskMetricSnapshot`;
 - risk rule strategies для exposure, loss и margin level с resolver-ом и unit-тестами;
+- создание `RiskAlert` через factory, active-alert deduplication, сохранение в PostgreSQL и публикация `RiskAlertRaisedEvent`;
 - отключаемый Market Data Simulator, который генерирует `QuoteTick` по настраиваемой частоте и пишет их в quote channel;
 - `QuoteBatchWriterWorker`, который читает `QuoteTick`, пишет котировки batch'ами в PostgreSQL и сбрасывает остаток batch при shutdown;
 - Swagger/OpenAPI с группами endpoints, описаниями операций, request examples и ProblemDetails-ответами;
@@ -82,4 +83,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - добавить создание risk alerts: `RiskAlertFactory`, deduplication/cooldown и сохранение активных алертов в PostgreSQL.
+Следующий технический шаг - добавить quote-driven risk evaluation, чтобы новые котировки запускали перерасчет risk metrics near real-time.
