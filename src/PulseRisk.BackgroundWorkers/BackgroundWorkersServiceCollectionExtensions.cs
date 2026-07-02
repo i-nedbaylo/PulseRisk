@@ -27,7 +27,9 @@ public static class BackgroundWorkersServiceCollectionExtensions
         services.AddHostedService<MarketDataSimulatorWorker>();
 
         services.AddSingleton<PositionChangedEventProcessor>();
+        services.AddScoped<RiskEvaluationProcessor>();
         services.AddHostedService<PositionChangedEventWorker>();
+        services.AddHostedService<RiskEvaluationRequestedWorker>();
 
         return services;
     }

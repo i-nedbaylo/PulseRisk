@@ -33,6 +33,8 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<ITradeRepository, EfTradeRepository>();
         services.AddScoped<IPositionRepository, EfPositionRepository>();
         services.AddScoped<IQuoteBatchWriter, EfQuoteBatchWriter>();
+        services.AddScoped<ILatestQuoteReader, EfLatestQuoteReader>();
+        services.AddScoped<IRiskRuleRepository, EfRiskRuleRepository>();
 
         services.Configure<EventChannelOptions>(
             configuration.GetSection(EventChannelOptions.SectionName));

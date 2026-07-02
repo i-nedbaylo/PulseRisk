@@ -229,12 +229,12 @@
 
 ## 10. Risk Engine
 
-- [ ] Реализовать `RiskEventWorker : BackgroundService`.
-- [ ] Обрабатывать `PositionChangedEvent`.
+- [x] Реализовать `RiskEventWorker : BackgroundService`.
+- [x] Обрабатывать `PositionChangedEvent`.
 - [ ] Обрабатывать quote-driven risk evaluation.
-- [ ] Подгружать активные risk rules.
-- [ ] Подгружать account/positions/latest quotes.
-- [ ] Рассчитывать `RiskMetricSnapshot`.
+- [x] Подгружать активные risk rules.
+- [x] Подгружать account/positions/latest quotes.
+- [x] Рассчитывать `RiskMetricSnapshot`.
 - [ ] Применять strategies по `RiskRuleType`.
 - [ ] Создавать risk alerts через `RiskAlertFactory`.
 - [ ] Реализовать alert deduplication/cooldown.

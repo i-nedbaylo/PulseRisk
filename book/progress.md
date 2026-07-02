@@ -23,7 +23,7 @@
 | 19. Реализуем bounded channels и backpressure | Bounded channel behavior протестирован | `chapter-19-backpressure` | Выполнено |
 | 20. Создаем Market Data Simulator | Quote simulator генерирует события | `chapter-20-market-simulator` | Выполнено |
 | 21. Пишем batch writer для котировок | Batch insert котировок работает | `chapter-21-quote-batch-writer` | Выполнено |
-| 22. Проектируем Risk Engine | Risk Engine contracts готовы | `chapter-22-risk-engine-design` | Не начато |
+| 22. Проектируем Risk Engine | Risk Engine contracts готовы | `chapter-22-risk-engine-design` | Выполнено |
 | 23. Реализуем risk rule strategies | Risk strategies покрыты тестами | `chapter-23-risk-strategies` | Не начато |
 | 24. Создаем risk alerts и deduplication | Alerts создаются без лавины дублей | `chapter-24-risk-alerts` | Не начато |
 | 25. Добавляем quote-driven risk evaluation | Котировки влияют на risk metrics | `chapter-25-quote-risk-evaluation` | Не начато |

@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PulseRisk.Application.Accounts;
 using PulseRisk.Application.Clients;
 using PulseRisk.Application.Instruments;
+using PulseRisk.Application.Risk;
 using PulseRisk.Application.Trades;
 
 namespace PulseRisk.Application;
@@ -37,6 +38,8 @@ public static class ApplicationServiceCollectionExtensions
             provider.GetRequiredService<CreateTradeValidator>());
         services.AddScoped<CreateTradeHandler>();
         services.AddScoped<GetTradeByIdHandler>();
+
+        services.AddScoped<RiskEvaluationContextBuilder>();
 
         return services;
     }

@@ -287,6 +287,18 @@ Risk Engine - центральный модуль проекта.
 
 Его задача - вычислять риск-метрики и применять набор risk rules.
 
+Текущая версия уже содержит первый design slice Risk Engine:
+
+- `PositionChangedEventWorker` превращает изменение позиции в `RiskEvaluationRequested`.
+- `RiskEvaluationRequestedWorker` читает risk requests из bounded risk channel.
+- `RiskEvaluationProcessor` создает scoped application pipeline на каждое событие.
+- `RiskEvaluationContextBuilder` подгружает account, position, instrument, latest quote и active risk rules.
+- `ILatestQuoteReader` и `IRiskRuleRepository` являются application ports.
+- `EfLatestQuoteReader` и `EfRiskRuleRepository` являются PostgreSQL/EF Core adapters.
+- `RiskMetricSnapshot` рассчитывает net exposure, floating PnL, equity, margin used и margin level.
+
+Strategies и создание alerts намеренно оставлены следующим шагом: сначала фиксируем состав данных и формулы, затем подключаем полиморфные правила.
+
 Метрики:
 
 - net exposure;
@@ -376,7 +388,7 @@ public interface IRiskRuleStrategy
 - проще RabbitMQ/Kafka для учебного монолита;
 - поддерживает graceful completion и cancellation.
 
-Текущая реализация начинается с `IEventWriter<TEvent>`/`IEventReader<TEvent>` и `InMemoryEventChannel<TEvent>`. Каналы настраиваются через `EventChannelOptions`: для risk events используется режим `Wait`, потому что событие изменения позиции нельзя терять, а для будущего потока котировок выбран `DropOldest`, где важнее свежие данные. Каналы отдают `EventChannelSnapshot` с depth, written/read/dropped counters и завершаются через `IEventChannelLifetime` при shutdown. `PositionChangedEventWorker` уже потребляет `PositionChangedEvent` и публикует `RiskEvaluationRequested`, но сам Risk Engine пока остается следующим модулем.
+Текущая реализация начинается с `IEventWriter<TEvent>`/`IEventReader<TEvent>` и `InMemoryEventChannel<TEvent>`. Каналы настраиваются через `EventChannelOptions`: для risk events используется режим `Wait`, потому что событие изменения позиции нельзя терять, а для потока котировок выбран `DropOldest`, где важнее свежие данные. Каналы отдают `EventChannelSnapshot` с depth, written/read/dropped counters и завершаются через `IEventChannelLifetime` при shutdown. `PositionChangedEventWorker` уже потребляет `PositionChangedEvent` и публикует `RiskEvaluationRequested`, а `RiskEvaluationRequestedWorker` готовит snapshot метрик для будущих risk strategies.
 
 ## 10. API
 
