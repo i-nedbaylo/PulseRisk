@@ -41,6 +41,13 @@ internal sealed class PositionConfiguration : IEntityTypeConfiguration<Position>
 
         builder.HasIndex(position => new { position.ClientId, position.Symbol });
 
+        builder.HasIndex(position => position.Symbol)
+            .HasDatabaseName("ix_positions_symbol");
+
+        builder.HasIndex(position => new { position.Symbol, position.TradingAccountId })
+            .HasDatabaseName("ix_positions_symbol_open_trading_account")
+            .HasFilter("net_volume <> 0");
+
         builder.HasIndex(position => new { position.TradingAccountId, position.Symbol })
             .IsUnique();
 

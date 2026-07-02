@@ -29,7 +29,7 @@
 | 25. Добавляем quote-driven risk evaluation | Котировки влияют на risk metrics | `chapter-25-quote-risk-evaluation` | Выполнено |
 | 26. Покрываем бизнес-логику unit-тестами | Обязательные unit-тесты готовы | `chapter-26-unit-test-coverage` | Выполнено |
 | 27. Укрепляем integration tests | Risk alert scenario покрыт PostgreSQL-тестом | `chapter-27-integration-coverage` | Выполнено |
-| 28. Оптимизируем PostgreSQL-запросы | EXPLAIN ANALYZE reports добавлены | `chapter-28-postgresql-performance` | Не начато |
+| 28. Оптимизируем PostgreSQL-запросы | EXPLAIN ANALYZE reports добавлены | `chapter-28-postgresql-performance` | Выполнено |
 | 29. Добавляем нагрузочный сценарий | Load scenario формирует отчет | `chapter-29-load-scenario` | Не начато |
 | 30. Измеряем производительность и аллокации | BenchmarkDotNet report добавлен | `chapter-30-benchmarks` | Не начато |
 | 31. Упаковываем проект в Docker Compose | `docker compose up --build` работает | `chapter-31-docker-compose` | Не начато |

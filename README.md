@@ -34,6 +34,7 @@
 - расширенное unit-покрытие Risk Engine edge cases: отсутствие котировки, отсутствие active rules, disabled rules, unsupported rule strategy и threshold boundaries;
 - mapping integration tests для EF-модели;
 - Testcontainers-сценарии `client -> account -> trade -> position`, batch insert котировок и `exposure breach -> risk alert` на настоящей PostgreSQL, которые автоматически пропускаются, если Docker Engine недоступен;
+- PostgreSQL performance evidence: seed-набор данных, `EXPLAIN ANALYZE` отчеты для hot-path запросов и partial index для quote-driven поиска открытых позиций;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -80,8 +81,9 @@ curl http://localhost:5000/api/health
 - `ARCHITECTURE.md` - архитектурное описание проекта.
 - `DEVELOPMENT_PLAN.md` - детальный чек-лист разработки.
 - `BOOK_PLAN.md` - подробный план книги.
+- `docs/explain-analyze/` - воспроизводимые SQL-скрипты и локальные `EXPLAIN ANALYZE` отчеты.
 - `book/` - будущая книга, которая пишется параллельно с кодом.
 
 ## Следующий этап
 
-Следующий технический шаг - подготовить PostgreSQL performance evidence: тестовый набор данных и первые `EXPLAIN ANALYZE` отчеты для hot-path запросов.
+Следующий технический шаг - добавить нагрузочный сценарий и сохранить первый отчет в `docs/load-tests`.

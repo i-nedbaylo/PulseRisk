@@ -1,0 +1,52 @@
+Before ix_positions_symbol_open_trading_account
+DROP INDEX
+ANALYZE
+                                                                 QUERY PLAN                                                                 
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=295.02..296.84 rows=727 width=72) (actual time=0.594..0.612 rows=727.00 loops=1)
+   Output: id, client_id, trading_account_id, symbol, net_volume, average_price, floating_pn_l, updated_at
+   Sort Key: positions.trading_account_id
+   Sort Method: quicksort  Memory: 93kB
+   Buffers: shared hit=155
+   ->  Bitmap Heap Scan on public.positions  (cost=50.47..260.47 rows=727 width=72) (actual time=0.096..0.512 rows=727.00 loops=1)
+         Output: id, client_id, trading_account_id, symbol, net_volume, average_price, floating_pn_l, updated_at
+         Recheck Cond: ((positions.symbol)::text = 'EURUSD'::text)
+         Filter: (positions.net_volume <> '0'::numeric)
+         Rows Removed by Filter: 3273
+         Heap Blocks: exact=150
+         Buffers: shared hit=155
+         ->  Bitmap Index Scan on ix_positions_symbol  (cost=0.00..50.28 rows=4000 width=0) (actual time=0.071..0.071 rows=4000.00 loops=1)
+               Index Cond: ((positions.symbol)::text = 'EURUSD'::text)
+               Index Searches: 1
+               Buffers: shared hit=5
+ Planning:
+   Buffers: shared hit=54
+ Planning Time: 0.277 ms
+ Execution Time: 0.668 ms
+(20 rows)
+
+After ix_positions_symbol_open_trading_account
+CREATE INDEX
+ANALYZE
+                                                                          QUERY PLAN                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=221.37..223.19 rows=727 width=72) (actual time=0.291..0.312 rows=727.00 loops=1)
+   Output: id, client_id, trading_account_id, symbol, net_volume, average_price, floating_pn_l, updated_at
+   Sort Key: positions.trading_account_id
+   Sort Method: quicksort  Memory: 93kB
+   Buffers: shared hit=150 read=5
+   ->  Bitmap Heap Scan on public.positions  (cost=25.91..186.82 rows=727 width=72) (actual time=0.101..0.222 rows=727.00 loops=1)
+         Output: id, client_id, trading_account_id, symbol, net_volume, average_price, floating_pn_l, updated_at
+         Recheck Cond: (((positions.symbol)::text = 'EURUSD'::text) AND (positions.net_volume <> '0'::numeric))
+         Heap Blocks: exact=150
+         Buffers: shared hit=150 read=5
+         ->  Bitmap Index Scan on ix_positions_symbol_open_trading_account  (cost=0.00..25.73 rows=727 width=0) (actual time=0.083..0.083 rows=727.00 loops=1)
+               Index Cond: ((positions.symbol)::text = 'EURUSD'::text)
+               Index Searches: 1
+               Buffers: shared read=5
+ Planning:
+   Buffers: shared hit=28 read=1
+ Planning Time: 0.170 ms
+ Execution Time: 0.340 ms
+(18 rows)
+

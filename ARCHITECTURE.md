@@ -259,6 +259,9 @@ CREATE INDEX ix_trades_client_id_created_at ON trades (client_id, created_at DES
 CREATE INDEX ix_trades_symbol_created_at ON trades (symbol, created_at DESC);
 CREATE UNIQUE INDEX ux_positions_account_symbol ON positions (trading_account_id, symbol);
 CREATE INDEX ix_positions_client_id_symbol ON positions (client_id, symbol);
+CREATE INDEX ix_positions_symbol_open_trading_account
+    ON positions (symbol, trading_account_id)
+    WHERE net_volume <> 0;
 CREATE INDEX ix_quotes_symbol_timestamp ON quotes (symbol, timestamp DESC);
 CREATE INDEX ix_risk_alerts_client_id_created_at ON risk_alerts (client_id, created_at DESC);
 CREATE INDEX ix_risk_alerts_severity_created_at ON risk_alerts (severity, created_at DESC);
@@ -270,6 +273,15 @@ CREATE INDEX ix_risk_alerts_severity_created_at ON risk_alerts (severity, create
 - partial index `WHERE resolved_at IS NULL`;
 - `risk_rules(rule_type, is_enabled)`;
 - `trades(trading_account_id, created_at DESC)`.
+
+`ix_positions_symbol_open_trading_account` добавлен под конкретный hot path: `QuoteRiskEvaluationDispatcher` получает новую котировку, вызывает `IPositionRepository.ListOpenBySymbolAsync(...)` и ищет только открытые позиции по символу. Без partial index PostgreSQL может прочитать все позиции инструмента и затем отфильтровать flat positions (`net_volume = 0`). Partial index хранит только строки, которым действительно нужен quote-driven risk evaluation.
+
+Паттерны здесь применяются на уровне ответственности:
+
+- **GRASP Information Expert**: знание о том, какие позиции открыты, остается в persistence/query boundary, потому что именно там есть SQL-предикат и статистика PostgreSQL.
+- **GRASP Indirection**: Application layer вызывает repository port и не знает о конкретном индексе.
+- **Protected Variations**: если lookup будет заменен на read model или cache, контракт `ListOpenBySymbolAsync(...)` сохранит Risk Engine от изменений.
+- **Отказ от overengineering**: не вводится отдельная read-model таблица или cache до появления измерений; сначала применяется минимальная оптимизация, подтвержденная `EXPLAIN ANALYZE`.
 
 ### 7.5. Batch insert котировок
 
@@ -504,6 +516,8 @@ Swagger/OpenAPI обязателен. Валидацию входных DTO мо
 - `AsNoTracking` для read-only queries;
 - compiled queries в горячих местах после измерений;
 - BenchmarkDotNet для PnL calculator variants.
+
+Текущая версия уже содержит первый PostgreSQL performance evidence в `docs/explain-analyze/`: seed-набор данных, hot-path `EXPLAIN ANALYZE` и сравнение lookup открытых позиций до/после partial index. В локальном disposable-наборе данных индекс `ix_positions_symbol_open_trading_account` уменьшил чтение для `EURUSD` с 4 000 строк по символу с фильтрацией 3 273 flat positions до прямого чтения 727 открытых позиций.
 
 ## 13. Testing strategy
 

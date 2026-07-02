@@ -1,0 +1,75 @@
+1. Client trade history
+                                                                          QUERY PLAN                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=0.42..398.74 rows=100 width=79) (actual time=0.023..0.261 rows=100.00 loops=1)
+   Output: id, client_id, trading_account_id, symbol, side, volume, open_price, created_at
+   Buffers: shared hit=53
+   ->  Index Scan using ix_trades_client_id_created_at on public.trades  (cost=0.42..478.40 rows=120 width=79) (actual time=0.022..0.254 rows=100.00 loops=1)
+         Output: id, client_id, trading_account_id, symbol, side, volume, open_price, created_at
+         Index Cond: (trades.client_id = '11111111-0000-0000-0000-000000000001'::uuid)
+         Index Searches: 1
+         Buffers: shared hit=53
+ Planning:
+   Buffers: shared hit=163 read=1
+ Planning Time: 0.717 ms
+ Execution Time: 0.293 ms
+(12 rows)
+
+2. Latest quote by symbol
+                                                                         QUERY PLAN                                                                          
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=0.42..0.58 rows=1 width=47) (actual time=0.032..0.032 rows=1.00 loops=1)
+   Output: id, symbol, bid, ask, "timestamp"
+   Buffers: shared hit=4
+   ->  Index Scan using ix_quotes_symbol_timestamp on public.quotes  (cost=0.42..15860.97 rows=100680 width=47) (actual time=0.032..0.032 rows=1.00 loops=1)
+         Output: id, symbol, bid, ask, "timestamp"
+         Index Cond: ((quotes.symbol)::text = 'EURUSD'::text)
+         Index Searches: 1
+         Buffers: shared hit=4
+ Planning:
+   Buffers: shared hit=49
+ Planning Time: 0.185 ms
+ Execution Time: 0.039 ms
+(12 rows)
+
+3. Active alert deduplication lookup
+                                                                                                                                        QUERY PLAN                                                                                                                                         
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Result  (cost=8.30..8.31 rows=1 width=1) (actual time=0.013..0.013 rows=1.00 loops=1)
+   Output: (InitPlan 1).col1
+   Buffers: shared hit=2
+   InitPlan 1
+     ->  Index Only Scan using ix_risk_alerts_client_id_trading_account_id_symbol_alert_type on public.risk_alerts  (cost=0.28..8.30 rows=1 width=0) (actual time=0.010..0.010 rows=0.00 loops=1)
+           Index Cond: ((risk_alerts.client_id = '11111111-0000-0000-0000-000000000001'::uuid) AND (risk_alerts.trading_account_id = '22222222-0000-0000-0000-000000000001'::uuid) AND (risk_alerts.symbol = 'EURUSD'::text) AND (risk_alerts.alert_type = 'ExposureLimitExceeded'::text))
+           Heap Fetches: 0
+           Index Searches: 1
+           Buffers: shared hit=2
+ Planning:
+   Buffers: shared hit=120
+ Planning Time: 0.420 ms
+ Execution Time: 0.025 ms
+(13 rows)
+
+4. Quote-driven open positions lookup
+                                                                          QUERY PLAN                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=225.37..227.19 rows=727 width=72) (actual time=0.714..0.733 rows=727.00 loops=1)
+   Output: id, client_id, trading_account_id, symbol, net_volume, average_price, floating_pn_l, updated_at
+   Sort Key: positions.trading_account_id
+   Sort Method: quicksort  Memory: 93kB
+   Buffers: shared hit=160
+   ->  Bitmap Heap Scan on public.positions  (cost=29.91..190.82 rows=727 width=72) (actual time=0.078..0.616 rows=727.00 loops=1)
+         Output: id, client_id, trading_account_id, symbol, net_volume, average_price, floating_pn_l, updated_at
+         Recheck Cond: (((positions.symbol)::text = 'EURUSD'::text) AND (positions.net_volume <> '0'::numeric))
+         Heap Blocks: exact=150
+         Buffers: shared hit=157
+         ->  Bitmap Index Scan on ix_positions_symbol_open_trading_account  (cost=0.00..29.73 rows=727 width=0) (actual time=0.054..0.054 rows=727.00 loops=1)
+               Index Cond: ((positions.symbol)::text = 'EURUSD'::text)
+               Index Searches: 1
+               Buffers: shared hit=7
+ Planning:
+   Buffers: shared hit=105
+ Planning Time: 0.361 ms
+ Execution Time: 0.772 ms
+(18 rows)
+
