@@ -337,6 +337,11 @@ public sealed class RiskEvaluationProcessorTests
 
             return Task.CompletedTask;
         }
+
+        public Task<long> CountActiveAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult((long)(ActiveKeys.Count + AddedAlerts.Count(alert => alert.ResolvedAt is null)));
+        }
     }
 
     private sealed class FakeUnitOfWork : IUnitOfWork

@@ -1,0 +1,25 @@
+namespace PulseRisk.BackgroundWorkers.LoadTests;
+
+public sealed record LoadTestReport(
+    string ScenarioName,
+    LoadTestProfile Profile,
+    DateTimeOffset StartedAt,
+    DateTimeOffset FinishedAt,
+    TimeSpan GenerationDuration,
+    TimeSpan DrainDuration,
+    int ClientCount,
+    int AccountCount,
+    int QuotesPerSecondTarget,
+    int TradesPerSecondTarget,
+    long QuotesGenerated,
+    long TradesAttempted,
+    long TradesSucceeded,
+    long TradesFailed,
+    double ActualQuotesPerSecond,
+    double ActualTradesPerSecond,
+    double RiskEvaluationsPerSecond,
+    double AverageTradeLatencyMilliseconds,
+    double P95TradeLatencyMilliseconds,
+    long DroppedQuotes,
+    long ActiveAlerts,
+    IReadOnlyCollection<EventChannelDelta> ChannelDeltas);

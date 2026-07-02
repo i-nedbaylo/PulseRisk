@@ -519,6 +519,18 @@ Swagger/OpenAPI обязателен. Валидацию входных DTO мо
 
 Текущая версия уже содержит первый PostgreSQL performance evidence в `docs/explain-analyze/`: seed-набор данных, hot-path `EXPLAIN ANALYZE` и сравнение lookup открытых позиций до/после partial index. В локальном disposable-наборе данных индекс `ix_positions_symbol_open_trading_account` уменьшил чтение для `EURUSD` с 4 000 строк по символу с фильтрацией 3 273 flat positions до прямого чтения 727 открытых позиций.
 
+Также добавлен первый load-test сценарий в `LoadTestWorker`. Он выключен по умолчанию и включается только через `LoadTest:Enabled=true`. Сценарий создает клиентов и счета через application handlers, генерирует сделки через `CreateTradeHandler`, пишет котировки в quote channel, ждет drain window и сохраняет markdown-отчет в `docs/load-tests`.
+
+Паттерны в load-test части:
+
+- **Template Method**: `BackgroundService` задает lifecycle worker-а, проект реализует конкретный `ExecuteAsync`.
+- **GRASP Controller / Pure Fabrication**: `LoadTestScenarioRunner` не является доменной сущностью; он координирует сценарий нагрузки и отделяет его от hosted-service lifecycle.
+- **GRASP Indirection**: сценарий использует application handlers и `IEventWriter<QuoteTick>`, а не прямую запись в таблицы и не прямой вызов worker-ов.
+- **Protected Variations**: `ILoadTestReportWriter` отделяет расчет метрик от формата отчета; markdown можно заменить JSON/HTML без изменения генератора нагрузки.
+- **Отказ от overengineering**: сценарий не вводит внешний load-test framework и не имитирует распределенную систему до появления Docker Compose/CI окружения.
+
+Локальный отчет `docs/load-tests/2026-07-02-local-load-report.md` снят на disposable PostgreSQL 18 cluster: `Quotes500`, 5 клиентов, 5 счетов, 3 секунды генерации, 1463 котировки, 28 успешных сделок, 54 обработанных risk evaluation requests, dropped quotes `0`.
+
 ## 13. Testing strategy
 
 Unit-тесты текущей версии:

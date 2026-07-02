@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PulseRisk.BackgroundWorkers.LoadTests;
 using PulseRisk.BackgroundWorkers.MarketData;
 using PulseRisk.BackgroundWorkers.RiskEvents;
 
@@ -20,12 +21,20 @@ public static class BackgroundWorkersServiceCollectionExtensions
             .Bind(configuration.GetSection(QuoteBatchOptions.SectionName))
             .ValidateOnStart();
 
+        services.AddOptions<LoadTestOptions>()
+            .Bind(configuration.GetSection(LoadTestOptions.SectionName))
+            .ValidateOnStart();
+
         services.AddSingleton<IValidateOptions<MarketDataOptions>, MarketDataOptionsValidator>();
         services.AddSingleton<IValidateOptions<QuoteBatchOptions>, QuoteBatchOptionsValidator>();
+        services.AddSingleton<IValidateOptions<LoadTestOptions>, LoadTestOptionsValidator>();
         services.AddSingleton<MarketDataQuoteGenerator>();
         services.AddScoped<QuoteRiskEvaluationDispatcher>();
+        services.AddScoped<LoadTestScenarioRunner>();
+        services.AddSingleton<ILoadTestReportWriter, MarkdownLoadTestReportWriter>();
         services.AddHostedService<QuoteBatchWriterWorker>();
         services.AddHostedService<MarketDataSimulatorWorker>();
+        services.AddHostedService<LoadTestWorker>();
 
         services.AddSingleton<PositionChangedEventProcessor>();
         services.AddScoped<RiskEvaluationProcessor>();

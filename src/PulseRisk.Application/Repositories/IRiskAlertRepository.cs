@@ -13,5 +13,7 @@ public interface IRiskAlertRepository
         RiskAlertType alertType,
         CancellationToken cancellationToken);
 
+    Task<long> CountActiveAsync(CancellationToken cancellationToken);
+
     Task AddAsync(RiskAlert alert, CancellationToken cancellationToken);
 }

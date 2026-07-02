@@ -27,6 +27,13 @@ internal sealed class EfRiskAlertRepository(PulseRiskDbContext dbContext) : IRis
                 cancellationToken);
     }
 
+    public Task<long> CountActiveAsync(CancellationToken cancellationToken)
+    {
+        return dbContext.RiskAlerts
+            .AsNoTracking()
+            .LongCountAsync(alert => alert.ResolvedAt == null, cancellationToken);
+    }
+
     public async Task AddAsync(RiskAlert alert, CancellationToken cancellationToken)
     {
         await dbContext.RiskAlerts.AddAsync(alert, cancellationToken);

@@ -277,23 +277,23 @@
 
 ## 12. Load-test scenario
 
-- [ ] Реализовать `LoadTestWorker`.
-- [ ] Добавить генерацию клиентов.
-- [ ] Добавить генерацию счетов.
-- [ ] Добавить генерацию сделок.
-- [ ] Добавить генерацию котировок 500/sec.
-- [ ] Добавить профиль 1000/sec.
-- [ ] Добавить профиль 5000/sec как optional senior scenario.
-- [ ] Собирать статистику:
-  - [ ] trades/sec;
-  - [ ] quotes/sec;
-  - [ ] risk evaluations/sec;
-  - [ ] average latency;
-  - [ ] p95 latency;
-  - [ ] dropped quotes;
-  - [ ] active alerts.
-- [ ] Сохранять отчет в `docs/load-tests`.
-- [ ] Добавить README-раздел с результатами.
+- [x] Реализовать `LoadTestWorker`.
+- [x] Добавить генерацию клиентов.
+- [x] Добавить генерацию счетов.
+- [x] Добавить генерацию сделок.
+- [x] Добавить генерацию котировок 500/sec.
+- [x] Добавить профиль 1000/sec.
+- [x] Добавить профиль 5000/sec как optional senior scenario.
+- [x] Собирать статистику:
+  - [x] trades/sec;
+  - [x] quotes/sec;
+  - [x] risk evaluations/sec;
+  - [x] average latency;
+  - [x] p95 latency;
+  - [x] dropped quotes;
+  - [x] active alerts.
+- [x] Сохранять отчет в `docs/load-tests`.
+- [x] Добавить README-раздел с результатами.
 
 ## 13. Benchmarks
 
