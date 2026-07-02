@@ -297,7 +297,15 @@ Risk Engine - центральный модуль проекта.
 - `EfLatestQuoteReader` и `EfRiskRuleRepository` являются PostgreSQL/EF Core adapters.
 - `RiskMetricSnapshot` рассчитывает net exposure, floating PnL, equity, margin used и margin level.
 
-Strategies и создание alerts намеренно оставлены следующим шагом: сначала фиксируем состав данных и формулы, затем подключаем полиморфные правила.
+Создание alerts намеренно оставлено следующим шагом: сначала фиксируем состав данных, формулы и первые полиморфные правила, затем подключаем сохранение алертов и защиту от дублей.
+
+Сейчас подключены первые метриковые strategies:
+
+- `MaxExposureRuleStrategy`;
+- `MaxLossRuleStrategy`;
+- `MarginLevelWarningRuleStrategy`.
+
+`RiskRuleStrategyResolver` выбирает strategy по `RiskRuleType`. Если active rule пока не имеет strategy, Risk Engine логирует это и продолжает обработку: так активные seed-правила `PriceSpikeDetection` и `HighFrequencyTradingActivity` не ломают worker до появления quote-driven/trade-activity контекста.
 
 Метрики:
 

@@ -23,6 +23,7 @@
 - backpressure diagnostics: depth, written/read/dropped counters и graceful completion каналов;
 - background worker, который превращает `PositionChangedEvent` в `RiskEvaluationRequested`;
 - Risk Engine skeleton: `RiskEvaluationRequestedWorker`, active rules/latest quote ports и расчет `RiskMetricSnapshot`;
+- risk rule strategies для exposure, loss и margin level с resolver-ом и unit-тестами;
 - отключаемый Market Data Simulator, который генерирует `QuoteTick` по настраиваемой частоте и пишет их в quote channel;
 - `QuoteBatchWriterWorker`, который читает `QuoteTick`, пишет котировки batch'ами в PostgreSQL и сбрасывает остаток batch при shutdown;
 - Swagger/OpenAPI с группами endpoints, описаниями операций, request examples и ProblemDetails-ответами;
@@ -81,4 +82,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - реализовать risk rule strategies: MaxExposure, MaxLoss, MarginLevel и первые unit-тесты правил.
+Следующий технический шаг - добавить создание risk alerts: `RiskAlertFactory`, deduplication/cooldown и сохранение активных алертов в PostgreSQL.

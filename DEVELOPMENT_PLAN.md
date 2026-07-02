@@ -83,11 +83,11 @@
 
 ## 3. Risk rules
 
-- [ ] Создать интерфейс `IRiskRuleStrategy`.
-- [ ] Реализовать resolver `RiskRuleStrategyResolver`.
-- [ ] Реализовать `MaxExposureRuleStrategy`.
-- [ ] Реализовать `MaxLossRuleStrategy`.
-- [ ] Реализовать `MarginLevelWarningRuleStrategy`.
+- [x] Создать интерфейс `IRiskRuleStrategy`.
+- [x] Реализовать resolver `RiskRuleStrategyResolver`.
+- [x] Реализовать `MaxExposureRuleStrategy`.
+- [x] Реализовать `MaxLossRuleStrategy`.
+- [x] Реализовать `MarginLevelWarningRuleStrategy`.
 - [ ] Реализовать `PriceSpikeDetectionRuleStrategy`.
 - [ ] Реализовать `HighFrequencyTradingActivityRuleStrategy`.
 - [ ] Создать `RiskAlertFactory`.
@@ -235,7 +235,7 @@
 - [x] Подгружать активные risk rules.
 - [x] Подгружать account/positions/latest quotes.
 - [x] Рассчитывать `RiskMetricSnapshot`.
-- [ ] Применять strategies по `RiskRuleType`.
+- [x] Применять strategies по `RiskRuleType`.
 - [ ] Создавать risk alerts через `RiskAlertFactory`.
 - [ ] Реализовать alert deduplication/cooldown.
 - [ ] Сохранять alert в PostgreSQL.
@@ -355,9 +355,9 @@
 
 - [x] `PositionCalculatorTests`.
 - [x] `PnLCalculatorTests`.
-- [ ] `MaxExposureRuleStrategyTests`.
-- [ ] `MaxLossRuleStrategyTests`.
-- [ ] `MarginLevelWarningRuleStrategyTests`.
+- [x] `MaxExposureRuleStrategyTests`.
+- [x] `MaxLossRuleStrategyTests`.
+- [x] `MarginLevelWarningRuleStrategyTests`.
 - [ ] `PriceSpikeDetectionRuleStrategyTests`.
 - [ ] `HighFrequencyTradingActivityRuleStrategyTests`.
 - [x] `CreateTradeValidatorTests`.

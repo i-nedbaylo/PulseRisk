@@ -4,6 +4,8 @@ using PulseRisk.Application.Clients;
 using PulseRisk.Application.Instruments;
 using PulseRisk.Application.Risk;
 using PulseRisk.Application.Trades;
+using PulseRisk.Domain.Risk;
+using PulseRisk.Domain.Risk.Strategies;
 
 namespace PulseRisk.Application;
 
@@ -40,6 +42,10 @@ public static class ApplicationServiceCollectionExtensions
         services.AddScoped<GetTradeByIdHandler>();
 
         services.AddScoped<RiskEvaluationContextBuilder>();
+        services.AddSingleton<IRiskRuleStrategy, MaxExposureRuleStrategy>();
+        services.AddSingleton<IRiskRuleStrategy, MaxLossRuleStrategy>();
+        services.AddSingleton<IRiskRuleStrategy, MarginLevelWarningRuleStrategy>();
+        services.AddSingleton<RiskRuleStrategyResolver>();
 
         return services;
     }
