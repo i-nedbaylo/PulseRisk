@@ -25,6 +25,19 @@ public sealed class MarginLevelWarningRuleStrategyTests
     }
 
     [Fact]
+    public async Task EvaluateAsync_WhenMarginLevelIsAtThreshold_ShouldTrigger()
+    {
+        var strategy = new MarginLevelWarningRuleStrategy();
+        var context = CreateContext(marginLevel: 100m);
+        var rule = CreateRule(threshold: 100m);
+
+        var result = await strategy.EvaluateAsync(context, rule, CancellationToken.None);
+
+        result.IsTriggered.Should().BeTrue();
+        result.AlertType.Should().Be(RiskAlertType.MarginLevelWarning);
+    }
+
+    [Fact]
     public async Task EvaluateAsync_WhenMarginLevelIsAboveThreshold_ShouldNotTrigger()
     {
         var strategy = new MarginLevelWarningRuleStrategy();

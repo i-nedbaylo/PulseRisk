@@ -89,12 +89,74 @@ public sealed class RiskEvaluationProcessorTests
         fixture.AlertEvents.Items.Should().ContainSingle();
     }
 
-    private static ProcessorFixture CreateFixture(IReadOnlyCollection<RiskRule> rules)
+    [Fact]
+    public async Task ProcessAsync_WhenLatestQuoteDoesNotExist_ShouldSkipWithoutPersistingAlerts()
+    {
+        var fixture = CreateFixture(
+            [
+                new RiskRule(Guid.NewGuid(), "Max exposure", RiskRuleType.MaxExposureLimit, 100_000m, RiskSeverity.Critical, isEnabled: true)
+            ],
+            hasLatestQuote: false);
+
+        await fixture.Processor.ProcessAsync(fixture.Request, CancellationToken.None);
+
+        fixture.RiskAlerts.AddedAlerts.Should().BeEmpty();
+        fixture.UnitOfWork.SaveChangesCalls.Should().Be(0);
+        fixture.AlertEvents.Items.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WhenNoActiveRulesExist_ShouldNotPersistAlerts()
+    {
+        var fixture = CreateFixture([]);
+
+        await fixture.Processor.ProcessAsync(fixture.Request, CancellationToken.None);
+
+        fixture.RiskAlerts.AddedAlerts.Should().BeEmpty();
+        fixture.UnitOfWork.SaveChangesCalls.Should().Be(0);
+        fixture.AlertEvents.Items.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WhenRuleIsDisabled_ShouldNotPersistAlert()
+    {
+        var fixture = CreateFixture([
+            new RiskRule(Guid.NewGuid(), "Disabled max exposure", RiskRuleType.MaxExposureLimit, 100_000m, RiskSeverity.Critical, isEnabled: false)
+        ]);
+
+        await fixture.Processor.ProcessAsync(fixture.Request, CancellationToken.None);
+
+        fixture.RiskAlerts.AddedAlerts.Should().BeEmpty();
+        fixture.UnitOfWork.SaveChangesCalls.Should().Be(0);
+        fixture.AlertEvents.Items.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WhenActiveRuleHasNoStrategy_ShouldSkipWithoutPersistingAlerts()
+    {
+        var fixture = CreateFixture([
+            new RiskRule(Guid.NewGuid(), "Price spike", RiskRuleType.PriceSpikeDetection, 2.5m, RiskSeverity.Warning, isEnabled: true)
+        ]);
+
+        await fixture.Processor.ProcessAsync(fixture.Request, CancellationToken.None);
+
+        fixture.RiskAlerts.AddedAlerts.Should().BeEmpty();
+        fixture.UnitOfWork.SaveChangesCalls.Should().Be(0);
+        fixture.AlertEvents.Items.Should().BeEmpty();
+    }
+
+    private static ProcessorFixture CreateFixture(
+        IReadOnlyCollection<RiskRule> rules,
+        bool hasLatestQuote = true,
+        Quote? latestQuote = null)
     {
         var clientId = Guid.NewGuid();
         var tradingAccountId = Guid.NewGuid();
         var symbol = new Symbol("EURUSD");
         var timestamp = new DateTimeOffset(2026, 7, 2, 12, 0, 0, TimeSpan.Zero);
+        latestQuote = hasLatestQuote
+            ? latestQuote ?? new Quote(Guid.NewGuid(), symbol, new Price(1.30m), new Price(1.31m), timestamp)
+            : null;
 
         var builder = new RiskEvaluationContextBuilder(
             new FakeTradingAccountRepository(new TradingAccount(
@@ -113,7 +175,7 @@ public sealed class RiskEvaluationProcessorTests
                 floatingPnL: 0m,
                 timestamp)),
             new FakeInstrumentRepository(new Instrument(symbol, "EUR", "USD", 5, 100_000m, isActive: true)),
-            new FakeLatestQuoteReader(new Quote(Guid.NewGuid(), symbol, new Price(1.30m), new Price(1.31m), timestamp)),
+            new FakeLatestQuoteReader(latestQuote),
             new FakeRiskRuleRepository(rules));
         var riskAlerts = new FakeRiskAlertRepository();
         var unitOfWork = new FakeUnitOfWork();
@@ -229,11 +291,11 @@ public sealed class RiskEvaluationProcessorTests
         }
     }
 
-    private sealed class FakeLatestQuoteReader(Quote quote) : ILatestQuoteReader
+    private sealed class FakeLatestQuoteReader(Quote? quote) : ILatestQuoteReader
     {
         public Task<Quote?> GetLatestAsync(Symbol symbol, CancellationToken cancellationToken)
         {
-            return Task.FromResult(quote.Symbol == symbol ? quote : null);
+            return Task.FromResult(quote?.Symbol == symbol ? quote : null);
         }
     }
 
@@ -241,7 +303,11 @@ public sealed class RiskEvaluationProcessorTests
     {
         public Task<IReadOnlyCollection<RiskRule>> ListEnabledAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult(rules);
+            var enabledRules = rules
+                .Where(rule => rule.IsEnabled)
+                .ToArray();
+
+            return Task.FromResult<IReadOnlyCollection<RiskRule>>(enabledRules);
         }
     }
 

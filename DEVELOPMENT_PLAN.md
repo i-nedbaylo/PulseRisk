@@ -73,7 +73,7 @@
   - [x] bid <= ask;
   - [x] leverage > 0;
   - [x] inactive instrument нельзя использовать для новой сделки;
-  - [ ] disabled risk rule не участвует в проверке.
+  - [x] disabled risk rule не участвует в проверке.
 - [x] Реализовать доменный сервис `PositionCalculator`.
 - [x] Реализовать доменный сервис `PnLCalculator`.
 - [x] Реализовать модели risk evaluation:
@@ -93,7 +93,7 @@
 - [x] Создать `RiskAlertFactory`.
 - [x] Добавить cooldown/deduplication модель для алертов.
 - [ ] Покрыть каждое правило unit-тестами.
-- [ ] Проверить сценарий: rule disabled не создает alert.
+- [x] Проверить сценарий: rule disabled не создает alert.
 - [x] Проверить сценарий: несколько rules могут создать несколько alert'ов в одной evaluation.
 
 ## 4. Infrastructure: PostgreSQL и EF Core
@@ -365,13 +365,13 @@
 - [x] `RiskAlertFactoryTests`.
 - [x] `QuoteRiskEvaluationDispatcherTests`.
 - [ ] `LatestQuoteCacheTests`.
-- [ ] Проверить edge cases:
+- [x] Проверить edge cases:
   - [x] нулевой объем;
   - [x] отрицательная цена;
   - [x] закрытие позиции;
   - [x] переворот позиции;
-  - [ ] отсутствие котировки;
-  - [ ] отсутствие активных risk rules.
+  - [x] отсутствие котировки;
+  - [x] отсутствие активных risk rules.
 
 ## 18. PostgreSQL performance evidence
 

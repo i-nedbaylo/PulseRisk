@@ -25,6 +25,19 @@ public sealed class MaxLossRuleStrategyTests
     }
 
     [Fact]
+    public async Task EvaluateAsync_WhenFloatingPnlIsAtLossThreshold_ShouldTrigger()
+    {
+        var strategy = new MaxLossRuleStrategy();
+        var context = CreateContext(floatingPnL: -25_000m);
+        var rule = CreateRule(threshold: -25_000m);
+
+        var result = await strategy.EvaluateAsync(context, rule, CancellationToken.None);
+
+        result.IsTriggered.Should().BeTrue();
+        result.AlertType.Should().Be(RiskAlertType.MaxLossExceeded);
+    }
+
+    [Fact]
     public async Task EvaluateAsync_WhenFloatingPnlIsAboveLossThreshold_ShouldNotTrigger()
     {
         var strategy = new MaxLossRuleStrategy();

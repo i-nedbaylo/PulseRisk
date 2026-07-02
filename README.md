@@ -31,6 +31,7 @@
 - первые smoke-тесты и unit-тесты доменной логики;
 - validators для первых write use cases;
 - unit-тесты orchestration для создания сделки;
+- расширенное unit-покрытие Risk Engine edge cases: отсутствие котировки, отсутствие active rules, disabled rules, unsupported rule strategy и threshold boundaries;
 - mapping integration tests для EF-модели;
 - Testcontainers-сценарий `client -> account -> trade -> position` на настоящей PostgreSQL, который автоматически пропускается, если Docker Engine недоступен;
 - каркас книги в `book/`.
@@ -83,4 +84,4 @@ curl http://localhost:5000/api/health
 
 ## Следующий этап
 
-Следующий технический шаг - укрепить покрытие бизнес-логики unit-тестами и закрыть оставшиеся edge cases Risk Engine.
+Следующий технический шаг - укрепить integration tests: сквозной сценарий превышения лимита должен создавать risk alert в PostgreSQL.

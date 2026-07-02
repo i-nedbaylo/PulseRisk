@@ -60,4 +60,26 @@ public sealed class RiskAlertFactoryTests
         act.Should().Throw<ArgumentException>()
             .WithMessage("Only triggered rule results can create risk alerts.*");
     }
+
+    [Fact]
+    public void Create_WhenTriggeredResultHasBlankMessage_ShouldThrow()
+    {
+        var context = new RiskEvaluationContext(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            new Symbol("EURUSD"),
+            NetExposure: 150_000m,
+            FloatingPnL: -1_000m,
+            MarginLevel: 80m);
+        var result = RiskRuleEvaluationResult.Triggered(
+            RiskAlertType.ExposureLimitExceeded,
+            RiskSeverity.Critical,
+            " ");
+        var factory = new RiskAlertFactory();
+
+        var act = () => factory.Create(context, result, DateTimeOffset.UtcNow);
+
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("Triggered rule result must contain alert message.*");
+    }
 }

@@ -507,7 +507,7 @@ Swagger/OpenAPI обязателен. Валидацию входных DTO мо
 
 ## 13. Testing strategy
 
-Unit-тесты:
+Unit-тесты текущей версии:
 
 - расчет средней цены позиции;
 - расчет floating PnL;
@@ -515,11 +515,15 @@ Unit-тесты:
 - Max Exposure Limit;
 - Max Loss Limit;
 - Margin Level Warning;
-- Price Spike Detection;
-- High Frequency Trading Activity;
 - отключенное risk rule;
+- active rule без зарегистрированной strategy;
+- отсутствие latest quote;
+- отсутствие active risk rules;
+- threshold boundaries для loss/margin rules;
 - некорректная сделка;
 - deduplication active alerts.
+
+Unit-тесты `PriceSpikeDetection` и `HighFrequencyTradingActivity` появятся вместе с реализацией соответствующих strategies, потому что им нужен дополнительный контекст: история цен и/или trade activity window.
 
 Integration-тесты:
 
