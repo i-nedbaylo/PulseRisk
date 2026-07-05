@@ -635,6 +635,7 @@ docker compose up --build
 - `docker-compose.yml` описывает `pulserisk-api` и `postgres`;
 - PostgreSQL использует `postgres:17.4`, named volume `postgres-data` и healthcheck через `pg_isready`;
 - API получает `ConnectionStrings__PulseRisk` через environment variables и подключается к БД по имени compose-сервиса `postgres`;
+- connection string явно задает `GSS Encryption Mode=Disable`, потому что demo-контур использует обычную username/password-аутентификацию без Kerberos/GSS;
 - `Database__ApplyMigrationsOnStartup=true` включает EF Core migrations только для demo/local запуска;
 - `ASPNETCORE_ENVIRONMENT=Development` включает Swagger UI для ручной проверки.
 
@@ -649,9 +650,12 @@ docker compose exec postgres psql -U pulserisk -d pulserisk
 - **GRASP Protected Variations**: адрес БД и startup migration behavior вынесены в конфигурацию, поэтому deployment-среда меняется без изменения application code.
 - **GRASP Indirection**: API зависит от service name `postgres`, а не от host-specific адреса или IP контейнера.
 - **Template Method на уровне host lifecycle**: миграции вставлены в стандартный ASP.NET Core startup flow между `Build()` и `Run()`.
-- **Отказ от overengineering**: Redis, Prometheus, Grafana, reverse proxy и отдельный worker host пока не добавлены, потому что базовый API + PostgreSQL контур еще должен пройти полный smoke test.
+- **Отказ от overengineering**: Redis, Prometheus, Grafana, reverse proxy и отдельный worker host пока не добавлены, потому что базовый API + PostgreSQL контур уже закрывает цель demo-run и не требует дополнительных инфраструктурных сервисов.
 
-Локальная проверка `docs/docker-compose/2026-07-05-local-compose-check.md` подтвердила `docker compose config`, запуск PostgreSQL service, healthcheck, SQL smoke query и полный `dotnet test` с `9/9` integration tests. Полный `docker compose up --build` для API image остался заблокирован внешним registry/network сбоем при скачивании .NET 10 base images (`TLS handshake timeout`).
+Локальные проверки:
+
+- `docs/docker-compose/2026-07-05-local-compose-check.md` подтвердила `docker compose config`, запуск PostgreSQL service, healthcheck, SQL smoke query и полный `dotnet test` с `9/9` integration tests.
+- `docs/docker-compose/2026-07-06-full-compose-smoke.md` подтвердила полный `docker compose up --build -d`: API image собирается, PostgreSQL становится healthy, EF Core migrations применяются на старте, `/api/health` и `/swagger/v1/swagger.json` возвращают `200 OK`.
 
 Swagger:
 

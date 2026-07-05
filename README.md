@@ -37,7 +37,7 @@
 - PostgreSQL performance evidence: seed-набор данных, `EXPLAIN ANALYZE` отчеты для hot-path запросов и partial index для quote-driven поиска открытых позиций;
 - отключаемый Load Test Worker с профилями `Quotes500`, `Quotes1000`, `Quotes5000`, генерацией клиентов/счетов/сделок/котировок и markdown-отчетом по throughput, latency, channel pressure и active alerts;
 - BenchmarkDotNet report для доменных расчетов position/PnL, p95 latency sample и value-type оптимизация расчетного результата без managed allocations;
-- Dockerfile, Docker Compose контур `pulserisk-api + postgres`, startup migrations по флагу и PostgreSQL healthcheck;
+- Dockerfile, Docker Compose контур `pulserisk-api + postgres`, startup migrations по флагу, PostgreSQL healthcheck и пройденный full compose smoke test;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -110,4 +110,4 @@ http://localhost:5000/swagger
 
 ## Следующий этап
 
-Следующий технический шаг - повторить полный `docker compose up --build` smoke test после восстановления доступа к Docker/MCR registry, затем перейти к GitLab CI/CD.
+Следующий технический шаг - настроить GitLab CI/CD: restore/build/test stages, Docker build stage, NuGet cache и публикацию test artifacts.

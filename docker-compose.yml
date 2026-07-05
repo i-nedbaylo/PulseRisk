@@ -6,7 +6,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:5000
-      ConnectionStrings__PulseRisk: Host=postgres;Port=5432;Database=pulserisk;Username=pulserisk;Password=pulserisk
+      ConnectionStrings__PulseRisk: Host=postgres;Port=5432;Database=pulserisk;Username=pulserisk;Password=pulserisk;GSS Encryption Mode=Disable
       Database__ApplyMigrationsOnStartup: "true"
       MarketData__Enabled: "false"
       LoadTest__Enabled: "false"

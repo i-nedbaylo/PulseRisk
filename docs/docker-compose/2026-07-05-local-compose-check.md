@@ -29,7 +29,7 @@ dotnet test PulseRisk.slnx
 | `psql` smoke query | returned `pulserisk / pulserisk` |
 | `dotnet test PulseRisk.slnx` | passed: unit `73/73`, integration `9/9`, skipped `0` |
 
-## Полная проверка API image
+## Полная проверка API image на дату отчета
 
 Полный запуск:
 
@@ -37,7 +37,7 @@ dotnet test PulseRisk.slnx
 docker compose up --build -d
 ```
 
-на текущей машине не завершился из-за внешнего registry/network сбоя при скачивании base images:
+на текущей машине в этот день не завершился из-за внешнего registry/network сбоя при скачивании base images:
 
 ```text
 TLS handshake timeout
@@ -49,7 +49,13 @@ TLS handshake timeout
 - `mcr.microsoft.com/dotnet/sdk:10.0`;
 - `mcr.microsoft.com/dotnet/aspnet:10.0`.
 
-После восстановления доступа к registry нужно повторить:
+Повторная проверка выполнена 2026-07-06 и сохранена в:
+
+```text
+docs/docker-compose/2026-07-06-full-compose-smoke.md
+```
+
+Для воспроизведения полного smoke test используются команды:
 
 ```bash
 docker compose up --build -d
@@ -60,4 +66,4 @@ docker compose down --volumes
 
 ## Вывод
 
-Compose-файл валиден, PostgreSQL service проверен, EF/Testcontainers сценарии теперь проходят на локальном Docker. Полный API container smoke test остается внешне заблокирован скачиванием .NET 10 base images.
+Compose-файл валиден, PostgreSQL service проверен, EF/Testcontainers сценарии проходят на локальном Docker. На дату этого отчета полный API container smoke test был отложен из-за внешнего registry/network сбоя; повтор от 2026-07-06 подтвердил успешный полный `docker compose up --build -d`.

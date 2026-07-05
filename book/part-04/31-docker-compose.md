@@ -25,7 +25,7 @@
 - передачу connection string через environment variables;
 - startup migrations как явно включаемую опцию;
 - Swagger/health smoke endpoints;
-- честное отделение кода от внешнего registry/network сбоя.
+- честное описание внешней registry/network нестабильности как эксплуатационного наблюдения, а не дефекта кода.
 
 ## Архитектурное решение
 
@@ -104,7 +104,7 @@ API получает настройки:
 ```yaml
 ASPNETCORE_ENVIRONMENT: Development
 ASPNETCORE_URLS: http://+:5000
-ConnectionStrings__PulseRisk: Host=postgres;Port=5432;Database=pulserisk;Username=pulserisk;Password=pulserisk
+ConnectionStrings__PulseRisk: Host=postgres;Port=5432;Database=pulserisk;Username=pulserisk;Password=pulserisk;GSS Encryption Mode=Disable
 Database__ApplyMigrationsOnStartup: "true"
 MarketData__Enabled: "false"
 LoadTest__Enabled: "false"
@@ -119,6 +119,10 @@ http://localhost:5000/swagger
 ```
 
 Для production-like image позже можно добавить отдельный compose profile или override-файл.
+
+Почему `GSS Encryption Mode=Disable`?
+
+В demo-контуре PostgreSQL использует обычную username/password-аутентификацию. Kerberos/GSS здесь не нужен. Npgsql 10 по умолчанию может пробовать GSS-API в Linux-container окружении и писать безвредный, но шумный log message про отсутствие `libgssapi_krb5.so.2`. Явное отключение GSS probe делает startup logs чище и не добавляет отдельный security-механизм туда, где он не используется.
 
 ## Startup migrations
 
@@ -150,6 +154,8 @@ Connection string и startup migration behavior вынесены в configuratio
 
 Почему это не overengineering: это стандартная изменяемая граница deployment-а, а не абстракция ради абстракции.
 
+Та же логика применена к `GSS Encryption Mode=Disable`: это environment-specific настройка драйвера PostgreSQL, а не доменное решение. Она живет в compose connection string и не просачивается в application layer.
+
 ### GRASP Indirection
 
 `docker-compose.yml` связывает API и PostgreSQL через имя сервиса `postgres`, а не через host-specific адрес.
@@ -180,7 +186,7 @@ app.Run()
 - Kubernetes manifests;
 - reverse proxy.
 
-Причина простая: цель главы - минимальный воспроизводимый demo-run API + PostgreSQL. Observability и отдельные процессы появятся позже, когда базовый compose запуск будет стабилен.
+Причина простая: цель главы - минимальный воспроизводимый demo-run API + PostgreSQL. Observability и отдельные процессы появятся позже, когда для них появится отдельная демонстрационная цель.
 
 ## Testcontainers hardening
 
@@ -202,6 +208,10 @@ docker compose config
 docker compose up -d postgres
 docker compose ps
 docker compose exec -T postgres psql -U pulserisk -d pulserisk -c "select current_database(), current_user;"
+docker compose up --build -d
+curl http://localhost:5000/api/health
+curl http://localhost:5000/swagger/v1/swagger.json
+docker compose exec -T postgres psql -U pulserisk -d pulserisk -c "\dt"
 dotnet test PulseRisk.slnx
 docker compose down --volumes
 ```
@@ -215,6 +225,12 @@ docker compose down --volumes
 | PostgreSQL service | started |
 | PostgreSQL healthcheck | healthy |
 | SQL smoke query | returned `pulserisk / pulserisk` |
+| Full Compose build | passed |
+| API container | started |
+| Health endpoint | `200 OK` |
+| Swagger/OpenAPI JSON | `200 OK` |
+| EF Core migrations | applied on startup |
+| PostgreSQL tables | 9 tables including `__EFMigrationsHistory` |
 | Unit tests | `73/73` |
 | Integration tests | `9/9` |
 | Skipped tests | `0` |
@@ -223,37 +239,25 @@ docker compose down --volumes
 
 ```text
 docs/docker-compose/2026-07-05-local-compose-check.md
+docs/docker-compose/2026-07-06-full-compose-smoke.md
 ```
 
-## Что осталось заблокировано
+## Наблюдение по registry/NuGet
 
-Полный запуск:
+Первый полный запуск:
 
 ```bash
 docker compose up --build -d
 ```
 
-не удалось завершить на текущей машине из-за внешнего registry/network сбоя:
-
-```text
-TLS handshake timeout
-```
-
-Ошибка возникала при скачивании .NET 10 base images:
+занял заметное время. Сначала Docker скачивал .NET 10 base images:
 
 ```text
 mcr.microsoft.com/dotnet/sdk:10.0
 mcr.microsoft.com/dotnet/aspnet:10.0
 ```
 
-Это не ошибка Dockerfile или compose-схемы, но это блокирует финальный smoke test:
-
-```bash
-curl http://localhost:5000/api/health
-curl http://localhost:5000/swagger/v1/swagger.json
-```
-
-После восстановления registry-доступа эту проверку нужно повторить.
+Затем `dotnet restore` внутри build container несколько раз получал 60-секундные NuGet timeout warnings. Команда в итоге завершилась успешно. Это важное практическое наблюдение: полный container build зависит не только от корректности Dockerfile, но и от registry/package-feed доступности. После успешного restore Docker layer cache делает повторные сборки быстрее, пока project files не меняются.
 
 ## Что изменилось в репозитории
 
@@ -262,6 +266,7 @@ curl http://localhost:5000/swagger/v1/swagger.json
 - Добавлен `docker-compose.yml`.
 - Добавлен startup extension `ApplyPulseRiskDatabaseMigrationsAsync`.
 - `Program.cs` применяет миграции на старте при включенном флаге.
+- В compose connection string добавлено `GSS Encryption Mode=Disable` для чистых Npgsql logs без Kerberos/GSS probe.
 - Добавлены документы `docs/docker-compose`.
 - Добавлена глава книги `31-docker-compose.md`.
 - Обновлены `README.md`, `ARCHITECTURE.md`, `DEVELOPMENT_PLAN.md`, `book/progress.md`.
@@ -276,6 +281,7 @@ curl http://localhost:5000/swagger/v1/swagger.json
 - Коммитить `.env` с секретами.
 - Тащить `book/` и `docs/` внутрь API image.
 - Считать registry timeout ошибкой приложения.
+- Оставлять шумные driver warnings в demo logs, если их можно убрать явной настройкой.
 
 ## Вопросы для интервью
 
@@ -284,6 +290,7 @@ curl http://localhost:5000/swagger/v1/swagger.json
 - Почему миграции на старте включаются флагом?
 - Что проверяет `docker compose config`?
 - Почему `depends_on` использует `service_healthy`?
+- Почему в connection string отключен GSS Encryption Mode?
 - Чем demo Compose отличается от production deployment?
 - Какие сервисы разумно добавить следующими?
 - Как бы вы вынесли workers в отдельный process?
@@ -303,5 +310,5 @@ curl http://localhost:5000/swagger/v1/swagger.json
 - [x] `docker compose config` проверен.
 - [x] PostgreSQL service проверен.
 - [x] Integration tests проходят на реальном Docker/PostgreSQL.
-- [ ] Полный `docker compose up --build` с API image проверен.
-- [ ] Swagger доступен из API container.
+- [x] Полный `docker compose up --build` с API image проверен.
+- [x] Swagger доступен из API container.

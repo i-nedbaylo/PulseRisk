@@ -331,10 +331,10 @@
 - [x] Добавить volume для PostgreSQL.
 - [x] Добавить переменные окружения для connection string.
 - [x] Добавить `ASPNETCORE_URLS=http://+:5000`.
-- [ ] Проверить доступность Swagger на `http://localhost:5000/swagger`.
+- [x] Проверить доступность Swagger на `http://localhost:5000/swagger`.
 - [ ] Добавить Redis optional.
 - [ ] Добавить Prometheus/Grafana optional.
-- [ ] Проверить `docker compose up --build` на чистом окружении.
+- [x] Проверить `docker compose up --build` на чистом окружении.
 
 ## 16. Integration tests
 
@@ -410,8 +410,8 @@
 - [ ] Добавить архитектурную схему.
 - [ ] Описать структуру solution.
 - [x] Описать запуск через Docker Compose.
-- [ ] Описать запуск миграций.
-- [ ] Описать Swagger endpoints.
+- [x] Описать запуск миграций.
+- [x] Описать Swagger endpoints.
 - [ ] Добавить примеры curl-запросов:
   - [ ] создать клиента;
   - [ ] создать счет;
@@ -444,8 +444,8 @@
 
 ## 22. Финальная приемка
 
-- [ ] `docker compose up --build` запускает проект.
-- [ ] Swagger доступен на `http://localhost:5000/swagger`.
+- [x] `docker compose up --build` запускает проект.
+- [x] Swagger доступен на `http://localhost:5000/swagger`.
 - [ ] Можно создать клиента.
 - [ ] Можно создать торговый счет.
 - [ ] Можно добавить инструмент.
@@ -454,8 +454,8 @@
 - [ ] Risk Engine создает alert при нарушении лимита.
 - [ ] Market Data Simulator генерирует котировки.
 - [ ] Фоновые процессы корректно останавливаются.
-- [ ] Данные сохраняются в PostgreSQL.
-- [ ] Миграции применяются на чистую БД.
+- [x] Данные сохраняются в PostgreSQL.
+- [x] Миграции применяются на чистую БД.
 - [ ] Unit-тесты проходят.
 - [ ] Integration-тесты проходят.
 - [ ] GitLab CI/CD проходит.
@@ -470,7 +470,7 @@
 - [ ] Можно показать risk rule strategy и unit-тесты.
 - [ ] Можно показать bounded channel и backpressure.
 - [ ] Можно показать индексы PostgreSQL и `EXPLAIN ANALYZE`.
-- [ ] Можно показать Docker Compose запуск.
+- [x] Можно показать Docker Compose запуск.
 - [ ] Можно показать GitLab pipeline.
 - [ ] Можно объяснить, почему проект не сделан микросервисами.
 - [ ] Можно объяснить, какие части легко вынести в отдельные сервисы.
