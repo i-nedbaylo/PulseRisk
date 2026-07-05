@@ -1,0 +1,35 @@
+services:
+  pulserisk-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5000
+      ConnectionStrings__PulseRisk: Host=postgres;Port=5432;Database=pulserisk;Username=pulserisk;Password=pulserisk
+      Database__ApplyMigrationsOnStartup: "true"
+      MarketData__Enabled: "false"
+      LoadTest__Enabled: "false"
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17.4
+    environment:
+      POSTGRES_DB: pulserisk
+      POSTGRES_USER: pulserisk
+      POSTGRES_PASSWORD: pulserisk
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulserisk -d pulserisk"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+volumes:
+  postgres-data:

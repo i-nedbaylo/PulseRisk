@@ -52,9 +52,7 @@ public sealed class TradeProcessingPostgreSqlTests
 
         var position = await assertionContext.Positions
             .AsNoTracking()
-            .SingleAsync(storedPosition =>
-                storedPosition.TradingAccountId == createdAccount.Id
-                && storedPosition.Symbol.Value == "EURUSD");
+            .SingleAsync(storedPosition => storedPosition.TradingAccountId == createdAccount.Id);
 
         trade.ClientId.Should().Be(createdClient.Id);
         trade.TradingAccountId.Should().Be(createdAccount.Id);

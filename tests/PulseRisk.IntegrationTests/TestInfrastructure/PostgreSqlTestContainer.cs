@@ -4,7 +4,7 @@ namespace PulseRisk.IntegrationTests.TestInfrastructure;
 
 internal static class PostgreSqlTestContainer
 {
-    private const string Image = "postgres:17-alpine";
+    private const string Image = "postgres:17.4";
 
     public static void SkipIfUnavailable()
     {
@@ -22,11 +22,7 @@ internal static class PostgreSqlTestContainer
 
     public static PostgreSqlContainer Create()
     {
-        return new PostgreSqlBuilder(Image)
-            .WithDatabase("pulserisk_tests")
-            .WithUsername("pulserisk")
-            .WithPassword("pulserisk")
-            .Build();
+        return new PostgreSqlBuilder(Image).Build();
     }
 
     public static async Task StartOrSkipAsync(PostgreSqlContainer container)

@@ -32,7 +32,7 @@
 | 28. Оптимизируем PostgreSQL-запросы | EXPLAIN ANALYZE reports добавлены | `chapter-28-postgresql-performance` | Выполнено |
 | 29. Добавляем нагрузочный сценарий | Load scenario формирует отчет | `chapter-29-load-scenario` | Выполнено |
 | 30. Измеряем производительность и аллокации | BenchmarkDotNet report добавлен | `chapter-30-benchmarks` | Выполнено |
-| 31. Упаковываем проект в Docker Compose | `docker compose up --build` работает | `chapter-31-docker-compose` | Не начато |
+| 31. Упаковываем проект в Docker Compose | `docker compose up --build` работает | `chapter-31-docker-compose` | Частично выполнено |
 | 32. Настраиваем GitLab CI/CD | Pipeline описан и запускает проверки | `chapter-32-gitlab-ci` | Не начато |
 | 33. Пишем README и финальную документацию | README готов к внешнему показу | `chapter-33-readme-docs` | Не начато |
 | 34. Готовим проект к демонстрации на интервью | Interview script готов | `chapter-34-interview-demo` | Не начато |

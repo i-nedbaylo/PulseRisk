@@ -1,0 +1,25 @@
+# Git and IDE state
+.git/
+.vs/
+.vscode/
+.idea/
+
+# Build and test output
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+BenchmarkDotNet.Artifacts/
+coverage/
+
+# Local runtime state
+docker-data/
+postgres-data/
+*.log
+.env
+.env.*
+!.env.example
+
+# Documentation and generated reports are not required to build the API image
+book/
+docs/

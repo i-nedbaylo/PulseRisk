@@ -96,19 +96,18 @@ configuration.AddInMemoryCollection(new Dictionary<string, string?>
 });
 ```
 
-Так production-регистрация инфраструктуры остается прежней, но БД указывает на Testcontainers PostgreSQL.
+Дополнительно test host пере-регистрирует `PulseRiskDbContext` на connection string контейнера. Это защищает тесты от ситуации, когда `appsettings.json` перекрывает тестовую строку подключения.
 
 ### Шаг 3. Поднимаем PostgreSQL и применяем migrations
 
-В тесте используется образ `postgres:17-alpine`:
+В тестах используется общий helper:
 
 ```csharp
-await using var postgres = new PostgreSqlBuilder("postgres:17-alpine")
-    .WithDatabase("pulserisk_tests")
-    .WithUsername("pulserisk")
-    .WithPassword("pulserisk")
-    .Build();
+await using var postgres = PostgreSqlTestContainer.Create();
+await PostgreSqlTestContainer.StartOrSkipAsync(postgres);
 ```
+
+Текущий image выровнен с Docker Compose окружением: `postgres:17.4`.
 
 После старта контейнера тест берет `PulseRiskDbContext` из DI и вызывает:
 

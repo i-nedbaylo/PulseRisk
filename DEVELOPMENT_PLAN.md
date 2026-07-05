@@ -324,13 +324,13 @@
 
 ## 15. Docker Compose
 
-- [ ] Создать `Dockerfile` для backend.
-- [ ] Создать `docker-compose.yml`.
-- [ ] Добавить сервис `pulserisk-api`.
-- [ ] Добавить сервис `postgres`.
-- [ ] Добавить volume для PostgreSQL.
-- [ ] Добавить переменные окружения для connection string.
-- [ ] Добавить `ASPNETCORE_URLS=http://+:5000`.
+- [x] Создать `Dockerfile` для backend.
+- [x] Создать `docker-compose.yml`.
+- [x] Добавить сервис `pulserisk-api`.
+- [x] Добавить сервис `postgres`.
+- [x] Добавить volume для PostgreSQL.
+- [x] Добавить переменные окружения для connection string.
+- [x] Добавить `ASPNETCORE_URLS=http://+:5000`.
 - [ ] Проверить доступность Swagger на `http://localhost:5000/swagger`.
 - [ ] Добавить Redis optional.
 - [ ] Добавить Prometheus/Grafana optional.
@@ -409,7 +409,7 @@
 - [ ] Описать, какие инженерные компетенции демонстрирует проект.
 - [ ] Добавить архитектурную схему.
 - [ ] Описать структуру solution.
-- [ ] Описать запуск через Docker Compose.
+- [x] Описать запуск через Docker Compose.
 - [ ] Описать запуск миграций.
 - [ ] Описать Swagger endpoints.
 - [ ] Добавить примеры curl-запросов:

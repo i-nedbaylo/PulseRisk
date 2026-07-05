@@ -76,6 +76,7 @@ docs/
   explain-analyze/
   load-tests/
   benchmarks/
+  docker-compose/
 docker/
   postgres/
 .gitlab-ci.yml
@@ -626,6 +627,31 @@ docker compose up --build
 - `redis` optional;
 - `prometheus` optional;
 - `grafana` optional.
+
+Текущая версия содержит первый demo Compose контур:
+
+- `Dockerfile` собирает `PulseRisk.Api` через multi-stage publish;
+- `.dockerignore` исключает build output, test artifacts, docs/book и локальные env/log файлы из image context;
+- `docker-compose.yml` описывает `pulserisk-api` и `postgres`;
+- PostgreSQL использует `postgres:17.4`, named volume `postgres-data` и healthcheck через `pg_isready`;
+- API получает `ConnectionStrings__PulseRisk` через environment variables и подключается к БД по имени compose-сервиса `postgres`;
+- `Database__ApplyMigrationsOnStartup=true` включает EF Core migrations только для demo/local запуска;
+- `ASPNETCORE_ENVIRONMENT=Development` включает Swagger UI для ручной проверки.
+
+PostgreSQL port намеренно не публикуется на host: API работает внутри compose network, а локальный `localhost:5432` часто уже занят другой БД. Для проверки БД используется:
+
+```bash
+docker compose exec postgres psql -U pulserisk -d pulserisk
+```
+
+Паттерны в Docker Compose части:
+
+- **GRASP Protected Variations**: адрес БД и startup migration behavior вынесены в конфигурацию, поэтому deployment-среда меняется без изменения application code.
+- **GRASP Indirection**: API зависит от service name `postgres`, а не от host-specific адреса или IP контейнера.
+- **Template Method на уровне host lifecycle**: миграции вставлены в стандартный ASP.NET Core startup flow между `Build()` и `Run()`.
+- **Отказ от overengineering**: Redis, Prometheus, Grafana, reverse proxy и отдельный worker host пока не добавлены, потому что базовый API + PostgreSQL контур еще должен пройти полный smoke test.
+
+Локальная проверка `docs/docker-compose/2026-07-05-local-compose-check.md` подтвердила `docker compose config`, запуск PostgreSQL service, healthcheck, SQL smoke query и полный `dotnet test` с `9/9` integration tests. Полный `docker compose up --build` для API image остался заблокирован внешним registry/network сбоем при скачивании .NET 10 base images (`TLS handshake timeout`).
 
 Swagger:
 

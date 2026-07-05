@@ -1,5 +1,6 @@
 using PulseRisk.Api.ErrorHandling;
 using PulseRisk.Api.OpenApi;
+using PulseRisk.Api.Startup;
 using PulseRisk.Application;
 using PulseRisk.BackgroundWorkers;
 using PulseRisk.Infrastructure;
@@ -24,6 +25,8 @@ builder.Services
     .AddPulseRiskBackgroundWorkers(builder.Configuration);
 
 var app = builder.Build();
+
+await app.ApplyPulseRiskDatabaseMigrationsAsync();
 
 if (app.Environment.IsDevelopment())
 {

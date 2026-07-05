@@ -37,6 +37,7 @@
 - PostgreSQL performance evidence: seed-набор данных, `EXPLAIN ANALYZE` отчеты для hot-path запросов и partial index для quote-driven поиска открытых позиций;
 - отключаемый Load Test Worker с профилями `Quotes500`, `Quotes1000`, `Quotes5000`, генерацией клиентов/счетов/сделок/котировок и markdown-отчетом по throughput, latency, channel pressure и active alerts;
 - BenchmarkDotNet report для доменных расчетов position/PnL, p95 latency sample и value-type оптимизация расчетного результата без managed allocations;
+- Dockerfile, Docker Compose контур `pulserisk-api + postgres`, startup migrations по флагу и PostgreSQL healthcheck;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -77,6 +78,24 @@ dotnet run --project src/PulseRisk.Api
 curl http://localhost:5000/api/health
 ```
 
+Запустить демонстрационный Docker Compose контур:
+
+```bash
+docker compose up --build
+```
+
+После запуска:
+
+```bash
+curl http://localhost:5000/api/health
+```
+
+Swagger UI:
+
+```text
+http://localhost:5000/swagger
+```
+
 ## Документы
 
 - `PROJECT_REQUIREMENTS.md` - нейтральный перечень компетенций и технических ожиданий, которые должен продемонстрировать проект.
@@ -86,8 +105,9 @@ curl http://localhost:5000/api/health
 - `docs/explain-analyze/` - воспроизводимые SQL-скрипты и локальные `EXPLAIN ANALYZE` отчеты.
 - `docs/load-tests/` - сценарии и результаты локальных нагрузочных прогонов.
 - `docs/benchmarks/` - BenchmarkDotNet-отчеты и p95-сэмплы для доменных расчетов.
+- `docs/docker-compose/` - заметки по локальной проверке Docker Compose окружения.
 - `book/` - будущая книга, которая пишется параллельно с кодом.
 
 ## Следующий этап
 
-Следующий технический шаг - упаковать проект в Docker Compose и проверить запуск API вместе с PostgreSQL на чистом окружении.
+Следующий технический шаг - повторить полный `docker compose up --build` smoke test после восстановления доступа к Docker/MCR registry, затем перейти к GitLab CI/CD.
