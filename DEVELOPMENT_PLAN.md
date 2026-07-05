@@ -388,16 +388,16 @@
 
 ## 19. GitLab CI/CD
 
-- [ ] Создать `.gitlab-ci.yml`.
-- [ ] Добавить stage `restore`.
-- [ ] Добавить stage `build`.
-- [ ] Добавить stage `unit_tests`.
-- [ ] Добавить stage `integration_tests`.
-- [ ] Добавить stage `static_analysis`.
-- [ ] Добавить stage `docker_build`.
-- [ ] Публиковать test artifacts.
-- [ ] Публиковать coverage artifacts.
-- [ ] Кешировать NuGet packages.
+- [x] Создать `.gitlab-ci.yml`.
+- [x] Добавить stage `restore`.
+- [x] Добавить stage `build`.
+- [x] Добавить stage `unit_tests`.
+- [x] Добавить stage `integration_tests`.
+- [x] Добавить stage `static_analysis`.
+- [x] Добавить stage `docker_build`.
+- [x] Публиковать test artifacts.
+- [x] Публиковать coverage artifacts.
+- [x] Кешировать NuGet packages.
 - [ ] Проверить pipeline на push.
 - [ ] Проверить pipeline на merge request.
 - [ ] Добавить badge в README optional.
@@ -424,7 +424,7 @@
 - [ ] Описать risk rules.
 - [ ] Описать PostgreSQL schema и индексы.
 - [ ] Описать запуск тестов.
-- [ ] Описать CI/CD.
+- [x] Описать CI/CD.
 - [ ] Добавить раздел "Архитектурные решения".
 - [ ] Добавить раздел "Performance notes".
 - [ ] Добавить раздел "Что можно улучшить".
@@ -471,7 +471,7 @@
 - [ ] Можно показать bounded channel и backpressure.
 - [ ] Можно показать индексы PostgreSQL и `EXPLAIN ANALYZE`.
 - [x] Можно показать Docker Compose запуск.
-- [ ] Можно показать GitLab pipeline.
+- [x] Можно показать GitLab pipeline.
 - [ ] Можно объяснить, почему проект не сделан микросервисами.
 - [ ] Можно объяснить, какие части легко вынести в отдельные сервисы.
 - [x] Можно показать минимум один performance/benchmark результат.

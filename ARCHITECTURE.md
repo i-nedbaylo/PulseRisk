@@ -590,27 +590,39 @@ Integration-тесты:
 
 ## 14. CI/CD
 
-GitLab pipeline:
+GitLab pipeline описан в `.gitlab-ci.yml`:
 
 ```mermaid
 flowchart LR
     Restore --> Build --> UnitTests["Unit tests"] --> IntegrationTests["Integration tests"] --> StaticAnalysis["Static analysis"] --> DockerBuild["Docker build"]
 ```
 
-Минимальные стадии:
+Стадии:
 
 - restore;
 - build;
-- unit tests;
-- integration tests;
-- docker build.
+- unit_tests;
+- integration_tests;
+- static_analysis;
+- docker_build.
 
 Артефакты:
 
-- test results в JUnit/TRX формате;
-- coverage report;
-- benchmark/load-test reports optional;
-- Docker image.
+- TRX test results для unit и integration tests;
+- Cobertura coverage artifacts;
+- build output между стадиями;
+- Docker image build как проверка Dockerfile.
+
+NuGet packages кешируются внутри project workspace через `NUGET_PACKAGES=.nuget/packages`, чтобы runner не зависел от глобального пользовательского cache. Integration tests используют Docker-in-Docker service `docker:28.4-dind`, заранее подтягивают `postgres:17.4` и требуют privileged runner-а. Это соответствует локальной Testcontainers-стратегии: в CI Docker должен быть обязательной инфраструктурной зависимостью, а не причиной тихого skipped status.
+
+Паттерны в CI/CD части:
+
+- **GRASP Protected Variations**: различия между локальным запуском, Docker Compose и CI закрыты переменными окружения и GitLab variables, а application code не меняется.
+- **GRASP Indirection**: job container общается с Docker daemon через service alias `docker` и `DOCKER_HOST`, а не через локальный host socket.
+- **Pipeline stages как готовый Chain of Responsibility**: проверки идут цепочкой restore -> build -> tests -> analysis -> docker build, но собственный GoF Chain of Responsibility в коде не создается.
+- **Отказ от overengineering**: публикация image в registry, deployment, scheduled benchmarks, whitespace-wide formatting gate и multi-SDK matrix пока не добавлены, потому что первый шаг CI должен закрепить базовую проверку проекта.
+
+Ограничение: локально проверяются команды pipeline, но статусы branch push и merge request подтверждаются только после запуска GitLab runner-а.
 
 ## 15. Docker Compose
 

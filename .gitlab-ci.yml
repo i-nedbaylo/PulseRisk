@@ -1,0 +1,127 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+stages:
+  - restore
+  - build
+  - unit_tests
+  - integration_tests
+  - static_analysis
+  - docker_build
+
+variables:
+  CONFIGURATION: Release
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  NUGET_PACKAGES: ".nuget/packages"
+
+default:
+  image: mcr.microsoft.com/dotnet/sdk:10.0
+  cache:
+    key: "nuget-$CI_COMMIT_REF_SLUG"
+    paths:
+      - .nuget/packages/
+    policy: pull-push
+  before_script:
+    - dotnet --info
+
+restore:
+  stage: restore
+  script:
+    - dotnet restore PulseRisk.slnx --packages "$NUGET_PACKAGES"
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - src/**/obj/
+      - tests/**/obj/
+
+build:
+  stage: build
+  needs:
+    - job: restore
+      artifacts: true
+  script:
+    - dotnet build PulseRisk.slnx --configuration "$CONFIGURATION" --no-restore
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - src/**/bin/
+      - src/**/obj/
+      - tests/**/bin/
+      - tests/**/obj/
+
+unit_tests:
+  stage: unit_tests
+  needs:
+    - job: build
+      artifacts: true
+  script:
+    - dotnet test tests/PulseRisk.UnitTests/PulseRisk.UnitTests.csproj --configuration "$CONFIGURATION" --no-build --logger "trx;LogFileName=unit-tests.trx" --results-directory artifacts/test-results/unit --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - artifacts/test-results/unit/
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: artifacts/test-results/unit/**/coverage.cobertura.xml
+
+integration_tests:
+  stage: integration_tests
+  services:
+    - name: docker:28.4-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+    TESTCONTAINERS_HOST_OVERRIDE: docker
+    TESTCONTAINERS_RYUK_DISABLED: "true"
+  needs:
+    - job: build
+      artifacts: true
+  before_script:
+    - dotnet --info
+    - apt-get update
+    - apt-get install -y --no-install-recommends docker.io
+    - docker info
+    - docker pull postgres:17.4
+  script:
+    - dotnet test tests/PulseRisk.IntegrationTests/PulseRisk.IntegrationTests.csproj --configuration "$CONFIGURATION" --no-build --logger "trx;LogFileName=integration-tests.trx" --results-directory artifacts/test-results/integration --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - artifacts/test-results/integration/
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: artifacts/test-results/integration/**/coverage.cobertura.xml
+
+static_analysis:
+  stage: static_analysis
+  needs:
+    - job: restore
+      artifacts: true
+  script:
+    - dotnet format analyzers PulseRisk.slnx --verify-no-changes --verbosity minimal --no-restore
+
+docker_build:
+  stage: docker_build
+  image: docker:28.4-cli
+  services:
+    - name: docker:28.4-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+    DOCKER_BUILDKIT: "1"
+  before_script:
+    - docker version
+    - docker info
+  script:
+    - docker build --pull -t "pulserisk-api:$CI_COMMIT_SHORT_SHA" .

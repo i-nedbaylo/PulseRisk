@@ -37,6 +37,6 @@ coverage.cobertura.xml
 *.coveragexml
 
 # NuGet
+.nuget/
 *.nupkg
 packages/
-
