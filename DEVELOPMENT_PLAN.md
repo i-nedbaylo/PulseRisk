@@ -399,7 +399,7 @@
 - [x] Публиковать coverage artifacts.
 - [x] Кешировать NuGet packages.
 - [x] Проверить workflow на push.
-- [ ] Проверить workflow на pull request.
+- [x] Проверить workflow на pull request.
 - [x] Подключить required status checks в GitHub branch protection для `main`.
 - [ ] Добавить badge в README optional.
 
