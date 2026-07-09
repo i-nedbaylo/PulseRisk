@@ -31,6 +31,21 @@ internal sealed class PulseRiskSwaggerTagDocumentFilter : IDocumentFilter
             },
             new()
             {
+                Name = "Positions",
+                Description = "Position read model and lookup operations."
+            },
+            new()
+            {
+                Name = "Risk",
+                Description = "Risk metrics and risk alert lookup operations."
+            },
+            new()
+            {
+                Name = "Quotes",
+                Description = "Market quote read operations."
+            },
+            new()
+            {
                 Name = "Health",
                 Description = "API liveness endpoint."
             }

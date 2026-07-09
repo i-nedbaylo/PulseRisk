@@ -48,6 +48,9 @@ public static class SwaggerServiceCollectionExtensions
             "Accounts" => "Accounts",
             "Instruments" => "Instruments",
             "Trades" => "Trades",
+            "Positions" => "Positions",
+            "Risk" => "Risk",
+            "Quotes" => "Quotes",
             "Health" => "Health",
             _ => "Other"
         };

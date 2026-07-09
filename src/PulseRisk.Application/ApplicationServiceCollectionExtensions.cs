@@ -2,6 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using PulseRisk.Application.Accounts;
 using PulseRisk.Application.Clients;
 using PulseRisk.Application.Instruments;
+using PulseRisk.Application.Positions;
+using PulseRisk.Application.Quotes;
 using PulseRisk.Application.Risk;
 using PulseRisk.Application.Trades;
 using PulseRisk.Domain.Risk;
@@ -40,8 +42,15 @@ public static class ApplicationServiceCollectionExtensions
             provider.GetRequiredService<CreateTradeValidator>());
         services.AddScoped<CreateTradeHandler>();
         services.AddScoped<GetTradeByIdHandler>();
+        services.AddScoped<GetTradesHandler>();
+
+        services.AddScoped<GetPositionsHandler>();
+
+        services.AddScoped<GetLatestQuotesHandler>();
 
         services.AddScoped<RiskEvaluationContextBuilder>();
+        services.AddScoped<GetRiskAlertsHandler>();
+        services.AddScoped<GetClientRiskMetricsHandler>();
         services.AddSingleton<IRiskRuleStrategy, MaxExposureRuleStrategy>();
         services.AddSingleton<IRiskRuleStrategy, MaxLossRuleStrategy>();
         services.AddSingleton<IRiskRuleStrategy, MarginLevelWarningRuleStrategy>();

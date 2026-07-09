@@ -15,13 +15,12 @@
 
 Перед финальной демонстрацией в первую очередь нужно закрыть:
 
-1. Read API и query objects: trades, positions, risk alerts, risk metrics, pagination.
-2. Управление simulator/load-test через API и явное решение по `security/auth` модели MVP.
-3. Observability MVP: JSON logs, correlation id, slow SQL/channel/risk logging, PostgreSQL health check.
-4. Недостающие integration tests для фильтров, concurrent trades и disabled risk rule.
-5. Проверку GitLab pipeline на реальном branch push и merge request.
-6. Финальный README с curl-примерами, архитектурой, risk rules, тестами и performance notes.
-7. Ручной demo-run по разделу "Финальная приемка".
+1. Управление simulator/load-test через API и явное решение по `security/auth` модели MVP.
+2. Observability MVP: JSON logs, correlation id, slow SQL/channel/risk logging, PostgreSQL health check.
+3. Недостающие integration tests для concurrent trades и disabled risk rule.
+4. Проверку GitLab pipeline на реальном branch push и merge request.
+5. Финальный README с curl-примерами, архитектурой, risk rules, тестами и performance notes.
+6. Ручной demo-run по разделу "Финальная приемка".
 
 ## 0. Подготовка репозитория
 
@@ -161,13 +160,13 @@
 - [x] Реализовать `RiskRuleRepository`.
 - [x] Реализовать `RiskAlertRepository`.
 - [x] Создать `IUnitOfWork` или использовать `DbContext` как unit of work за application boundary.
-- [ ] Создать query object `GetTradesQuery`.
-- [ ] Создать query object `GetPositionsQuery`.
-- [ ] Создать query object `GetRiskAlertsQuery`.
-- [ ] Создать query object `GetLatestQuotesQuery`.
-- [ ] Создать query object `GetClientRiskMetricsQuery`.
-- [ ] Добавить keyset или offset pagination для истории сделок.
-- [ ] Добавить pagination для risk alerts.
+- [x] Создать query object `GetTradesQuery`.
+- [x] Создать query object `GetPositionsQuery`.
+- [x] Создать query object `GetRiskAlertsQuery`.
+- [x] Создать query object `GetLatestQuotesQuery`.
+- [x] Создать query object `GetClientRiskMetricsQuery`.
+- [x] Добавить keyset или offset pagination для истории сделок.
+- [x] Добавить pagination для risk alerts.
 - [x] Для read-only запросов использовать `AsNoTracking` или Dapper.
 
 ## 6. Application: clients, accounts, instruments
@@ -283,12 +282,13 @@
 - [x] Реализовать `GET /api/instruments`.
 - [x] Реализовать `POST /api/trades`.
 - [x] Реализовать `GET /api/trades/{id}`.
-- [ ] Реализовать `GET /api/trades` с фильтрами.
-- [ ] Реализовать `GET /api/clients/{clientId}/trades`.
-- [ ] Реализовать `GET /api/positions`.
-- [ ] Реализовать `GET /api/clients/{clientId}/positions`.
-- [ ] Реализовать `GET /api/risk/clients/{clientId}`.
-- [ ] Реализовать `GET /api/risk/alerts`.
+- [x] Реализовать `GET /api/trades` с фильтрами.
+- [x] Реализовать `GET /api/clients/{clientId}/trades`.
+- [x] Реализовать `GET /api/positions`.
+- [x] Реализовать `GET /api/clients/{clientId}/positions`.
+- [x] Реализовать `GET /api/risk/clients/{clientId}`.
+- [x] Реализовать `GET /api/risk/alerts`.
+- [x] Реализовать `GET /api/quotes/latest`.
 - [ ] Реализовать `POST /api/risk/rules`.
 - [ ] Реализовать `PUT /api/risk/rules/{id}`.
 - [ ] Реализовать `POST /api/simulator/market/start`.
@@ -370,8 +370,8 @@
 - [x] Добавить тест "создать сделку".
 - [x] Добавить тест "позиция обновилась после сделки".
 - [x] Добавить тест "risk alert создан при превышении exposure".
-- [ ] Добавить тест "history trades фильтруется по clientId".
-- [ ] Добавить тест "alerts фильтруются по severity".
+- [x] Добавить тест "history trades фильтруется по clientId".
+- [x] Добавить тест "alerts фильтруются по severity".
 - [ ] Добавить тест "concurrent trades не ломают позицию".
 - [x] Добавить тест "quote batch writer пишет batch".
 

@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using PulseRisk.Application.Common;
 using PulseRisk.Application.Events;
+using PulseRisk.Application.Positions;
 using PulseRisk.Application.Repositories;
 using PulseRisk.Application.Trades;
 using PulseRisk.Domain.Entities;
@@ -369,6 +370,36 @@ public sealed class CreateTradeHandlerTests
             return Task.FromResult(Items.FirstOrDefault(trade => trade.Id == id));
         }
 
+        public Task<PagedResult<Trade>> SearchAsync(
+            GetTradesQuery query,
+            CancellationToken cancellationToken)
+        {
+            var filteredItems = Items.AsEnumerable();
+
+            if (query.ClientId is { } clientId)
+            {
+                filteredItems = filteredItems.Where(trade => trade.ClientId == clientId);
+            }
+
+            if (query.TradingAccountId is { } tradingAccountId)
+            {
+                filteredItems = filteredItems.Where(trade => trade.TradingAccountId == tradingAccountId);
+            }
+
+            if (query.Symbol is { } symbol)
+            {
+                filteredItems = filteredItems.Where(trade => trade.Symbol == symbol);
+            }
+
+            var result = filteredItems.ToArray();
+
+            return Task.FromResult(new PagedResult<Trade>(
+                result,
+                query.PageNumber,
+                query.PageSize,
+                result.Length));
+        }
+
         public void Clear()
         {
             Items.Clear();
@@ -421,6 +452,35 @@ public sealed class CreateTradeHandlerTests
                 .ToArray();
 
             return Task.FromResult<IReadOnlyCollection<Position>>(result);
+        }
+
+        public Task<IReadOnlyCollection<Position>> SearchAsync(
+            GetPositionsQuery query,
+            CancellationToken cancellationToken)
+        {
+            var result = Items.AsEnumerable();
+
+            if (query.ClientId is { } clientId)
+            {
+                result = result.Where(position => position.ClientId == clientId);
+            }
+
+            if (query.TradingAccountId is { } tradingAccountId)
+            {
+                result = result.Where(position => position.TradingAccountId == tradingAccountId);
+            }
+
+            if (query.Symbol is { } symbol)
+            {
+                result = result.Where(position => position.Symbol == symbol);
+            }
+
+            if (query.OpenOnly)
+            {
+                result = result.Where(position => position.NetVolume != 0);
+            }
+
+            return Task.FromResult<IReadOnlyCollection<Position>>(result.ToArray());
         }
     }
 

@@ -47,9 +47,30 @@ internal sealed class PulseRiskSwaggerOperationFilter : IOperationFilter
             ["Trades.Create"] = new(
                 "Create trade",
                 "Accepts a trade, persists it and updates the aggregate position in one commit."),
+            ["Trades.Get"] = new(
+                "Search trades",
+                "Returns paged trade history filtered by client, account, symbol, side and creation time."),
             ["Trades.GetById"] = new(
                 "Get trade",
                 "Returns one trade by identifier."),
+            ["Trades.GetByClientId"] = new(
+                "Search client trades",
+                "Returns paged trade history for one client with optional account, symbol, side and time filters."),
+            ["Positions.Get"] = new(
+                "Search positions",
+                "Returns positions filtered by client, account, symbol and open-position state."),
+            ["Positions.GetByClientId"] = new(
+                "Search client positions",
+                "Returns positions for one client with optional account, symbol and open-position filters."),
+            ["Risk.GetClientMetrics"] = new(
+                "Get client risk metrics",
+                "Returns current risk metrics for open positions owned by one client."),
+            ["Risk.GetAlerts"] = new(
+                "Search risk alerts",
+                "Returns paged risk alerts filtered by client, account, symbol, type, severity, activity and creation time."),
+            ["Quotes.GetLatest"] = new(
+                "Get latest quotes",
+                "Returns the latest known quote for one symbol or each symbol with quote history."),
             ["Health.Get"] = new(
                 "Health check",
                 "Returns basic API liveness information.")
@@ -180,6 +201,7 @@ internal sealed class PulseRiskSwaggerOperationFilter : IOperationFilter
         ControllerActionDescriptor descriptor)
     {
         return descriptor.ActionName == "GetById"
+            || descriptor.ControllerName == "Risk" && descriptor.ActionName == "GetClientMetrics"
             || descriptor.ControllerName is "Accounts" or "Trades"
                 && string.Equals(apiDescription.HttpMethod, HttpMethods.Post, StringComparison.OrdinalIgnoreCase);
     }

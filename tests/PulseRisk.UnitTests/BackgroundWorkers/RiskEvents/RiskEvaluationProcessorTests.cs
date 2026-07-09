@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using PulseRisk.Application.Common;
 using PulseRisk.Application.Events;
+using PulseRisk.Application.Positions;
 using PulseRisk.Application.Repositories;
 using PulseRisk.Application.Risk;
 using PulseRisk.BackgroundWorkers.RiskEvents;
@@ -271,6 +272,18 @@ public sealed class RiskEvaluationProcessorTests
 
             return Task.FromResult(result);
         }
+
+        public Task<IReadOnlyCollection<Position>> SearchAsync(
+            GetPositionsQuery query,
+            CancellationToken cancellationToken)
+        {
+            IReadOnlyCollection<Position> result =
+                query.ClientId is null || position.ClientId == query.ClientId.Value
+                ? [position]
+                : [];
+
+            return Task.FromResult<IReadOnlyCollection<Position>>(result);
+        }
     }
 
     private sealed class FakeInstrumentRepository(Instrument instrument) : IInstrumentRepository
@@ -296,6 +309,18 @@ public sealed class RiskEvaluationProcessorTests
         public Task<Quote?> GetLatestAsync(Symbol symbol, CancellationToken cancellationToken)
         {
             return Task.FromResult(quote?.Symbol == symbol ? quote : null);
+        }
+
+        public Task<IReadOnlyCollection<Quote>> ListLatestAsync(
+            Symbol? symbol,
+            CancellationToken cancellationToken)
+        {
+            IReadOnlyCollection<Quote> result =
+                quote is not null && (symbol is null || quote.Symbol == symbol.Value)
+                    ? [quote]
+                    : [];
+
+            return Task.FromResult(result);
         }
     }
 
@@ -341,6 +366,31 @@ public sealed class RiskEvaluationProcessorTests
         public Task<long> CountActiveAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult((long)(ActiveKeys.Count + AddedAlerts.Count(alert => alert.ResolvedAt is null)));
+        }
+
+        public Task<PagedResult<RiskAlert>> SearchAsync(
+            GetRiskAlertsQuery query,
+            CancellationToken cancellationToken)
+        {
+            var alerts = AddedAlerts.AsEnumerable();
+
+            if (query.Severity is { } severity)
+            {
+                alerts = alerts.Where(alert => alert.Severity == severity);
+            }
+
+            if (query.ActiveOnly)
+            {
+                alerts = alerts.Where(alert => alert.ResolvedAt is null);
+            }
+
+            var result = alerts.ToArray();
+
+            return Task.FromResult(new PagedResult<RiskAlert>(
+                result,
+                query.PageNumber,
+                query.PageSize,
+                result.Length));
         }
     }
 
