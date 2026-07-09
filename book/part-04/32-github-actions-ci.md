@@ -109,3 +109,5 @@ GitHub Actions и GitLab CI решают одну задачу, но испол�
 - [x] Workflow проверен на push.
 - [x] Workflow проверен на pull request.
 - [x] Required status checks подключены в GitHub branch protection для `main`.
+- [x] GitHub Actions закреплены по commit SHA и обновляются через Dependabot.
+- [x] Post-merge CI на `main` подтвержден.

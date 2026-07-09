@@ -7,8 +7,8 @@
 | 3. Формулируем техническое задание | MVP scope и критерии приемки зафиксированы | `chapter-03-requirements` | Черновик |
 | 4. Выбираем архитектурный стиль | `ARCHITECTURE.md` согласован с проектом | `chapter-04-architecture` | Черновик |
 | 5. Планируем путь разработки | `DEVELOPMENT_PLAN.md` согласован с книгой | `chapter-05-development-plan` | Черновик |
-| 6. Создаем solution и структуру репозитория | Solution и проекты созданы | `chapter-06-solution-skeleton` | Выполнено |
-| 7. Настраиваем .NET 10, analyzers и стиль кода | Repo standards добавлены | `chapter-07-repo-standards` | Выполнено |
+| 6. Создаем solution и структуру репозитория | Solution и проекты созданы | `chapter-06-solution-skeleton` | Код выполнен, глава отсутствует |
+| 7. Настраиваем .NET 10, analyzers и стиль кода | Repo standards добавлены | `chapter-07-repo-standards` | Код выполнен, глава отсутствует |
 | 8. Проектируем доменную модель | Модель описана перед реализацией | `chapter-08-domain-design` | Выполнено |
 | 9. Реализуем value objects и entities | Domain entities/value objects добавлены | `chapter-09-domain-model` | Выполнено |
 | 10. Пишем первые unit-тесты домена | Первые unit-тесты проходят | `chapter-10-domain-tests` | Выполнено |
@@ -33,7 +33,7 @@
 | 29. Добавляем нагрузочный сценарий | Load scenario формирует отчет | `chapter-29-load-scenario` | Выполнено |
 | 30. Измеряем производительность и аллокации | BenchmarkDotNet report добавлен | `chapter-30-benchmarks` | Выполнено |
 | 31. Упаковываем проект в Docker Compose | `docker compose up --build` работает | `chapter-31-docker-compose` | Выполнено |
-| 32. Настраиваем GitHub Actions CI/CD | GitHub workflow описан и привязан к branch protection | `chapter-32-github-actions-ci` | Частично выполнено |
+| 32. Настраиваем GitHub Actions CI/CD | GitHub workflow описан, проверен и привязан к branch protection | `chapter-32-github-actions-ci` | Выполнено |
 | 33. Настраиваем GitLab CI/CD | Pipeline описан и запускает проверки | `chapter-33-gitlab-ci` | Частично выполнено |
 | 34. Пишем README и финальную документацию | README готов к внешнему показу | `chapter-34-readme-docs` | Не начато |
 | 35. Готовим проект к демонстрации на интервью | Interview script готов | `chapter-35-interview-demo` | Не начато |
