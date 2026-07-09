@@ -4,7 +4,9 @@
 
 ## GitHub Actions
 
-GitHub workflow описан в `.github/workflows/ci.yml` и запускается на `push` и `pull_request`.
+GitHub workflow описан в `.github/workflows/ci.yml` и запускается на `push` в
+`main`, для pull request в `main` и вручную через `workflow_dispatch`. Такой
+набор событий не создает два одинаковых запуска для каждого push в PR-ветку.
 
 Workflow содержит jobs:
 
@@ -17,12 +19,24 @@ Workflow содержит jobs:
 
 GitHub Actions workflow проверяет:
 
-- `dotnet restore` с NuGet cache в `.nuget/packages`;
+- `dotnet restore` в locked mode с NuGet cache в `.nuget/packages`;
 - `dotnet build` в `Release`;
 - unit tests с TRX и Cobertura artifacts;
 - integration tests с Testcontainers PostgreSQL;
 - `dotnet format analyzers --verify-no-changes`;
 - `docker build` API image.
+
+Сторонние Actions закреплены по immutable commit SHA, а читаемый комментарий
+рядом с SHA фиксирует major-версию. `.github/dependabot.yml` еженедельно
+проверяет обновления GitHub Actions. Длительные jobs ограничены через
+`timeout-minutes`, поэтому зависший Docker или внешний package feed не занимает
+runner бесконечно.
+
+NuGet lock-файлы хранят точный граф транзитивных зависимостей. Локальный
+`dotnet restore` может обновлять их после осознанного изменения
+`PackageReference`, а CI использует `RestoreLockedMode` и завершается ошибкой,
+если project-файлы и lock-файлы расходятся. Dockerfile также копирует
+lock-файлы до restore и выполняет его с `--locked-mode`.
 
 После первого успешного запуска workflow на GitHub нужно подключить required status checks в branch protection для `main`.
 

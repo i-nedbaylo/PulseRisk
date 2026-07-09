@@ -25,13 +25,22 @@
 .github/workflows/ci.yml
 ```
 
-Workflow должен запускаться на:
+Workflow должен запускаться для pull request в `main`, после merge через push
+в `main` и вручную:
 
 ```yaml
 on:
   push:
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 ```
+
+Запуск `push` для всех веток здесь не нужен: открытый pull request уже запускает
+тот же workflow и создал бы вторую, полностью дублирующую проверку.
 
 Минимальный набор проверок:
 
@@ -41,6 +50,16 @@ on:
 4. Integration tests с Docker/PostgreSQL.
 5. Static analysis через `dotnet format analyzers --verify-no-changes`.
 6. Docker build API image.
+
+Jobs независимы и выполняются параллельно. Каждый job получает чистый runner,
+поэтому формальный `needs: restore` не передал бы ему восстановленные пакеты без
+отдельно опубликованного артефакта. NuGet cache ускоряет повторный restore, а
+`packages.lock.json` и locked mode обеспечивают одинаковый граф зависимостей,
+в том числе при сборке Docker image.
+
+Внешние Actions закреплены по commit SHA, их обновления создает Dependabot.
+Для jobs также заданы `timeout-minutes`, чтобы зависший restore, Testcontainers
+или Docker build завершался предсказуемо.
 
 ## Branch protection
 
