@@ -1,8 +1,12 @@
-# GitLab CI/CD
+# CI/CD
 
-Папка фиксирует решения и локальные проверки, связанные с pipeline.
+Папка фиксирует решения и локальные проверки, связанные с CI/CD pipelines.
 
-Текущий pipeline описан в `.gitlab-ci.yml` и содержит стадии:
+## GitHub Actions
+
+GitHub workflow описан в `.github/workflows/ci.yml` и запускается на `push` и `pull_request`.
+
+Workflow содержит jobs:
 
 - `restore`;
 - `build`;
@@ -11,7 +15,29 @@
 - `static_analysis`;
 - `docker_build`.
 
-## Что проверяет pipeline
+GitHub Actions workflow проверяет:
+
+- `dotnet restore` с NuGet cache в `.nuget/packages`;
+- `dotnet build` в `Release`;
+- unit tests с TRX и Cobertura artifacts;
+- integration tests с Testcontainers PostgreSQL;
+- `dotnet format analyzers --verify-no-changes`;
+- `docker build` API image.
+
+После первого успешного запуска workflow на GitHub нужно подключить required status checks в branch protection для `main`.
+
+## GitLab CI/CD
+
+GitLab pipeline описан в `.gitlab-ci.yml` и содержит стадии:
+
+- `restore`;
+- `build`;
+- `unit_tests`;
+- `integration_tests`;
+- `static_analysis`;
+- `docker_build`.
+
+## Что проверяет GitLab pipeline
 
 - `dotnet restore` с NuGet cache в `.nuget/packages`;
 - `dotnet build` в `Release`;
@@ -34,4 +60,4 @@ docker pull postgres:17.4
 
 ## Что еще нужно подтвердить
 
-Локально можно проверить команды `dotnet build`, `dotnet test`, `dotnet format` и `docker build`. Полный статус GitLab pipeline можно подтвердить только после push в GitLab и запуска pipeline на branch или merge request.
+Локально можно проверить команды `dotnet build`, `dotnet test`, `dotnet format` и `docker build`. Полный статус GitHub Actions workflow можно подтвердить только после push в GitHub и запуска checks на branch или pull request. Полный статус GitLab pipeline можно подтвердить только после push в GitLab и запуска pipeline на branch или merge request.

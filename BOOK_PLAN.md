@@ -216,9 +216,10 @@
 29. Добавляем нагрузочный сценарий.
 30. Измеряем производительность и аллокации.
 31. Упаковываем проект в Docker Compose.
-32. Настраиваем GitLab CI/CD.
-33. Пишем README и финальную документацию.
-34. Готовим проект к демонстрации на интервью.
+32. Настраиваем GitHub Actions CI/CD.
+33. Настраиваем GitLab CI/CD.
+34. Пишем README и финальную документацию.
+35. Готовим проект к демонстрации на интервью.
 
 ## 8. Подробный план глав
 
@@ -257,7 +258,7 @@
 - PostgreSQL: индексы, транзакции, оптимизация;
 - architecture: GoF, GRASP, отсутствие overengineering;
 - unit-тесты xUnit/NUnit;
-- GitLab CI/CD;
+- GitHub Actions и GitLab CI/CD;
 - fintech bonus: MetaTrader, cTrader, FIX, trading platforms.
 
 Практический результат:
@@ -825,7 +826,29 @@
 - `docker compose up --build`;
 - Swagger доступен на `http://localhost:5000/swagger`.
 
-### Глава 32. Настраиваем GitLab CI/CD
+### Глава 32. Настраиваем GitHub Actions CI/CD
+
+Цель: добавить GitHub Actions workflow и связать его с branch protection.
+
+Содержание:
+
+- `.github/workflows/ci.yml`;
+- restore/build;
+- unit tests;
+- integration tests;
+- static analysis;
+- docker build;
+- NuGet cache;
+- test/coverage artifacts;
+- required status checks для `main`.
+
+Проверка:
+
+- workflow проходит на push;
+- workflow проходит на pull request;
+- branch protection требует успешные checks.
+
+### Глава 33. Настраиваем GitLab CI/CD
 
 Цель: показать DevOps-культуру, ожидаемую от зрелого backend-проекта.
 
@@ -845,7 +868,7 @@
 - pipeline проходит;
 - test results доступны как artifacts.
 
-### Глава 33. Пишем README и финальную документацию
+### Глава 34. Пишем README и финальную документацию
 
 Цель: сделать проект понятным для внешнего читателя и интервьюера.
 
@@ -869,7 +892,7 @@
 - обновленный `ARCHITECTURE.md`;
 - ссылки на reports.
 
-### Глава 34. Готовим проект к демонстрации на интервью
+### Глава 35. Готовим проект к демонстрации на интервью
 
 Цель: собрать финальный narrative защиты проекта.
 
@@ -959,7 +982,9 @@
 - [ ] Написать главу 32.
 - [ ] Написать главу 33.
 - [ ] Написать главу 34.
+- [ ] Написать главу 35.
 - [ ] Проверить запуск через Docker Compose.
+- [ ] Проверить GitHub Actions CI/CD.
 - [ ] Проверить GitLab CI/CD.
 - [ ] Проверить финальный README.
 
@@ -1048,6 +1073,7 @@
 - [ ] есть рабочий сценарий client -> account -> trade -> position -> risk alert;
 - [ ] есть Market Data Simulator;
 - [ ] есть unit-тесты и integration-тесты;
+- [ ] есть GitHub Actions CI/CD;
 - [ ] есть GitLab CI/CD;
 - [ ] есть PostgreSQL performance evidence;
 - [ ] каждая важная архитектурная идея объяснена и привязана к демонстрируемым компетенциям;

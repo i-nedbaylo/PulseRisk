@@ -33,6 +33,7 @@
 | 29. Добавляем нагрузочный сценарий | Load scenario формирует отчет | `chapter-29-load-scenario` | Выполнено |
 | 30. Измеряем производительность и аллокации | BenchmarkDotNet report добавлен | `chapter-30-benchmarks` | Выполнено |
 | 31. Упаковываем проект в Docker Compose | `docker compose up --build` работает | `chapter-31-docker-compose` | Выполнено |
-| 32. Настраиваем GitLab CI/CD | Pipeline описан и запускает проверки | `chapter-32-gitlab-ci` | Частично выполнено |
-| 33. Пишем README и финальную документацию | README готов к внешнему показу | `chapter-33-readme-docs` | Не начато |
-| 34. Готовим проект к демонстрации на интервью | Interview script готов | `chapter-34-interview-demo` | Не начато |
+| 32. Настраиваем GitHub Actions CI/CD | GitHub workflow описан и привязан к branch protection | `chapter-32-github-actions-ci` | Частично выполнено |
+| 33. Настраиваем GitLab CI/CD | Pipeline описан и запускает проверки | `chapter-33-gitlab-ci` | Частично выполнено |
+| 34. Пишем README и финальную документацию | README готов к внешнему показу | `chapter-34-readme-docs` | Не начато |
+| 35. Готовим проект к демонстрации на интервью | Interview script готов | `chapter-35-interview-demo` | Не начато |
