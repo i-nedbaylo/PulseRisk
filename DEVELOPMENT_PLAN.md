@@ -2,6 +2,27 @@
 
 План ориентирован на учебно-демонстрационный проект, который должен показать инженерные компетенции в разработке real-time fintech/risk-management backend. Главный акцент - конкурентная обработка событий, PostgreSQL, производительность, тестируемость и понятная архитектура без overengineering.
 
+## Как читать статус
+
+- `[x]` - реализовано и подтверждено кодом, тестом, CI, документацией или ручной проверкой.
+- `[ ]` - открытый backlog item.
+- `[optional]` - улучшение не блокирует демонстрационный MVP.
+- `[senior]` - расширение для усиления проекта после базовой версии.
+- Открытые пункты без `[optional]`/`[senior]` - реальный обязательный backlog перед финальной демонстрацией.
+- Раздел "Финальная приемка" закрывается только после отдельного ручного demo-run, даже если часть сценариев уже покрыта тестами.
+
+## Фокус обязательного backlog
+
+Перед финальной демонстрацией в первую очередь нужно закрыть:
+
+1. Read API и query objects: trades, positions, risk alerts, risk metrics, pagination.
+2. Управление simulator/load-test через API и явное решение по `security/auth` модели MVP.
+3. Observability MVP: JSON logs, correlation id, slow SQL/channel/risk logging, PostgreSQL health check.
+4. Недостающие integration tests для фильтров, concurrent trades и disabled risk rule.
+5. Проверку GitLab pipeline на реальном branch push и merge request.
+6. Финальный README с curl-примерами, архитектурой, risk rules, тестами и performance notes.
+7. Ручной demo-run по разделу "Финальная приемка".
+
 ## 0. Подготовка репозитория
 
 - [x] Зафиксировать название проекта: `PulseRisk`.
@@ -39,7 +60,7 @@
 - [x] Подключить BenchmarkDotNet для benchmark-проекта.
 - [ ] Создать options-классы:
   - [x] `MarketDataOptions`;
-  - [ ] `RiskEngineOptions`;
+  - [ ] `RiskEngineOptions` (добавить, когда появятся отдельные runtime-настройки Risk Engine);
   - [x] `EventChannelOptions`;
   - [x] `QuoteBatchOptions`;
   - [x] `LoadTestOptions`.
@@ -89,11 +110,11 @@
 - [x] Реализовать `MaxExposureRuleStrategy`.
 - [x] Реализовать `MaxLossRuleStrategy`.
 - [x] Реализовать `MarginLevelWarningRuleStrategy`.
-- [ ] Реализовать `PriceSpikeDetectionRuleStrategy`.
-- [ ] Реализовать `HighFrequencyTradingActivityRuleStrategy`.
+- [ ] [senior] Реализовать `PriceSpikeDetectionRuleStrategy`.
+- [ ] [senior] Реализовать `HighFrequencyTradingActivityRuleStrategy`.
 - [x] Создать `RiskAlertFactory`.
 - [x] Добавить cooldown/deduplication модель для алертов.
-- [ ] Покрыть каждое правило unit-тестами.
+- [x] Покрыть каждое реализованное правило unit-тестами.
 - [x] Проверить сценарий: rule disabled не создает alert.
 - [x] Проверить сценарий: несколько rules могут создать несколько alert'ов в одной evaluation.
 
@@ -212,12 +233,12 @@
 - [x] Реализовать генератор bid/ask по инструментам.
 - [x] Добавить настраиваемую частоту генерации.
 - [x] Добавить режим normal load.
-- [ ] Добавить режим high load.
-- [ ] Добавить режим price spike.
+- [ ] [optional] Добавить режим high load.
+- [ ] [senior] Добавить режим price spike.
 - [ ] Добавить start/stop управление через application service.
 - [x] Избегать `Thread.Sleep`, использовать async delay/timer с `CancellationToken`.
 - [ ] Проверить корректную остановку worker'а.
-- [ ] Добавить `LatestQuoteCache`.
+- [ ] [senior] Добавить `LatestQuoteCache`.
 - [x] Реализовать `QuoteBatchWriterWorker`.
 - [x] Реализовать batch insert quotes.
 - [x] Публиковать quote-driven risk requests после сохранения batch-а котировок.
@@ -319,9 +340,9 @@
   - [ ] PostgreSQL;
   - [ ] optional Redis.
 - [x] Добавить endpoint `GET /api/health`.
-- [ ] Добавить metrics endpoint optional.
-- [ ] Добавить Prometheus optional.
-- [ ] Добавить Grafana dashboard optional.
+- [ ] [optional] Добавить metrics endpoint.
+- [ ] [optional] Добавить Prometheus.
+- [ ] [optional] Добавить Grafana dashboard.
 
 ## 15. Docker Compose
 
@@ -333,8 +354,8 @@
 - [x] Добавить переменные окружения для connection string.
 - [x] Добавить `ASPNETCORE_URLS=http://+:5000`.
 - [x] Проверить доступность Swagger на `http://localhost:5000/swagger`.
-- [ ] Добавить Redis optional.
-- [ ] Добавить Prometheus/Grafana optional.
+- [ ] [optional] Добавить Redis.
+- [ ] [optional] Добавить Prometheus/Grafana.
 - [x] Проверить `docker compose up --build` на чистом окружении.
 
 ## 16. Integration tests
@@ -361,12 +382,12 @@
 - [x] `MaxExposureRuleStrategyTests`.
 - [x] `MaxLossRuleStrategyTests`.
 - [x] `MarginLevelWarningRuleStrategyTests`.
-- [ ] `PriceSpikeDetectionRuleStrategyTests`.
-- [ ] `HighFrequencyTradingActivityRuleStrategyTests`.
+- [ ] [senior] `PriceSpikeDetectionRuleStrategyTests`.
+- [ ] [senior] `HighFrequencyTradingActivityRuleStrategyTests`.
 - [x] `CreateTradeValidatorTests`.
 - [x] `RiskAlertFactoryTests`.
 - [x] `QuoteRiskEvaluationDispatcherTests`.
-- [ ] `LatestQuoteCacheTests`.
+- [ ] [senior] `LatestQuoteCacheTests`.
 - [x] Проверить edge cases:
   - [x] нулевой объем;
   - [x] отрицательная цена;
@@ -409,8 +430,8 @@
 - [x] Ограничить push-trigger до `main` и PR-trigger до `main`.
 - [x] Проверить post-merge CI на `main`.
 - [x] Проверить Dependabot PR flow через обычный approval и merge.
-- [ ] Добавить badge в README optional.
-- [ ] Добавить Dependabot для NuGet packages или отдельный dependency audit optional.
+- [ ] [optional] Добавить badge в README.
+- [ ] [optional] Добавить Dependabot для NuGet packages или отдельный dependency audit.
 
 ## 20. GitLab CI/CD
 
@@ -426,7 +447,7 @@
 - [x] Кешировать NuGet packages.
 - [ ] Проверить pipeline на push.
 - [ ] Проверить pipeline на merge request.
-- [ ] Добавить badge в README optional.
+- [ ] [optional] Добавить badge в README.
 
 ## 21. README
 
@@ -457,18 +478,20 @@
 
 ## 22. Senior-level extensions
 
-- [ ] Реализовать SignalR hub для real-time risk metrics.
-- [ ] Добавить Redis latest quote cache.
-- [ ] Реализовать outbox pattern.
-- [ ] Реализовать PostgreSQL advisory lock option для позиций.
-- [ ] Добавить Prometheus metrics.
-- [ ] Добавить Grafana dashboard.
-- [ ] Реализовать CQRS read model для risk metrics.
-- [ ] Добавить отдельный worker host.
+- [ ] [senior] Реализовать SignalR hub для real-time risk metrics.
+- [ ] [senior] Добавить Redis latest quote cache.
+- [ ] [senior] Реализовать outbox pattern.
+- [ ] [senior] Реализовать PostgreSQL advisory lock option для позиций.
+- [ ] [senior] Добавить Prometheus metrics.
+- [ ] [senior] Добавить Grafana dashboard.
+- [ ] [senior] Реализовать CQRS read model для risk metrics.
+- [ ] [senior] Добавить отдельный worker host.
 - [x] Добавить allocation optimization report.
-- [ ] Добавить legacy refactoring example: baseline service -> optimized service.
+- [ ] [senior] Добавить legacy refactoring example: baseline service -> optimized service.
 
 ## 23. Финальная приемка
+
+Эти пункты намеренно остаются открытыми до отдельного ручного demo-run по чистому окружению. Unit/integration tests и CI подтверждают части сценариев, но не заменяют финальную демонстрационную приемку.
 
 - [x] `docker compose up --build` запускает проект.
 - [x] Swagger доступен на `http://localhost:5000/swagger`.
