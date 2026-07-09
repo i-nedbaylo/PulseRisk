@@ -398,9 +398,9 @@
 - [x] Публиковать test artifacts.
 - [x] Публиковать coverage artifacts.
 - [x] Кешировать NuGet packages.
-- [ ] Проверить workflow на push.
+- [x] Проверить workflow на push.
 - [ ] Проверить workflow на pull request.
-- [ ] Подключить required status checks в GitHub branch protection для `main`.
+- [x] Подключить required status checks в GitHub branch protection для `main`.
 - [ ] Добавить badge в README optional.
 
 ## 20. GitLab CI/CD

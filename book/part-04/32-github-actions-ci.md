@@ -87,6 +87,6 @@ GitHub Actions и GitLab CI решают одну задачу, но испол�
 - [x] Integration tests job добавлен.
 - [x] Static analysis job добавлен.
 - [x] Docker build job добавлен.
-- [ ] Workflow проверен на push.
+- [x] Workflow проверен на push.
 - [ ] Workflow проверен на pull request.
-- [ ] Required status checks подключены в GitHub branch protection для `main`.
+- [x] Required status checks подключены в GitHub branch protection для `main`.
