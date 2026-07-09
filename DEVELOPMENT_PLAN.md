@@ -42,8 +42,8 @@
   - [ ] `RiskEngineOptions`;
   - [x] `EventChannelOptions`;
   - [x] `QuoteBatchOptions`;
-  - [ ] `LoadTestOptions`.
-- [ ] Настроить validation options на старте приложения.
+  - [x] `LoadTestOptions`.
+- [x] Настроить validation options на старте приложения для существующих options.
 
 ## 2. Domain layer
 
@@ -68,7 +68,7 @@
 - [x] Реализовать entity `Quote`.
 - [x] Реализовать entity `RiskRule`.
 - [x] Реализовать entity `RiskAlert`.
-- [ ] Добавить доменные инварианты:
+- [x] Добавить доменные инварианты:
   - [x] volume > 0;
   - [x] price > 0;
   - [x] bid <= ask;
@@ -147,7 +147,7 @@
 - [ ] Создать query object `GetClientRiskMetricsQuery`.
 - [ ] Добавить keyset или offset pagination для истории сделок.
 - [ ] Добавить pagination для risk alerts.
-- [ ] Для read-only запросов использовать `AsNoTracking` или Dapper.
+- [x] Для read-only запросов использовать `AsNoTracking` или Dapper.
 
 ## 6. Application: clients, accounts, instruments
 
@@ -243,7 +243,7 @@
 - [x] Сохранять alert в PostgreSQL.
 - [x] Логировать alert как `Warning`.
 - [ ] Логировать длительную risk evaluation.
-- [ ] Добавить integration-тест "превышение лимита создает alert".
+- [x] Добавить integration-тест "превышение лимита создает alert".
 - [ ] Добавить integration-тест "disabled rule не создает alert".
 
 ## 11. API layer
@@ -274,6 +274,7 @@
 - [ ] Реализовать `POST /api/simulator/market/stop`.
 - [ ] Реализовать `POST /api/simulator/load-test/start`.
 - [ ] Реализовать `GET /api/simulator/status`.
+- [ ] Явно зафиксировать security/auth модель MVP: demo API без auth или optional API key/JWT.
 - [x] Добавить примеры запросов в Swagger.
 
 ## 12. Load-test scenario
@@ -314,10 +315,10 @@
 - [ ] Логировать channel pressure.
 - [ ] Логировать risk alerts.
 - [ ] Добавить health checks:
-  - [ ] application;
+  - [x] application;
   - [ ] PostgreSQL;
   - [ ] optional Redis.
-- [ ] Добавить endpoint `/health`.
+- [x] Добавить endpoint `GET /api/health`.
 - [ ] Добавить metrics endpoint optional.
 - [ ] Добавить Prometheus optional.
 - [ ] Добавить Grafana dashboard optional.
@@ -401,7 +402,15 @@
 - [x] Проверить workflow на push.
 - [x] Проверить workflow на pull request.
 - [x] Подключить required status checks в GitHub branch protection для `main`.
+- [x] Закрепить GitHub Actions по immutable commit SHA.
+- [x] Добавить Dependabot для обновления GitHub Actions.
+- [x] Добавить NuGet lock files и locked restore в CI/Docker.
+- [x] Добавить workflow concurrency и job timeouts.
+- [x] Ограничить push-trigger до `main` и PR-trigger до `main`.
+- [x] Проверить post-merge CI на `main`.
+- [x] Проверить Dependabot PR flow через обычный approval и merge.
 - [ ] Добавить badge в README optional.
+- [ ] Добавить Dependabot для NuGet packages или отдельный dependency audit optional.
 
 ## 20. GitLab CI/CD
 
@@ -473,8 +482,10 @@
 - [ ] Фоновые процессы корректно останавливаются.
 - [x] Данные сохраняются в PostgreSQL.
 - [x] Миграции применяются на чистую БД.
-- [ ] Unit-тесты проходят.
-- [ ] Integration-тесты проходят.
+- [x] Unit-тесты проходят.
+- [x] Integration-тесты проходят.
+- [x] GitHub Actions CI/CD проходит.
+- [x] `main` защищен от direct push и требует PR/checks/review.
 - [ ] GitLab CI/CD проходит.
 - [ ] README позволяет запустить проект без дополнительных объяснений.
 - [ ] ARCHITECTURE.md объясняет выбор паттернов и подходов.
@@ -482,13 +493,14 @@
 
 ## 24. Критерии готовности к показу на интервью
 
-- [ ] Можно за 2-3 минуты объяснить доменную модель.
-- [ ] Можно показать flow создания сделки и обновления позиции.
-- [ ] Можно показать risk rule strategy и unit-тесты.
-- [ ] Можно показать bounded channel и backpressure.
-- [ ] Можно показать индексы PostgreSQL и `EXPLAIN ANALYZE`.
+- [x] Можно за 2-3 минуты объяснить доменную модель.
+- [x] Можно показать flow создания сделки и обновления позиции.
+- [x] Можно показать risk rule strategy и unit-тесты.
+- [x] Можно показать bounded channel и backpressure.
+- [x] Можно показать индексы PostgreSQL и `EXPLAIN ANALYZE`.
 - [x] Можно показать Docker Compose запуск.
+- [x] Можно показать GitHub Actions pipeline.
 - [x] Можно показать GitLab pipeline.
-- [ ] Можно объяснить, почему проект не сделан микросервисами.
-- [ ] Можно объяснить, какие части легко вынести в отдельные сервисы.
+- [x] Можно объяснить, почему проект не сделан микросервисами.
+- [x] Можно объяснить, какие части легко вынести в отдельные сервисы.
 - [x] Можно показать минимум один performance/benchmark результат.

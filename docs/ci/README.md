@@ -38,7 +38,9 @@ NuGet lock-файлы хранят точный граф транзитивны�
 если project-файлы и lock-файлы расходятся. Dockerfile также копирует
 lock-файлы до restore и выполняет его с `--locked-mode`.
 
-После первого успешного запуска workflow на GitHub нужно подключить required status checks в branch protection для `main`.
+GitHub workflow подтвержден на pull request и push в `main`. Для `main`
+подключены required status checks, запрет прямого push, PR flow и требование
+одного approving review.
 
 ## GitLab CI/CD
 
@@ -74,4 +76,7 @@ docker pull postgres:17.4
 
 ## Что еще нужно подтвердить
 
-Локально можно проверить команды `dotnet build`, `dotnet test`, `dotnet format` и `docker build`. Полный статус GitHub Actions workflow можно подтвердить только после push в GitHub и запуска checks на branch или pull request. Полный статус GitLab pipeline можно подтвердить только после push в GitLab и запуска pipeline на branch или merge request.
+Локально можно проверить команды `dotnet build`, `dotnet test`, `dotnet format`
+и `docker build`. GitHub Actions уже подтвержден реальными PR/push checks.
+Полный статус GitLab pipeline можно подтвердить только после push в GitLab и
+запуска pipeline на branch или merge request.
