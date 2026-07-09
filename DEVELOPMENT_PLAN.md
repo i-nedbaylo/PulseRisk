@@ -274,7 +274,7 @@
 - [ ] Реализовать `POST /api/simulator/market/stop`.
 - [ ] Реализовать `POST /api/simulator/load-test/start`.
 - [ ] Реализовать `GET /api/simulator/status`.
-- [ ] Явно зафиксировать security/auth модель MVP: demo API без auth или optional API key/JWT.
+- [ ] Явно зафиксировать `security/auth` модель MVP: demo API без `auth` или optional `API key`/`JWT`.
 - [x] Добавить примеры запросов в Swagger.
 
 ## 12. Load-test scenario
@@ -485,7 +485,7 @@
 - [x] Unit-тесты проходят.
 - [x] Integration-тесты проходят.
 - [x] GitHub Actions CI/CD проходит.
-- [x] `main` защищен от direct push и требует PR/checks/review.
+- [x] `main` защищен от прямого `push` и требует PR/checks/review.
 - [ ] GitLab CI/CD проходит.
 - [ ] README позволяет запустить проект без дополнительных объяснений.
 - [ ] ARCHITECTURE.md объясняет выбор паттернов и подходов.

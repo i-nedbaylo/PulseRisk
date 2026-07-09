@@ -39,7 +39,7 @@
 - BenchmarkDotNet report для доменных расчетов position/PnL, p95 latency sample и value-type оптимизация расчетного результата без managed allocations;
 - Dockerfile, Docker Compose контур `pulserisk-api + postgres`, startup migrations по флагу, PostgreSQL healthcheck и пройденный full compose smoke test;
 - GitHub Actions и GitLab CI/CD pipelines со стадиями restore/build/unit tests/integration tests/static analysis/docker build, NuGet cache и test/coverage artifacts;
-- GitHub branch protection для `main`: PR flow, required checks, 1 approval и запрет прямого push;
+- GitHub branch protection для `main`: PR flow, required checks, требование одного `approving review` и запрет прямого `push`;
 - каркас книги в `book/`.
 
 ## Быстрый старт

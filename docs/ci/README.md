@@ -39,8 +39,8 @@ NuGet lock-файлы хранят точный граф транзитивны�
 lock-файлы до restore и выполняет его с `--locked-mode`.
 
 GitHub workflow подтвержден на pull request и push в `main`. Для `main`
-подключены required status checks, запрет прямого push, PR flow и требование
-одного approving review.
+подключены `required status checks`, запрет прямого `push`, PR flow и требование
+одного `approving review`.
 
 ## GitLab CI/CD
 
