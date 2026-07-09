@@ -386,7 +386,24 @@
 - [x] Добавить документы в `docs/explain-analyze`.
 - [x] Описать выводы в README.
 
-## 19. GitLab CI/CD
+## 19. GitHub Actions CI/CD
+
+- [x] Создать `.github/workflows/ci.yml`.
+- [x] Добавить job `restore` или общий restore step с NuGet cache.
+- [x] Добавить job `build`.
+- [x] Добавить job `unit_tests`.
+- [x] Добавить job `integration_tests`.
+- [x] Добавить job `static_analysis`.
+- [x] Добавить job `docker_build`.
+- [x] Публиковать test artifacts.
+- [x] Публиковать coverage artifacts.
+- [x] Кешировать NuGet packages.
+- [x] Проверить workflow на push.
+- [x] Проверить workflow на pull request.
+- [x] Подключить required status checks в GitHub branch protection для `main`.
+- [ ] Добавить badge в README optional.
+
+## 20. GitLab CI/CD
 
 - [x] Создать `.gitlab-ci.yml`.
 - [x] Добавить stage `restore`.
@@ -402,7 +419,7 @@
 - [ ] Проверить pipeline на merge request.
 - [ ] Добавить badge в README optional.
 
-## 20. README
+## 21. README
 
 - [ ] Описать бизнес-контекст PulseRisk.
 - [ ] Указать, что проект учебный и не предназначен для реальной торговли.
@@ -429,7 +446,7 @@
 - [ ] Добавить раздел "Performance notes".
 - [ ] Добавить раздел "Что можно улучшить".
 
-## 21. Senior-level extensions
+## 22. Senior-level extensions
 
 - [ ] Реализовать SignalR hub для real-time risk metrics.
 - [ ] Добавить Redis latest quote cache.
@@ -442,7 +459,7 @@
 - [x] Добавить allocation optimization report.
 - [ ] Добавить legacy refactoring example: baseline service -> optimized service.
 
-## 22. Финальная приемка
+## 23. Финальная приемка
 
 - [x] `docker compose up --build` запускает проект.
 - [x] Swagger доступен на `http://localhost:5000/swagger`.
@@ -463,7 +480,7 @@
 - [ ] ARCHITECTURE.md объясняет выбор паттернов и подходов.
 - [ ] В документации есть разделы про performance, PostgreSQL и concurrency.
 
-## 23. Критерии готовности к показу на интервью
+## 24. Критерии готовности к показу на интервью
 
 - [ ] Можно за 2-3 минуты объяснить доменную модель.
 - [ ] Можно показать flow создания сделки и обновления позиции.

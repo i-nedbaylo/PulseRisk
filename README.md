@@ -38,7 +38,7 @@
 - отключаемый Load Test Worker с профилями `Quotes500`, `Quotes1000`, `Quotes5000`, генерацией клиентов/счетов/сделок/котировок и markdown-отчетом по throughput, latency, channel pressure и active alerts;
 - BenchmarkDotNet report для доменных расчетов position/PnL, p95 latency sample и value-type оптимизация расчетного результата без managed allocations;
 - Dockerfile, Docker Compose контур `pulserisk-api + postgres`, startup migrations по флагу, PostgreSQL healthcheck и пройденный full compose smoke test;
-- GitLab CI/CD pipeline со стадиями restore/build/unit tests/integration tests/static analysis/docker build, NuGet cache и test/coverage artifacts;
+- GitHub Actions и GitLab CI/CD pipelines со стадиями restore/build/unit tests/integration tests/static analysis/docker build, NuGet cache и test/coverage artifacts;
 - каркас книги в `book/`.
 
 ## Быстрый старт
@@ -107,9 +107,9 @@ http://localhost:5000/swagger
 - `docs/load-tests/` - сценарии и результаты локальных нагрузочных прогонов.
 - `docs/benchmarks/` - BenchmarkDotNet-отчеты и p95-сэмплы для доменных расчетов.
 - `docs/docker-compose/` - заметки по локальной проверке Docker Compose окружения.
-- `docs/ci/` - заметки по GitLab CI/CD pipeline и требованиям к runner-у.
+- `docs/ci/` - заметки по GitHub Actions, GitLab CI/CD pipeline и требованиям к runner-у.
 - `book/` - будущая книга, которая пишется параллельно с кодом.
 
 ## Следующий этап
 
-Следующий технический шаг - запустить GitLab pipeline на branch push и merge request, затем перейти к финальному README и демонстрационной документации.
+Следующий технический шаг - запустить GitHub Actions workflow на push/pull request, подключить required checks в branch protection, затем проверить GitLab pipeline на branch push и merge request.
