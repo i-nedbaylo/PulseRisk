@@ -6,4 +6,8 @@ namespace PulseRisk.Application.Repositories;
 public interface ILatestQuoteReader
 {
     Task<Quote?> GetLatestAsync(Symbol symbol, CancellationToken cancellationToken);
+
+    Task<IReadOnlyCollection<Quote>> ListLatestAsync(
+        Symbol? symbol,
+        CancellationToken cancellationToken);
 }

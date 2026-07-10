@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PulseRisk.Application.Positions;
 using PulseRisk.Application.Repositories;
 using PulseRisk.Domain.Entities;
 using PulseRisk.Domain.ValueObjects;
@@ -31,6 +32,39 @@ internal sealed class EfPositionRepository(PulseRiskDbContext dbContext) : IPosi
             .AsNoTracking()
             .Where(position => position.Symbol == symbol && position.NetVolume != 0)
             .OrderBy(position => position.TradingAccountId)
+            .ToArrayAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyCollection<Position>> SearchAsync(
+        GetPositionsQuery query,
+        CancellationToken cancellationToken)
+    {
+        var source = dbContext.Positions.AsNoTracking();
+
+        if (query.ClientId is { } clientId)
+        {
+            source = source.Where(position => position.ClientId == clientId);
+        }
+
+        if (query.TradingAccountId is { } tradingAccountId)
+        {
+            source = source.Where(position => position.TradingAccountId == tradingAccountId);
+        }
+
+        if (query.Symbol is { } symbol)
+        {
+            source = source.Where(position => position.Symbol == symbol);
+        }
+
+        if (query.OpenOnly)
+        {
+            source = source.Where(position => position.NetVolume != 0);
+        }
+
+        return await source
+            .OrderBy(position => position.ClientId)
+            .ThenBy(position => position.TradingAccountId)
+            .ThenByDescending(position => position.UpdatedAt)
             .ToArrayAsync(cancellationToken);
     }
 }

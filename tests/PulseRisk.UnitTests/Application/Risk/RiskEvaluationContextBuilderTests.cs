@@ -1,5 +1,6 @@
 using FluentAssertions;
 using PulseRisk.Application.Events;
+using PulseRisk.Application.Positions;
 using PulseRisk.Application.Repositories;
 using PulseRisk.Application.Risk;
 using PulseRisk.Domain.Entities;
@@ -170,6 +171,18 @@ public sealed class RiskEvaluationContextBuilderTests
 
             return Task.FromResult(result);
         }
+
+        public Task<IReadOnlyCollection<Position>> SearchAsync(
+            GetPositionsQuery query,
+            CancellationToken cancellationToken)
+        {
+            IReadOnlyCollection<Position> result =
+                query.ClientId is null || position.ClientId == query.ClientId.Value
+                ? [position]
+                : [];
+
+            return Task.FromResult<IReadOnlyCollection<Position>>(result);
+        }
     }
 
     private sealed class FakeInstrumentRepository(Instrument instrument) : IInstrumentRepository
@@ -195,6 +208,18 @@ public sealed class RiskEvaluationContextBuilderTests
         public Task<Quote?> GetLatestAsync(Symbol symbol, CancellationToken cancellationToken)
         {
             return Task.FromResult(quote?.Symbol == symbol ? quote : null);
+        }
+
+        public Task<IReadOnlyCollection<Quote>> ListLatestAsync(
+            Symbol? symbol,
+            CancellationToken cancellationToken)
+        {
+            IReadOnlyCollection<Quote> result =
+                quote is not null && (symbol is null || quote.Symbol == symbol.Value)
+                    ? [quote]
+                    : [];
+
+            return Task.FromResult(result);
         }
     }
 

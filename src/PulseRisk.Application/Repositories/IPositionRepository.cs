@@ -1,5 +1,6 @@
 using PulseRisk.Domain.Entities;
 using PulseRisk.Domain.ValueObjects;
+using PulseRisk.Application.Positions;
 
 namespace PulseRisk.Application.Repositories;
 
@@ -14,5 +15,9 @@ public interface IPositionRepository
 
     Task<IReadOnlyCollection<Position>> ListOpenBySymbolAsync(
         Symbol symbol,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyCollection<Position>> SearchAsync(
+        GetPositionsQuery query,
         CancellationToken cancellationToken);
 }

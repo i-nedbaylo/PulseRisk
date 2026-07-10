@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using PulseRisk.Application.Events;
+using PulseRisk.Application.Positions;
 using PulseRisk.Application.Repositories;
 using PulseRisk.BackgroundWorkers.MarketData;
 using PulseRisk.Domain.Entities;
@@ -119,6 +120,35 @@ public sealed class QuoteRiskEvaluationDispatcherTests
                 .ToArray();
 
             return Task.FromResult<IReadOnlyCollection<Position>>(result);
+        }
+
+        public Task<IReadOnlyCollection<Position>> SearchAsync(
+            GetPositionsQuery query,
+            CancellationToken cancellationToken)
+        {
+            var result = positions.AsEnumerable();
+
+            if (query.ClientId is { } clientId)
+            {
+                result = result.Where(position => position.ClientId == clientId);
+            }
+
+            if (query.TradingAccountId is { } tradingAccountId)
+            {
+                result = result.Where(position => position.TradingAccountId == tradingAccountId);
+            }
+
+            if (query.Symbol is { } symbol)
+            {
+                result = result.Where(position => position.Symbol == symbol);
+            }
+
+            if (query.OpenOnly)
+            {
+                result = result.Where(position => position.NetVolume != 0);
+            }
+
+            return Task.FromResult<IReadOnlyCollection<Position>>(result.ToArray());
         }
     }
 
