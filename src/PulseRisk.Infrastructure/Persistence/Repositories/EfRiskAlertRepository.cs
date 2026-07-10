@@ -87,18 +87,21 @@ internal sealed class EfRiskAlertRepository(PulseRiskDbContext dbContext) : IRis
             source = source.Where(alert => alert.CreatedAt <= createdTo);
         }
 
+        var (pageNumber, pageSize) = Pagination.Normalize(query.PageNumber, query.PageSize);
+        var offset = Pagination.CalculateOffset(pageNumber, pageSize);
+
         var totalCount = await source.CountAsync(cancellationToken);
         var items = await source
             .OrderByDescending(alert => alert.CreatedAt)
             .ThenByDescending(alert => alert.Id)
-            .Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize)
+            .Skip(offset)
+            .Take(pageSize)
             .ToArrayAsync(cancellationToken);
 
         return new PagedResult<RiskAlert>(
             items,
-            query.PageNumber,
-            query.PageSize,
+            pageNumber,
+            pageSize,
             totalCount);
     }
 }

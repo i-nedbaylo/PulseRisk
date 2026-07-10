@@ -386,8 +386,9 @@ public sealed class RiskEvaluationProcessorTests
 
             var filteredAlerts = alerts.ToArray();
             var (pageNumber, pageSize) = Pagination.Normalize(query.PageNumber, query.PageSize);
+            var offset = Pagination.CalculateOffset(pageNumber, pageSize);
             var pageItems = filteredAlerts
-                .Skip((pageNumber - 1) * pageSize)
+                .Skip(offset)
                 .Take(pageSize)
                 .ToArray();
 

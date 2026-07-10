@@ -408,8 +408,9 @@ public sealed class CreateTradeHandlerTests
 
             var filteredResult = filteredItems.ToArray();
             var (pageNumber, pageSize) = Pagination.Normalize(query.PageNumber, query.PageSize);
+            var offset = Pagination.CalculateOffset(pageNumber, pageSize);
             var pageItems = filteredResult
-                .Skip((pageNumber - 1) * pageSize)
+                .Skip(offset)
                 .Take(pageSize)
                 .ToArray();
 

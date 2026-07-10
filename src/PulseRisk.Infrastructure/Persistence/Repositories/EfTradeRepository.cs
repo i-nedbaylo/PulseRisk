@@ -56,18 +56,21 @@ internal sealed class EfTradeRepository(PulseRiskDbContext dbContext) : ITradeRe
             source = source.Where(trade => trade.CreatedAt <= createdTo);
         }
 
+        var (pageNumber, pageSize) = Pagination.Normalize(query.PageNumber, query.PageSize);
+        var offset = Pagination.CalculateOffset(pageNumber, pageSize);
+
         var totalCount = await source.CountAsync(cancellationToken);
         var items = await source
             .OrderByDescending(trade => trade.CreatedAt)
             .ThenByDescending(trade => trade.Id)
-            .Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize)
+            .Skip(offset)
+            .Take(pageSize)
             .ToArrayAsync(cancellationToken);
 
         return new PagedResult<Trade>(
             items,
-            query.PageNumber,
-            query.PageSize,
+            pageNumber,
+            pageSize,
             totalCount);
     }
 }
