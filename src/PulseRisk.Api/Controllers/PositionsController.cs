@@ -13,7 +13,7 @@ public sealed class PositionsController : ControllerBase
         [FromQuery] Guid? clientId,
         [FromQuery] Guid? tradingAccountId,
         [FromQuery] string? symbol,
-        [FromQuery] bool openOnly,
+        [FromQuery] bool? openOnly,
         [FromServices] GetPositionsHandler handler,
         CancellationToken cancellationToken)
     {
@@ -21,7 +21,7 @@ public sealed class PositionsController : ControllerBase
             clientId,
             tradingAccountId,
             QuerySymbols.ParseOptional(symbol),
-            openOnly);
+            openOnly ?? false);
 
         return Ok(await handler.HandleAsync(query, cancellationToken));
     }
@@ -32,7 +32,7 @@ public sealed class PositionsController : ControllerBase
         Guid clientId,
         [FromQuery] Guid? tradingAccountId,
         [FromQuery] string? symbol,
-        [FromQuery] bool openOnly,
+        [FromQuery] bool? openOnly,
         [FromServices] GetPositionsHandler handler,
         CancellationToken cancellationToken)
     {
@@ -40,7 +40,7 @@ public sealed class PositionsController : ControllerBase
             clientId,
             tradingAccountId,
             QuerySymbols.ParseOptional(symbol),
-            openOnly);
+            openOnly ?? false);
 
         return Ok(await handler.HandleAsync(query, cancellationToken));
     }

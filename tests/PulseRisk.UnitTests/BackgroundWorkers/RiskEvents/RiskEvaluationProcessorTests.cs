@@ -384,13 +384,18 @@ public sealed class RiskEvaluationProcessorTests
                 alerts = alerts.Where(alert => alert.ResolvedAt is null);
             }
 
-            var result = alerts.ToArray();
+            var filteredAlerts = alerts.ToArray();
+            var (pageNumber, pageSize) = Pagination.Normalize(query.PageNumber, query.PageSize);
+            var pageItems = filteredAlerts
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToArray();
 
             return Task.FromResult(new PagedResult<RiskAlert>(
-                result,
-                query.PageNumber,
-                query.PageSize,
-                result.Length));
+                pageItems,
+                pageNumber,
+                pageSize,
+                filteredAlerts.Length));
         }
     }
 

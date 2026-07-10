@@ -18,8 +18,8 @@ public sealed class TradesController : ControllerBase
         [FromQuery] TradeSide? side,
         [FromQuery] DateTimeOffset? createdFrom,
         [FromQuery] DateTimeOffset? createdTo,
-        [FromQuery] int pageNumber,
-        [FromQuery] int pageSize,
+        [FromQuery] int? pageNumber,
+        [FromQuery] int? pageSize,
         [FromServices] GetTradesHandler handler,
         CancellationToken cancellationToken)
     {
@@ -30,8 +30,8 @@ public sealed class TradesController : ControllerBase
             side,
             createdFrom,
             createdTo,
-            pageNumber,
-            pageSize);
+            pageNumber ?? Pagination.DefaultPageNumber,
+            pageSize ?? Pagination.DefaultPageSize);
 
         return Ok(await handler.HandleAsync(query, cancellationToken));
     }
@@ -67,8 +67,8 @@ public sealed class TradesController : ControllerBase
         [FromQuery] TradeSide? side,
         [FromQuery] DateTimeOffset? createdFrom,
         [FromQuery] DateTimeOffset? createdTo,
-        [FromQuery] int pageNumber,
-        [FromQuery] int pageSize,
+        [FromQuery] int? pageNumber,
+        [FromQuery] int? pageSize,
         [FromServices] GetTradesHandler handler,
         CancellationToken cancellationToken)
     {
@@ -79,8 +79,8 @@ public sealed class TradesController : ControllerBase
             side,
             createdFrom,
             createdTo,
-            pageNumber,
-            pageSize);
+            pageNumber ?? Pagination.DefaultPageNumber,
+            pageSize ?? Pagination.DefaultPageSize);
 
         return Ok(await handler.HandleAsync(query, cancellationToken));
     }

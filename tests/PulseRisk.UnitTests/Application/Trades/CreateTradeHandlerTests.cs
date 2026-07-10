@@ -391,13 +391,33 @@ public sealed class CreateTradeHandlerTests
                 filteredItems = filteredItems.Where(trade => trade.Symbol == symbol);
             }
 
-            var result = filteredItems.ToArray();
+            if (query.Side is { } side)
+            {
+                filteredItems = filteredItems.Where(trade => trade.Side == side);
+            }
+
+            if (query.CreatedFrom is { } createdFrom)
+            {
+                filteredItems = filteredItems.Where(trade => trade.CreatedAt >= createdFrom);
+            }
+
+            if (query.CreatedTo is { } createdTo)
+            {
+                filteredItems = filteredItems.Where(trade => trade.CreatedAt <= createdTo);
+            }
+
+            var filteredResult = filteredItems.ToArray();
+            var (pageNumber, pageSize) = Pagination.Normalize(query.PageNumber, query.PageSize);
+            var pageItems = filteredResult
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToArray();
 
             return Task.FromResult(new PagedResult<Trade>(
-                result,
-                query.PageNumber,
-                query.PageSize,
-                result.Length));
+                pageItems,
+                pageNumber,
+                pageSize,
+                filteredResult.Length));
         }
 
         public void Clear()
